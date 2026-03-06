@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Hattrick.Core/Hattrick.Core.csproj" />
+  <Project Path="Hattrick.Tests/Hattrick.Tests.csproj" />
+  <Project Path="Hattrick/Hattrick.csproj" />
+</Solution>

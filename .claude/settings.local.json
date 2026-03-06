@@ -1,0 +1,62 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Write",
+      "Bash",
+      "Bash(dotnet sln:*)",
+      "Bash(dotnet new:*)",
+      "Bash(dir:*)",
+      "Bash(ls:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet add:*)",
+      "Bash(dotnet test:*)",
+      "Bash(git -C \"C:/Projects/hattrick\" status)",
+      "Bash(git -C \"C:/Projects/hattrick\" diff)",
+      "Bash(git -C \"C:/Projects/hattrick\" log --oneline -5)",
+      "Bash(git -C \"C:/Projects/hattrick\" add)",
+      "Bash(git -C \"C:/Projects/hattrick\" push)",
+      "Bash(git -C \"C:/Projects/hattrick\" log --oneline -3)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(tree:*)",
+      "Bash(dotnet clean:*)",
+      "Bash(git checkout:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl:*)",
+      "Bash(grep:*)",
+      "Bash(cd:*)",
+      "Bash(dotnet run:*)",
+      "WebFetch(domain:wiki.hattrick.org)",
+      "Bash(sed:*)",
+      "WebFetch(domain:web.archive.org)",
+      "WebFetch(domain:www.hattrick.org)",
+      "WebFetch(domain:hattrick.fandom.com)",
+      "WebFetch(domain:chpp.hattrick.org)",
+      "WebFetch(domain:www.managerzone.com)",
+      "Bash(python3:*)",
+      "Bash(pdftotext:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "dotnet build Hattrick/Hattrick.csproj --no-restore -v q 2>&1 | tail -5"
+          }
+        ]
+      }
+    ]
+  }
+}

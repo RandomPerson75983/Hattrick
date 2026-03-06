@@ -1,0 +1,36 @@
+{
+  "quartet": "CSS Foundation",
+  "description": "Global styles, colors, typography, flexbox utilities, responsive mixins",
+  "requirements": [
+    "File: Hattrick/Components/Shared/Layout/MainLayout.razor.css",
+    "File: Hattrick/Components/Shared/Styles/global.css (or global.razor.css if scoped)",
+    "Colors per spec: #1a1a1a (header), #3a7d3a (nav), #4CAF50 (accent), #f5f5f5 (bg), #ffffff (cards)",
+    "Typography: Sans-serif (Arial/Helvetica), header 20-24px bold, body 14px, small 12px",
+    "Layouts: app-container (flex column, full viewport), app-header (fixed 60px), app-body (flex row), left-sidebar (fixed width ~180px), main-content (flex-grow), right-panel (fixed width ~200px)",
+    "Responsive: Desktop (1200px+), Tablet (768-1199px), Mobile (<768px)",
+    "Utilities: spacing/padding classes, flexbox helpers, responsive breakpoints"
+  ],
+  "designSpecFile": "Docs/MAIN_LAYOUT_DESIGN_PLAN.md",
+  "colorScheme": {
+    "darkBackground": "#1a1a1a",
+    "navGreen": "#3a7d3a",
+    "accentGreen": "#4CAF50",
+    "lightBackground": "#f5f5f5",
+    "cardBackground": "#ffffff",
+    "textPrimary": "#333333",
+    "textSecondary": "#666666",
+    "textLight": "#ffffff",
+    "yellow": "#FFD700"
+  },
+  "testFiles": [],
+  "implFiles": [
+    "Hattrick/Components/Shared/Layout/MainLayout.razor.css",
+    "Hattrick/Components/Shared/Styles/global.css"
+  ],
+  "notes": [
+    "MainLayout.razor.css: Root layout with flexbox (3-column: sidebar | content | right-panel). Header fixed 60px, sidebar fixed 180px, right-panel fixed 200px, main-content grows. All colors from handoff colorScheme.",
+    "global.css: CSS variables for all colors, global typography (Arial sans-serif, h1 24px bold, body 14px, small 12px), flexbox utilities (flex, flex-col, flex-between, gap-*), spacing classes (p-*, px-*, py-*, m-*), text/bg/border utilities. Responsive breakpoints as comments only (will be implemented in Quartet 8).",
+    "No media queries implemented yet — desktop layout only. Breakpoints documented in comments for Tablet (768-1199px) and Mobile (<768px).",
+    "Uses CSS custom properties (--color-*) for colors, enabling easy theme changes. Scrollbar styling included for better UX."
+  ]
+}

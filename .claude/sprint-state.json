@@ -1,0 +1,52 @@
+{
+  "sprintName": "Main Layout Design Plan Implementation",
+  "description": "Build MainLayout, HeaderBar, NavMenu (redesigned), Home page, and responsive CSS per MAIN_LAYOUT_DESIGN_PLAN.md",
+  "quartets": [
+    {
+      "name": "CSS Foundation",
+      "description": "Global styles: colors, typography, flexbox utilities, responsive mixins (no tests)"
+    },
+    {
+      "name": "NavItem Component",
+      "description": "Individual nav link with icon, label, active state (bUnit tests)"
+    },
+    {
+      "name": "NavSection Component",
+      "description": "Collapsible section header for grouped nav items (bUnit tests)"
+    },
+    {
+      "name": "HeaderBar Component",
+      "description": "Top navigation bar: logo, team info, stats bar, user menu (bUnit tests)"
+    },
+    {
+      "name": "NavMenu Redesign",
+      "description": "Complete sidebar navigation using NavSection/NavItem, all sections populated (bUnit tests)"
+    },
+    {
+      "name": "MainLayout Redesign",
+      "description": "3-column layout: header + (sidebar | main | right-panel), responsive containers (bUnit tests)"
+    },
+    {
+      "name": "Home Page Subcomponents",
+      "description": "ClubInfoCard, UpcomingMatchesPanel, ActivityFeed, QuickLinksSection (bUnit tests)"
+    },
+    {
+      "name": "Home.razor Redesign",
+      "description": "Main dashboard page assembly with all subcomponents, placeholder data (bUnit tests)"
+    },
+    {
+      "name": "Responsive CSS Polish",
+      "description": "Media queries for tablet/mobile, animations, hover states, final visual polish"
+    }
+  ],
+  "currentQuartet": 0,
+  "currentStep": "planning",
+  "completedQuartets": [],
+  "notes": [
+    "bUnit v2 component tests required for all Razor components",
+    "CSS only quartets (CSS Foundation, Responsive Polish) have no test files",
+    "Use CultureInfo.InvariantCulture where needed",
+    "All colors per MAIN_LAYOUT_DESIGN_PLAN color scheme",
+    "Component props follow MAIN_LAYOUT_DESIGN_PLAN specifications"
+  ]
+}

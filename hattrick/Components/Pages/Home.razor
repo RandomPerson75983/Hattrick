@@ -1,0 +1,55 @@
+﻿@page "/"
+
+<div class="main-menu-container">
+    <h1>Hattrick Clone</h1>
+    <p class="subtitle">Football Manager Simulation</p>
+
+    <div class="menu-buttons">
+        <button class="btn btn-primary btn-lg" @onclick="OnNewGame">
+            <span class="bi bi-plus-square"></span> New Game
+        </button>
+
+        <button class="btn btn-primary btn-lg" @onclick="OnContinueGame">
+            <span class="bi bi-play-circle"></span> Continue Game
+        </button>
+
+        <button class="btn btn-secondary btn-lg" @onclick="OnLoadGame">
+            <span class="bi bi-folder-open"></span> Load Game
+        </button>
+
+        <button class="btn btn-secondary btn-lg" @onclick="OnSettings">
+            <span class="bi bi-gear"></span> Settings
+        </button>
+
+        <button class="btn btn-outline-secondary btn-lg" @onclick="OnAbout">
+            <span class="bi bi-question-circle"></span> About
+        </button>
+    </div>
+</div>
+
+@code {
+    private void OnNewGame()
+    {
+        // TODO: Implement new game start
+    }
+
+    private void OnContinueGame()
+    {
+        // TODO: Load most recent save
+    }
+
+    private void OnLoadGame()
+    {
+        // TODO: Open load game dialog
+    }
+
+    private void OnSettings()
+    {
+        // TODO: Open settings page
+    }
+
+    private void OnAbout()
+    {
+        // TODO: Show about/help dialog
+    }
+}

@@ -1,0 +1,11 @@
+C:\Projects\hattrick\Hattrick.Core\bin\Debug\net10.0\Hattrick.Core.deps.json
+C:\Projects\hattrick\Hattrick.Core\bin\Debug\net10.0\Hattrick.Core.dll
+C:\Projects\hattrick\Hattrick.Core\bin\Debug\net10.0\Hattrick.Core.pdb
+C:\Projects\hattrick\Hattrick.Core\obj\Debug\net10.0\Hattrick.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\hattrick\Hattrick.Core\obj\Debug\net10.0\Hattrick.Core.AssemblyInfoInputs.cache
+C:\Projects\hattrick\Hattrick.Core\obj\Debug\net10.0\Hattrick.Core.AssemblyInfo.cs
+C:\Projects\hattrick\Hattrick.Core\obj\Debug\net10.0\Hattrick.Core.csproj.CoreCompileInputs.cache
+C:\Projects\hattrick\Hattrick.Core\obj\Debug\net10.0\Hattrick.Core.dll
+C:\Projects\hattrick\Hattrick.Core\obj\Debug\net10.0\refint\Hattrick.Core.dll
+C:\Projects\hattrick\Hattrick.Core\obj\Debug\net10.0\Hattrick.Core.pdb
+C:\Projects\hattrick\Hattrick.Core\obj\Debug\net10.0\ref\Hattrick.Core.dll

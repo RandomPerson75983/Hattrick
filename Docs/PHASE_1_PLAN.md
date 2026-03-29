@@ -28,19 +28,21 @@ SkillType enum:
 Keeper, Defending, Playmaking, Winger, Scoring, Passing, SetPieces, Stamina
 ```
 
-SkillLevel display names (1-20, with sub-levels: very low, low, high, very high):
+SkillLevel enum (0-20, using official Hattrick denominations as member names):
 ```
-1: non-existent       11: outstanding
-2: disastrous          12: brilliant
-3: wretched            13: magnificent
-4: poor                14: world class
-5: weak                15: supernatural
-6: inadequate          16: titanic
-7: passable            17: extra-terrestrial
-8: solid               18: mythical
-9: excellent           19: magical
-10: formidable         20: utopian (divine)
+0: NonExistent         11: Brilliant
+1: Disastrous          12: Magnificent
+2: Wretched            13: WorldClass
+3: Poor                14: Supernatural
+4: Weak                15: Titanic
+5: Inadequate          16: ExtraTerrestrial
+6: Passable            17: Mythical
+7: Solid               18: Magical
+8: Excellent           19: Utopian
+9: Formidable          20: Divine
+10: Outstanding
 ```
+Sub-levels (shown in match ratings): very low, low, high, very high
 
 ### Quartet 2: Position & Order Enums
 

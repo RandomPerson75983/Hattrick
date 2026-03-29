@@ -17,6 +17,13 @@ public interface IGameStateService
     int CurrentWeekNumber { get; set; }
 
     /// <summary>
+    /// Gets or sets the current turn within the week (1-4).
+    /// Turn 1: Pre-midweek match. Turn 2: Post-midweek management.
+    /// Turn 3: Pre-weekend match. Turn 4: End of week processing.
+    /// </summary>
+    int CurrentTurnNumber { get; set; }
+
+    /// <summary>
     /// Gets or sets whether a game is currently loaded/active.
     /// </summary>
     bool IsGameLoaded { get; set; }
@@ -25,6 +32,12 @@ public interface IGameStateService
     /// Gets the save slot number of the currently loaded game (if loaded).
     /// </summary>
     int? CurrentSaveSlot { get; set; }
+
+    /// <summary>
+    /// Gets or sets the team ID of the human player's team.
+    /// All other teams in the league are AI-managed.
+    /// </summary>
+    Guid? HumanPlayerTeamId { get; set; }
 
     /// <summary>
     /// Resets the game state to default (used when starting a new game or loading).

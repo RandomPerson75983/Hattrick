@@ -6,7 +6,7 @@
 Phase 0: Foundation & Infrastructure
     └── Phase 1: Core Data Models + Lineup Management
             ├── Phase 2: Match Engine (most complex)
-            │       └── Phase 3: Season & League + Friendlies
+            │       └── Phase 3: Season & League + AI Agents + Friendlies
             │               └── Phase 5: Economy
             │                       └── Phase 6: Transfer Market
             ├── Phase 4: Training System (needs match minutes data)
@@ -17,6 +17,53 @@ Phase 10: Achievements & Polish
 ```
 
 **Critical insight:** Match engine is the center of everything. Phases 0-2 must be solid before anything else.
+
+## Core Architecture: API-First Design for AI Agents
+
+The 7 non-player teams in each league are managed by AI agents (local LLM via Ollama, with rules-based fallback). Every manager action is exposed through team-agnostic service methods that both the Blazor UI and AI agents call.
+
+### Key Principles
+- **All service methods take `Guid teamId`** as first parameter — works for any team
+- **Domain services ARE the API** — no separate API layer, no monolithic facade
+- **Rules-based AI is the default** — game works without any LLM server
+- **LLM (Ollama) is optional upgrade** — enabled in settings for smarter AI opponents
+- **4 turns per week** — lets AI react to injuries/cards between matches
+
+### Game Loop: 4 Turns Per Week
+```
+TURN 1: Pre-Midweek Match
+  ├── Human/AI: Set lineup and tactics
+  ├── Human/AI: Transfer activity (if window open)
+  └── Simulate midweek match (cup/friendly)
+
+TURN 2: Post-Midweek / Management
+  ├── Human/AI: React to injuries, adjust lineup, browse transfers
+  └── No match simulated
+
+TURN 3: Pre-Weekend Match
+  ├── Human/AI: Set lineup and tactics for league match
+  ├── Human/AI: Transfer activity (if window open)
+  └── Simulate weekend match (league)
+
+TURN 4: End of Week
+  ├── Human/AI: Training, staff, youth, economy decisions
+  ├── Apply training gains
+  ├── Process economy (wages, income, maintenance)
+  ├── Update form, injuries heal, suspensions clear
+  └── Auto-save
+```
+
+### AI Integration Architecture (Hattrick.Core/Ai/)
+- `IAiManagerOrchestrator` — coordinates AI decisions per turn type
+- `IRulesBasedAi` — deterministic fallback (default, no LLM needed)
+- `ILlmClient` / `OllamaLlmClient` — calls Ollama via OpenAI-compatible API
+- `IToolDefinitionProvider` — maps service methods to LLM tool schemas
+- `IToolExecutor` — dispatches LLM tool calls to domain services
+- `IAiSettings` — LLM endpoint, model name, enabled flag
+
+### Game State Query Layer
+- `IGameStateQueryService` — read-only snapshots for AI consumption
+- Snapshot DTOs in `Hattrick.Core/Models/Snapshots/` — plain records, JSON-serializable
 
 ---
 
@@ -42,18 +89,26 @@ Phase 10: Achievements & Polish
 
 ## Phase 1: Core Data Models + Lineup Management
 
-**Goal:** All domain models defined. Repositories operational. Lineup management fully functional.
+**Goal:** All domain models defined. Repositories operational. Lineup management fully functional. API-first: all services take `teamId`.
 
-**Deliverable:** All models create/read/update correctly. Player can set starting XI, positions, orders, substitution plan.
+**Deliverable:** All models create/read/update correctly. Player can set starting XI, positions, orders, substitution plan. Services work for any team (human or AI).
 
 ### Key Models
-- **Player:** Id, Name, Age, Skills (1-20 scale), Specialty, Form, TSI, Injury status
+- **Player:** Id, TeamId, Name, Age, Skills (1-20 scale), Specialty, Form, TSI, Injury status
 - **MatchLineupSlot:** Position, IndividualOrder, IsStarter, Substitution plan
 - **TeamLineup:** Formation, Tactic, Attitude, 11 starters + 3 subs
-- **Team:** Budget, Fans, TeamSpirit, DefaultLineup, Staff
-- **Season:** CurrentWeek, LeagueTable, Schedules
+- **Team:** Id, Name, IsHumanControlled, Budget, Fans, TeamSpirit, DefaultLineup, Staff
+- **Season:** CurrentWeek, CurrentTurn (1-4), LeagueTable, Schedules
 - **MatchFixture/MatchResult:** Fixtures + results with full event logs
 - **YouthSquad:** Investment level + youth players
+- **TurnType enum:** PreMidweek, PostMidweek, PreWeekend, EndOfWeek
+
+### Snapshot DTOs (Hattrick.Core/Models/Snapshots/)
+- **TeamSnapshot** — team name, budget, fans, spirit, staff summary
+- **PlayerSnapshot** — all player attributes for AI consumption
+- **LeagueTableSnapshot** — standings, points, GD
+- **MatchFixtureSnapshot** — upcoming match info
+- **MatchResultSnapshot** — completed match summary
 
 ### Repositories (all in-memory, thread-safe with `Lock`)
 - IPlayerRepository
@@ -62,8 +117,13 @@ Phase 10: Achievements & Polish
 - IMatchRepository
 - IYouthSquadRepository
 
-### Services
+### Services (all methods take `Guid teamId` as first parameter)
 - `ILineupService` - lineup validation, auto-suggest, substitution plan, man marking
+- `IGameStateQueryService` - read-only snapshots for AI agents (skeleton, grows each phase)
+
+### API-First Requirements
+- Every service method signature: `ReturnType MethodName(Guid teamId, ...params)`
+- `IGameStateService` extended with `HumanPlayerTeamId` and `CurrentTurn` properties
 
 ---
 
@@ -95,20 +155,30 @@ Phase 10: Achievements & Polish
 
 ---
 
-## Phase 3: Season & League System + Friendly Matches
+## Phase 3: Season & League System + AI Agents + Friendly Matches
 
-**Goal:** Full 16-week season runs. League table tracks. Promotion/relegation works. Friendlies fill gaps.
+**Goal:** Full 16-week season runs with 4 turns/week. AI agents manage 7 opponent teams. League table tracks. Promotion/relegation works. Friendlies fill gaps.
 
-**Deliverable:** Complete full season week 1-16. League table accurate. Friendlies scheduled.
+**Deliverable:** Complete full season week 1-16. League table accurate. AI teams make reasonable decisions. Game works without LLM (rules-based default).
 
 ### Services
 - `IScheduleService` - 14-week round-robin league, week 15 qualifier, week 16 break
-- `IFriendlyService` - schedule midweek friendlies (training value, 50/50 gate split, 0.35 XP/min vs league 3.5)
+- `IFriendlyService(teamId, ...)` - schedule midweek friendlies (training value, 50/50 gate split, 0.35 XP/min vs league 3.5)
 - `ILeagueService` - track standings, tiebreakers
-- `ISeasonAdvanceService` - weekly pipeline (matches → training → economy → injuries → form)
+- `ISeasonAdvanceService` - **4-turn-per-week pipeline** (AdvanceTurn(), CurrentTurn 1-4)
 - `ISeasonEndService` - promotion/relegation, prize money, new season prep
-- `IAiTeamService` - AI lineup selection, tactic choice, friendly arrangement
 - `ISeasonInitService` - generate 7 AI teams for division
+
+### AI Agent Services (Hattrick.Core/Ai/)
+- `IAiManagerOrchestrator` - coordinates AI decisions per turn type for each AI team
+  - `ProcessPreMatchDecisions(teamId)` — lineup, tactics, attitude
+  - `ProcessManagementDecisions(teamId)` — react to injuries, transfers
+  - `ProcessEndOfWeekDecisions(teamId)` — training, staff, youth
+- `IRulesBasedAi` - deterministic fallback AI (default, always works)
+- `ILlmClient` / `OllamaLlmClient` - calls local Ollama server (optional upgrade)
+- `IToolDefinitionProvider` - maps service methods to LLM tool call schemas
+- `IToolExecutor` - dispatches LLM tool calls to domain service methods
+- `IAiSettings` - LLM endpoint, model, enabled flag (stored in game save)
 
 ### Key Mechanic: Friendly Matches
 Teams eliminated from cup MUST arrange friendlies each midweek to maintain training minutes for all players.
@@ -174,10 +244,12 @@ applied = baseGain × ageMult × coachMult × assistantMult
 - Summer: week 15-16 + weeks 1-2 of new season
 - Winter: week 8 (1-week window)
 
-### Services
+### Services (all methods take `Guid teamId`)
 - `IPlayerValuationService` - market value = f(TSI, age); deduct 8% commissions
-- `ITransferMarketService` - pool generation, buy/sell
-- `IAiTransferService` - AI: buy weakness, sell old players, max 2 buys + 2 sells/window
+- `ITransferMarketService(teamId, ...)` - pool generation, buy/sell
+- AI transfer logic handled by `IRulesBasedAi` + `IAiManagerOrchestrator` (Phase 3)
+  - Adds transfer tool definitions to `ToolDefinitionProvider`
+  - Adds transfer methods to `IRulesBasedAi`: buy weakness, sell old players
 
 ---
 

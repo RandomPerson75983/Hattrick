@@ -13,8 +13,10 @@ public class GameStateServiceTests
         // Assert
         service.CurrentSeasonNumber.Should().Be(1);
         service.CurrentWeekNumber.Should().Be(1);
+        service.CurrentTurnNumber.Should().Be(1);
         service.IsGameLoaded.Should().BeFalse();
         service.CurrentSaveSlot.Should().BeNull();
+        service.HumanPlayerTeamId.Should().BeNull();
     }
 
     [Fact]
@@ -77,8 +79,10 @@ public class GameStateServiceTests
         {
             CurrentSeasonNumber = 10,
             CurrentWeekNumber = 15,
+            CurrentTurnNumber = 3,
             IsGameLoaded = true,
-            CurrentSaveSlot = 25
+            CurrentSaveSlot = 25,
+            HumanPlayerTeamId = Guid.NewGuid()
         };
 
         // Act
@@ -87,8 +91,10 @@ public class GameStateServiceTests
         // Assert
         service.CurrentSeasonNumber.Should().Be(1);
         service.CurrentWeekNumber.Should().Be(1);
+        service.CurrentTurnNumber.Should().Be(1);
         service.IsGameLoaded.Should().BeFalse();
         service.CurrentSaveSlot.Should().BeNull();
+        service.HumanPlayerTeamId.Should().BeNull();
     }
 
     [Fact]
@@ -137,5 +143,46 @@ public class GameStateServiceTests
 
         // Assert
         service.CurrentWeekNumber.Should().Be(weekNumber);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    public void CurrentTurnNumber_CanHoldAnyValidTurnValue(int turnNumber)
+    {
+        // Arrange
+        var service = new GameStateService();
+
+        // Act
+        service.CurrentTurnNumber = turnNumber;
+
+        // Assert
+        service.CurrentTurnNumber.Should().Be(turnNumber);
+    }
+
+    [Fact]
+    public void HumanPlayerTeamId_CanBeSet()
+    {
+        // Arrange
+        var service = new GameStateService();
+        var teamId = Guid.NewGuid();
+
+        // Act
+        service.HumanPlayerTeamId = teamId;
+
+        // Assert
+        service.HumanPlayerTeamId.Should().Be(teamId);
+    }
+
+    [Fact]
+    public void HumanPlayerTeamId_DefaultsToNull()
+    {
+        // Arrange & Act
+        var service = new GameStateService();
+
+        // Assert
+        service.HumanPlayerTeamId.Should().BeNull();
     }
 }

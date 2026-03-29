@@ -5,11 +5,18 @@ namespace Hattrick.Core.Services;
 /// </summary>
 public class GameStateService : IGameStateService
 {
-    /// <inheritdoc />
-    public int CurrentSeasonNumber { get; set; } = 1;
+    private const int DefaultTurnNumber = 1;
+    private const int DefaultSeasonNumber = 1;
+    private const int DefaultWeekNumber = 1;
 
     /// <inheritdoc />
-    public int CurrentWeekNumber { get; set; } = 1;
+    public int CurrentSeasonNumber { get; set; } = DefaultSeasonNumber;
+
+    /// <inheritdoc />
+    public int CurrentWeekNumber { get; set; } = DefaultWeekNumber;
+
+    /// <inheritdoc />
+    public int CurrentTurnNumber { get; set; } = DefaultTurnNumber;
 
     /// <inheritdoc />
     public bool IsGameLoaded { get; set; }
@@ -18,11 +25,16 @@ public class GameStateService : IGameStateService
     public int? CurrentSaveSlot { get; set; }
 
     /// <inheritdoc />
+    public Guid? HumanPlayerTeamId { get; set; }
+
+    /// <inheritdoc />
     public void Reset()
     {
-        CurrentSeasonNumber = 1;
-        CurrentWeekNumber = 1;
+        CurrentSeasonNumber = DefaultSeasonNumber;
+        CurrentWeekNumber = DefaultWeekNumber;
+        CurrentTurnNumber = DefaultTurnNumber;
         IsGameLoaded = false;
         CurrentSaveSlot = null;
+        HumanPlayerTeamId = null;
     }
 }

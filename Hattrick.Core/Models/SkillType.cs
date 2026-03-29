@@ -5,12 +5,12 @@ namespace Hattrick.Core.Models;
 /// </summary>
 public enum SkillType
 {
-    Keeper,
-    Defending,
-    Playmaking,
-    Winger,
-    Scoring,
-    Passing,
-    SetPieces,
-    Stamina
+    Keeper = 0,
+    Defending = 1,
+    Playmaking = 2,
+    Winger = 3,
+    Passing = 4,
+    Scoring = 5,
+    SetPieces = 6,
+    Stamina = 7
 }

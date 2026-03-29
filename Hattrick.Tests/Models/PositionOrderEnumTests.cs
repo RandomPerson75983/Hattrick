@@ -1,6 +1,4 @@
-using FluentAssertions;
 using Hattrick.Core.Models;
-using Xunit;
 
 namespace Hattrick.Tests.Models;
 
@@ -20,66 +18,6 @@ public class PositionOrderEnumTests
 
         // Assert
         members.Should().Be(6, "Position enum should have exactly 6 members");
-    }
-
-    [Fact]
-    public void Position_HasKeeperMember()
-    {
-        // Arrange & Act
-        var hasKeeper = typeof(Position).GetEnumNames().Contains("Keeper");
-
-        // Assert
-        hasKeeper.Should().BeTrue("Position enum must have Keeper member");
-    }
-
-    [Fact]
-    public void Position_HasCentralDefenderMember()
-    {
-        // Arrange & Act
-        var hasCentralDefender = typeof(Position).GetEnumNames().Contains("CentralDefender");
-
-        // Assert
-        hasCentralDefender.Should().BeTrue("Position enum must have CentralDefender member");
-    }
-
-    [Fact]
-    public void Position_HasWingBackMember()
-    {
-        // Arrange & Act
-        var hasWingBack = typeof(Position).GetEnumNames().Contains("WingBack");
-
-        // Assert
-        hasWingBack.Should().BeTrue("Position enum must have WingBack member");
-    }
-
-    [Fact]
-    public void Position_HasInnerMidfielderMember()
-    {
-        // Arrange & Act
-        var hasInnerMidfielder = typeof(Position).GetEnumNames().Contains("InnerMidfielder");
-
-        // Assert
-        hasInnerMidfielder.Should().BeTrue("Position enum must have InnerMidfielder member");
-    }
-
-    [Fact]
-    public void Position_HasWingerMember()
-    {
-        // Arrange & Act
-        var hasWinger = typeof(Position).GetEnumNames().Contains("Winger");
-
-        // Assert
-        hasWinger.Should().BeTrue("Position enum must have Winger member");
-    }
-
-    [Fact]
-    public void Position_HasForwardMember()
-    {
-        // Arrange & Act
-        var hasForward = typeof(Position).GetEnumNames().Contains("Forward");
-
-        // Assert
-        hasForward.Should().BeTrue("Position enum must have Forward member");
     }
 
     [Fact]
@@ -135,56 +73,6 @@ public class PositionOrderEnumTests
     }
 
     [Fact]
-    public void IndividualOrder_HasNormalMember()
-    {
-        // Arrange & Act
-        var hasNormal = typeof(IndividualOrder).GetEnumNames().Contains("Normal");
-
-        // Assert
-        hasNormal.Should().BeTrue("IndividualOrder enum must have Normal member");
-    }
-
-    [Fact]
-    public void IndividualOrder_HasOffensiveMember()
-    {
-        // Arrange & Act
-        var hasOffensive = typeof(IndividualOrder).GetEnumNames().Contains("Offensive");
-
-        // Assert
-        hasOffensive.Should().BeTrue("IndividualOrder enum must have Offensive member");
-    }
-
-    [Fact]
-    public void IndividualOrder_HasDefensiveMember()
-    {
-        // Arrange & Act
-        var hasDefensive = typeof(IndividualOrder).GetEnumNames().Contains("Defensive");
-
-        // Assert
-        hasDefensive.Should().BeTrue("IndividualOrder enum must have Defensive member");
-    }
-
-    [Fact]
-    public void IndividualOrder_HasTowardsMiddleMember()
-    {
-        // Arrange & Act
-        var hasTowardsMiddle = typeof(IndividualOrder).GetEnumNames().Contains("TowardsMiddle");
-
-        // Assert
-        hasTowardsMiddle.Should().BeTrue("IndividualOrder enum must have TowardsMiddle member");
-    }
-
-    [Fact]
-    public void IndividualOrder_HasTowardsWingMember()
-    {
-        // Arrange & Act
-        var hasTowardsWing = typeof(IndividualOrder).GetEnumNames().Contains("TowardsWing");
-
-        // Assert
-        hasTowardsWing.Should().BeTrue("IndividualOrder enum must have TowardsWing member");
-    }
-
-    [Fact]
     public void IndividualOrder_AllMembersAreExpected()
     {
         // Arrange & Act
@@ -218,62 +106,6 @@ public class PositionOrderEnumTests
         defensive.Should().Be(2);
         towardsMiddle.Should().Be(3);
         towardsWing.Should().Be(4);
-    }
-
-    #endregion
-
-    #region Integration Tests
-
-    [Fact]
-    public void Position_CanBeConvertedToString()
-    {
-        // Arrange
-        var position = Position.Keeper;
-
-        // Act
-        var stringValue = position.ToString();
-
-        // Assert
-        stringValue.Should().Be("Keeper");
-    }
-
-    [Fact]
-    public void Position_CanBeCastFromInt()
-    {
-        // Arrange
-        const int positionValue = 0;
-
-        // Act
-        var position = (Position)positionValue;
-
-        // Assert
-        position.Should().Be(Position.Keeper);
-    }
-
-    [Fact]
-    public void IndividualOrder_CanBeConvertedToString()
-    {
-        // Arrange
-        var order = IndividualOrder.Normal;
-
-        // Act
-        var stringValue = order.ToString();
-
-        // Assert
-        stringValue.Should().Be("Normal");
-    }
-
-    [Fact]
-    public void IndividualOrder_CanBeCastFromInt()
-    {
-        // Arrange
-        const int orderValue = 0;
-
-        // Act
-        var order = (IndividualOrder)orderValue;
-
-        // Assert
-        order.Should().Be(IndividualOrder.Normal);
     }
 
     #endregion

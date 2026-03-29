@@ -4,67 +4,12 @@ namespace Hattrick.Tests.Models;
 
 /// <summary>
 /// Tests for SkillType and SkillLevel enums and their display names mapping.
-/// Verifies enum member existence, correct values, and static display name lookups.
+/// Verifies enum member existence, correct values, explicit integer assignments,
+/// correct ordering per game reference, and static display name lookups.
 /// </summary>
 public class SkillEnumTests
 {
     #region SkillType Enum Tests
-
-    [Fact]
-    public void SkillType_HasKeeperMember()
-    {
-        // Assert
-        ((SkillType)Enum.Parse(typeof(SkillType), "Keeper")).Should().Be(SkillType.Keeper);
-    }
-
-    [Fact]
-    public void SkillType_HasDefendingMember()
-    {
-        // Assert
-        ((SkillType)Enum.Parse(typeof(SkillType), "Defending")).Should().Be(SkillType.Defending);
-    }
-
-    [Fact]
-    public void SkillType_HasPlaymakingMember()
-    {
-        // Assert
-        ((SkillType)Enum.Parse(typeof(SkillType), "Playmaking")).Should().Be(SkillType.Playmaking);
-    }
-
-    [Fact]
-    public void SkillType_HasWingerMember()
-    {
-        // Assert
-        ((SkillType)Enum.Parse(typeof(SkillType), "Winger")).Should().Be(SkillType.Winger);
-    }
-
-    [Fact]
-    public void SkillType_HasScoringMember()
-    {
-        // Assert
-        ((SkillType)Enum.Parse(typeof(SkillType), "Scoring")).Should().Be(SkillType.Scoring);
-    }
-
-    [Fact]
-    public void SkillType_HasPassingMember()
-    {
-        // Assert
-        ((SkillType)Enum.Parse(typeof(SkillType), "Passing")).Should().Be(SkillType.Passing);
-    }
-
-    [Fact]
-    public void SkillType_HasSetPiecesMember()
-    {
-        // Assert
-        ((SkillType)Enum.Parse(typeof(SkillType), "SetPieces")).Should().Be(SkillType.SetPieces);
-    }
-
-    [Fact]
-    public void SkillType_HasStaminaMember()
-    {
-        // Assert
-        ((SkillType)Enum.Parse(typeof(SkillType), "Stamina")).Should().Be(SkillType.Stamina);
-    }
 
     [Fact]
     public void SkillType_HasExactlyEightMembers()
@@ -79,75 +24,124 @@ public class SkillEnumTests
     [Fact]
     public void SkillType_MembersHaveCorrectNames()
     {
-        // Act
+        // Act - GetNames returns names in declaration order
         var memberNames = Enum.GetNames(typeof(SkillType));
 
-        // Assert
-        memberNames.Should().Contain(new[]
+        // Assert - Passing must come before Scoring per game reference ordering
+        memberNames.Should().HaveCount(8).And.ContainInOrder(new[]
         {
             "Keeper", "Defending", "Playmaking", "Winger",
-            "Scoring", "Passing", "SetPieces", "Stamina"
+            "Passing", "Scoring", "SetPieces", "Stamina"
         });
     }
+
+    #region SkillType Explicit Integer Value Tests
+
+    /// <summary>
+    /// SkillType members must have explicit integer values to prevent
+    /// silent breakage if members are inserted or reordered.
+    /// Values match game reference ordering: Passing (4) before Scoring (5).
+    /// </summary>
+    [Theory]
+    [InlineData(SkillType.Keeper, 0)]
+    [InlineData(SkillType.Defending, 1)]
+    [InlineData(SkillType.Playmaking, 2)]
+    [InlineData(SkillType.Winger, 3)]
+    [InlineData(SkillType.Passing, 4)]
+    [InlineData(SkillType.Scoring, 5)]
+    [InlineData(SkillType.SetPieces, 6)]
+    [InlineData(SkillType.Stamina, 7)]
+    public void SkillType_MemberHasExplicitIntegerValue(SkillType member, int expectedValue)
+    {
+        // Assert - Each member must map to the correct integer for serialization stability
+        ((int)member).Should().Be(expectedValue,
+            $"SkillType.{member} must have explicit value {expectedValue} for serialization stability");
+    }
+
+    [Fact]
+    public void SkillType_PassingComesBeforeScoring()
+    {
+        // Assert - Game reference ordering: Passing (4) before Scoring (5)
+        ((int)SkillType.Passing).Should().BeLessThan((int)SkillType.Scoring,
+            "Passing must come before Scoring per game reference ordering");
+    }
+
+    [Fact]
+    public void SkillType_ValuesAreContiguousFromZero()
+    {
+        // Act
+        var intValues = Enum.GetValues(typeof(SkillType))
+            .Cast<int>()
+            .OrderBy(v => v)
+            .ToList();
+
+        // Assert - Values should be 0, 1, 2, 3, 4, 5, 6, 7
+        intValues.Should().BeEquivalentTo(
+            Enumerable.Range(0, 8),
+            "SkillType values must be contiguous integers starting from 0");
+    }
+
+    #endregion
 
     #endregion
 
     #region SkillLevel Enum Tests
 
     [Fact]
-    public void SkillLevel_HasAllLevelsFrom1To20()
+    public void SkillLevel_HasNoneSentinelAtZero()
     {
-        // Act
+        // Assert - None=0 sentinel must exist so default(SkillLevel) is valid
+        var none = (SkillLevel)0;
+        none.Should().Be(SkillLevel.None,
+            "SkillLevel must have a None=0 member to handle default/uninitialized values");
+    }
+
+    [Fact]
+    public void SkillLevel_DefaultIsNone()
+    {
+        // Arrange - default(enum) in C# is always 0
+        var defaultLevel = default(SkillLevel);
+
+        // Assert - default(SkillLevel) must be a defined member, not an undefined int 0
+        defaultLevel.Should().Be(SkillLevel.None,
+            "default(SkillLevel) must equal SkillLevel.None so uninitialized fields are valid");
+        Enum.IsDefined(typeof(SkillLevel), defaultLevel).Should().BeTrue(
+            "default(SkillLevel) must be a defined enum member");
+    }
+
+    [Fact]
+    public void SkillLevel_NoneHasIntegerValueZero()
+    {
+        // Assert
+        ((int)SkillLevel.None).Should().Be(0,
+            "SkillLevel.None must have integer value 0");
+    }
+
+    [Fact]
+    public void SkillLevel_HasAllLevelsFrom0To20()
+    {
+        // Act - Now includes None=0 plus Level1-Level20
         var values = Enum.GetValues(typeof(SkillLevel));
         var intValues = values.Cast<int>().ToList();
 
-        // Assert
-        intValues.Should().HaveCount(20);
+        // Assert - 21 members: None(0) + Level1(1) through Level20(20)
+        intValues.Should().HaveCount(21);
         intValues.Should().BeInAscendingOrder();
-        intValues.Min().Should().Be(1);
+        intValues.Min().Should().Be(0, "minimum should be None=0");
         intValues.Max().Should().Be(20);
-    }
-
-    [Fact]
-    public void SkillLevel_Level1Exists()
-    {
-        // Act
-        var level = (SkillLevel)1;
-
-        // Assert
-        level.Should().Be(SkillLevel.Level1);
-    }
-
-    [Fact]
-    public void SkillLevel_Level10Exists()
-    {
-        // Act
-        var level = (SkillLevel)10;
-
-        // Assert
-        level.Should().Be(SkillLevel.Level10);
-    }
-
-    [Fact]
-    public void SkillLevel_Level20Exists()
-    {
-        // Act
-        var level = (SkillLevel)20;
-
-        // Assert
-        level.Should().Be(SkillLevel.Level20);
     }
 
     [Fact]
     public void SkillLevel_AllLevelsHaveSequentialValues()
     {
-        // Act
+        // Act - Get all values sorted
         var values = Enum.GetValues(typeof(SkillLevel)).Cast<SkillLevel>().ToList();
 
-        // Assert
+        // Assert - values should be 0, 1, 2, ..., 20 (None + Level1-Level20)
         for (int i = 0; i < values.Count; i++)
         {
-            ((int)values[i]).Should().Be(i + 1);
+            ((int)values[i]).Should().Be(i,
+                $"SkillLevel member at index {i} should have integer value {i}");
         }
     }
 
@@ -156,103 +150,49 @@ public class SkillEnumTests
     #region Display Names Mapping Tests
 
     [Fact]
-    public void GetDisplayName_Level1_ReturnsNonExistent()
+    public void GetDisplayName_None_ThrowsArgumentOutOfRangeException()
     {
+        // Arrange
+        var none = SkillLevel.None;
+
         // Act
-        var displayName = SkillLevelDisplayNames.GetDisplayName(SkillLevel.Level1);
+        var act = () => SkillLevelDisplayNames.GetDisplayName(none);
 
-        // Assert
-        displayName.Should().Be("non-existent");
-    }
-
-    [Fact]
-    public void GetDisplayName_Level2_ReturnsVeryPoor()
-    {
-        // Act
-        var displayName = SkillLevelDisplayNames.GetDisplayName(SkillLevel.Level2);
-
-        // Assert
-        displayName.Should().Be("very poor");
-    }
-
-    [Fact]
-    public void GetDisplayName_Level10_ReturnsMediocre()
-    {
-        // Act
-        var displayName = SkillLevelDisplayNames.GetDisplayName(SkillLevel.Level10);
-
-        // Assert
-        displayName.Should().Be("mediocre");
-    }
-
-    [Fact]
-    public void GetDisplayName_Level20_ReturnsUtopian()
-    {
-        // Act
-        var displayName = SkillLevelDisplayNames.GetDisplayName(SkillLevel.Level20);
-
-        // Assert
-        displayName.Should().Be("utopian");
-    }
-
-    [Fact]
-    public void GetDisplayName_AllLevels_ReturnNonEmptyString()
-    {
-        // Act & Assert
-        for (int level = 1; level <= 20; level++)
-        {
-            var skillLevel = (SkillLevel)level;
-            var displayName = SkillLevelDisplayNames.GetDisplayName(skillLevel);
-            displayName.Should().NotBeNullOrEmpty($"Level {level} should have a display name");
-        }
-    }
-
-    [Fact]
-    public void GetDisplayName_AllLevels_ReturnUniqueNames()
-    {
-        // Act
-        var displayNames = new List<string>();
-        for (int level = 1; level <= 20; level++)
-        {
-            var skillLevel = (SkillLevel)level;
-            displayNames.Add(SkillLevelDisplayNames.GetDisplayName(skillLevel));
-        }
-
-        // Assert
-        var uniqueCount = displayNames.Distinct().Count();
-        uniqueCount.Should().Be(20, "All 20 levels should have unique display names");
+        // Assert - None is not a playable skill level, so GetDisplayName should reject it
+        act.Should().Throw<ArgumentOutOfRangeException>(
+            "SkillLevel.None is not a valid playable level and should not have a display name");
     }
 
     [Fact]
     public void GetDisplayName_Progression_IsMonotonic()
     {
-        // Arrange
+        // Arrange - Official Hattrick skill level denominations
         var expectedProgression = new[]
         {
             "non-existent",      // 1
-            "very poor",         // 2
-            "poor",              // 3
-            "below average",     // 4
-            "average",           // 5
-            "above average",     // 6
-            "good",              // 7
-            "very good",         // 8
+            "disastrous",        // 2
+            "wretched",          // 3
+            "poor",              // 4
+            "weak",              // 5
+            "inadequate",        // 6
+            "passable",          // 7
+            "solid",             // 8
             "excellent",         // 9
-            "mediocre",          // 10 (pivot - middle of scale)
-            "decent",            // 11
-            "competent",         // 12
-            "proficient",        // 13
-            "accomplished",      // 14
-            "formidable",        // 15
-            "exceptional",       // 16
-            "outstanding",       // 17
-            "remarkable",        // 18
-            "extraordinary",     // 19
-            "utopian"            // 20
+            "formidable",        // 10
+            "outstanding",       // 11
+            "brilliant",         // 12
+            "magnificent",       // 13
+            "world class",       // 14
+            "supernatural",      // 15
+            "titanic",           // 16
+            "extra-terrestrial", // 17
+            "mythical",          // 18
+            "magical",           // 19
+            "utopian (divine)"   // 20
         };
 
         // Act & Assert
-        for (int level = 1; level <= 20; level++)
+        for (int level = (int)SkillLevel.Level1; level <= (int)SkillLevel.Level20; level++)
         {
             var skillLevel = (SkillLevel)level;
             var displayName = SkillLevelDisplayNames.GetDisplayName(skillLevel);
@@ -262,61 +202,50 @@ public class SkillEnumTests
     }
 
     [Fact]
-    public void GetDisplayName_LowerLevels_SuggestWeakness()
+    public void GetDisplayName_UndefinedHighValue_ThrowsArgumentOutOfRangeException()
     {
-        // Act
-        var level1 = SkillLevelDisplayNames.GetDisplayName(SkillLevel.Level1);
-        var level3 = SkillLevelDisplayNames.GetDisplayName(SkillLevel.Level3);
+        // Arrange - Cast an arbitrary high integer to SkillLevel that is not a defined member
+        var undefined = (SkillLevel)99;
 
-        // Assert
-        level1.ToLower().Should().Contain("non");
-        level3.ToLower().Should().NotContain("excellent");
+        // Act
+        var act = () => SkillLevelDisplayNames.GetDisplayName(undefined);
+
+        // Assert - Undefined values must throw ArgumentOutOfRangeException, not KeyNotFoundException
+        act.Should().Throw<ArgumentOutOfRangeException>(
+            "undefined SkillLevel values must be rejected with ArgumentOutOfRangeException");
     }
 
     [Fact]
-    public void GetDisplayName_UpperLevels_SuggestExcellence()
+    public void GetDisplayName_NegativeValue_ThrowsArgumentOutOfRangeException()
     {
-        // Act
-        var level18 = SkillLevelDisplayNames.GetDisplayName(SkillLevel.Level18);
-        var level20 = SkillLevelDisplayNames.GetDisplayName(SkillLevel.Level20);
+        // Arrange - Cast a negative integer to SkillLevel
+        var negative = (SkillLevel)(-1);
 
-        // Assert
-        level18.ToLower().Should().NotContain("poor");
-        level20.Should().Be("utopian");
+        // Act
+        var act = () => SkillLevelDisplayNames.GetDisplayName(negative);
+
+        // Assert - Negative values must throw ArgumentOutOfRangeException, not KeyNotFoundException
+        act.Should().Throw<ArgumentOutOfRangeException>(
+            "negative SkillLevel values must be rejected with ArgumentOutOfRangeException");
     }
 
     [Fact]
-    public void GetDisplayName_MidpointLevel_ReturnsMediacore()
+    public void GetDisplayName_ValueJustAboveMax_ThrowsArgumentOutOfRangeException()
     {
-        // Arrange - Level 10 is the midpoint
-        var skillLevel = SkillLevel.Level10;
+        // Arrange - Cast 21 to SkillLevel (one above the maximum defined Level20=20)
+        var justAboveMax = (SkillLevel)21;
 
         // Act
-        var displayName = SkillLevelDisplayNames.GetDisplayName(skillLevel);
+        var act = () => SkillLevelDisplayNames.GetDisplayName(justAboveMax);
 
-        // Assert
-        displayName.Should().Be("mediocre");
+        // Assert - Off-by-one above max must throw ArgumentOutOfRangeException, not KeyNotFoundException
+        act.Should().Throw<ArgumentOutOfRangeException>(
+            "SkillLevel value just above the maximum (21) must be rejected with ArgumentOutOfRangeException");
     }
 
     #endregion
 
     #region Integration Tests
-
-    [Fact]
-    public void SkillTypeAndLevel_CanBeUsedTogether()
-    {
-        // Arrange
-        var skillType = SkillType.Keeper;
-        var skillLevel = SkillLevel.Level15;
-
-        // Act
-        var displayName = SkillLevelDisplayNames.GetDisplayName(skillLevel);
-
-        // Assert
-        skillType.Should().Be(SkillType.Keeper);
-        skillLevel.Should().Be(SkillLevel.Level15);
-        displayName.Should().NotBeNullOrEmpty();
-    }
 
     [Fact]
     public void AllSkillTypesAndAllSkillLevels_CanBeCreated()
@@ -325,14 +254,14 @@ public class SkillEnumTests
         var skillTypes = Enum.GetValues(typeof(SkillType)).Cast<SkillType>().ToList();
         var skillLevels = Enum.GetValues(typeof(SkillLevel)).Cast<SkillLevel>().ToList();
 
-        // Act & Assert
+        // Act & Assert - 8 skill types, 21 skill levels (None + Level1-Level20)
         skillTypes.Should().HaveCount(8);
-        skillLevels.Should().HaveCount(20);
+        skillLevels.Should().HaveCount(21);
 
-        // Verify all combinations are valid
+        // Verify all combinations of type + playable level are valid
         foreach (var type in skillTypes)
         {
-            foreach (var level in skillLevels)
+            foreach (var level in skillLevels.Where(l => l != SkillLevel.None))
             {
                 var displayName = SkillLevelDisplayNames.GetDisplayName(level);
                 displayName.Should().NotBeNullOrEmpty();

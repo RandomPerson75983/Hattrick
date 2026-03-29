@@ -1,11 +1,13 @@
 namespace Hattrick.Core.Models;
 
 /// <summary>
-/// Enumeration of skill levels from 1 to 20.
-/// Level 10 (mediocre) is the pivot/midpoint of the scale.
+/// Enumeration of skill levels from 0 (None) to 20.
+/// None (0) represents an uninitialized or invalid skill level.
+/// Level 10 (formidable) is the halfway point of the 1-20 scale.
 /// </summary>
 public enum SkillLevel
 {
+    None = 0,
     Level1 = 1,
     Level2 = 2,
     Level3 = 3,

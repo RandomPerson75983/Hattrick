@@ -30,7 +30,7 @@ You are @coder executing a single task: implement code to make tests pass.
 - Player uses `PlayerId` not `Id`
 - Repositories use `Lock _lock`
 
-Full rules: C:\Projects\BaseballManager\CLAUDE.md
+Full rules: C:\Projects\hattrick\CLAUDE.md
 
 ## Self-Review Before Reporting Done
 After implementation, verify your code against the handoff algorithm:

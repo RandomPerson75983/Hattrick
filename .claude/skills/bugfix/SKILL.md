@@ -84,7 +84,7 @@ Prompt: Read .claude/skills/sprint/coder.md
 
 Run the full test suite first:
 ```bash
-dotnet test BaseballManager.Tests/BaseballManager.Tests.csproj
+dotnet test Hattrick.Tests/Hattrick.Tests.csproj
 ```
 If tests fail, respawn @coder with failure details and re-run tests. Do NOT proceed to review with failing tests.
 
@@ -110,7 +110,7 @@ Spawn 21 review agents in batches (7-7-7). Each reviews ONLY the changed files.
 **Agent prompt:**
 ```
 Spawn agent (subagent_type: "general-purpose", name: "reviewer-XX")
-Prompt: Read C:\Projects\BaseballManager\Docs\CODE_REVIEW_AGENTS\{XX_NAME}.md
+Prompt: Read C:\Projects\Hattrick\Docs\CODE_REVIEW_AGENTS\{XX_NAME}.md
         Review ONLY these files for issues in your specialty: [changedFiles]
         Also read .claude/bugfix-handoff.json for context on what was fixed
         Report: File, line, description, severity (Critical/High/Medium/Low), suggested fix
@@ -141,7 +141,7 @@ After all 21 review agents complete, run post-review agents **sequentially**:
 
 ## Phase 3 — Final Report
 
-1. **Run full test suite:** `dotnet test BaseballManager.Tests/BaseballManager.Tests.csproj`
+1. **Run full test suite:** `dotnet test Hattrick.Tests/Hattrick.Tests.csproj`
 
 2. **Delete handoff and review files**
 

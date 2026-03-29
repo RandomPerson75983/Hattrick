@@ -1,0 +1,16 @@
+C:\\Projects\\hattrick\\Docs\\PHASE_0_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_1_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_2_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_3_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_4_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_5_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_6_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_7_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_8_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_9_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_10_PLAN.md
+C:\\Projects\\hattrick\\Docs\\IMPLEMENTATION_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_1_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_2_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_3_PLAN.md
+C:\\Projects\\hattrick\\Docs\\PHASE_7_PLAN.md

@@ -29,7 +29,7 @@ For straightforward bugs, go directly to implementation. Do NOT enter plan mode 
 
 ## Code Reviews - REQUIRED
 
-Run `/review` to spawn 23 specialized agents. Each agent reads its focus file from `Docs/CODE_REVIEW_AGENTS/`:
+Run `/review` to spawn specialized agents. Each agent reads its focus file from `Docs/CODE_REVIEW_AGENTS/`:
 
 | # | Focus | Top Issues |
 |---|-------|------------|
@@ -56,6 +56,10 @@ Run `/review` to spawn 23 specialized agents. Each agent reads its focus file fr
 | 21 | Security Basics | Hardcoded secrets, exposed internals, insecure defaults |
 | 22 | Deduplication | Post-review: removes duplicate findings across agents |
 | 23 | Validation | Post-review: verifies findings against actual code, removes false positives |
+| 24 | Phase Plan Completion | Full codebase only: verifies all plan items implemented |
+| 25 | Game Integration | Full codebase only: new systems wired into all game flows |
+| 26 | Integration Test Coverage | Full codebase only: new systems validated in integration tests |
+| 27 | API Surface | Action handlers thin, mutations have API paths, parameter validation |
 
 All agents write findings to `.claude/review-findings/{timestamp}/` (timestamped per run) for compaction resilience.
 

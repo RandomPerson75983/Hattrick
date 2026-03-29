@@ -42,18 +42,97 @@
       "WebFetch(domain:chpp.hattrick.org)",
       "WebFetch(domain:www.managerzone.com)",
       "Bash(python3:*)",
-      "Bash(pdftotext:*)"
+      "Bash(pdftotext:*)",
+      "WebFetch(domain:bunit.dev)",
+      "WebFetch(domain:en.wikipedia.org)"
     ]
   },
   "enableAllProjectMcpServers": true,
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/block-bypass-agents.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "input=$(cat); if echo \"$input\" | grep -qiE 'dotnet\\s+test'; then if tasklist /fi \"imagename eq dotnet.exe\" 2>/dev/null | grep -q \"dotnet.exe\"; then echo 'BLOCKED: A dotnet process is already running. You MUST wait for it to complete before starting another dotnet test. Running multiple test processes simultaneously causes memory exhaustion (2GB+ each) and crashes the system.' >&2; exit 2; fi; fi; exit 0"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/tdd-enforce.sh"
+          },
+          {
+            "type": "command",
+            "command": "python .claude/hooks/code-quality-check.py"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
+            "command": "bash .claude/hooks/tdd-track.sh"
+          },
+          {
+            "type": "command",
             "command": "dotnet build Hattrick/Hattrick.csproj --no-restore -v q 2>&1 | tail -5"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -Command \"[void][System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); \\$n = New-Object System.Windows.Forms.NotifyIcon; \\$n.Icon = [System.Drawing.SystemIcons]::Information; \\$n.BalloonTipTitle = 'Claude Code'; \\$n.BalloonTipText = 'Needs your attention'; \\$n.Visible = \\$true; \\$n.ShowBalloonTip(5000); Start-Sleep -Milliseconds 500; \\$n.Dispose()\""
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '--- Post-Compaction Context Reminder ---'; echo 'CONSTRAINT: Never run multiple dotnet test processes simultaneously (2GB+ each, causes OOM crashes)'; echo 'WORKFLOW: TDD pattern — @test-writer (write + verify tests fail) → @coder (implement) → @verifier (confirm pass)'; echo 'TESTING: xUnit + FluentAssertions v7 + NSubstitute. Repos=Singleton, Services=Scoped.'; echo '--- End Context ---'"
+          }
+        ]
+      },
+      {
+        "matcher": "startup|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "> .claude/hooks/tdd-session-state.txt 2>/dev/null; echo 'TDD session state reset — tests must be written before implementation.'"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "input=$(cat); ts=$(date '+%Y-%m-%d %H:%M:%S'); prompt=$(echo \"$input\" | sed -n 's/.*\"prompt\" *: *\"\\([^\"]*\\).*/\\1/p' | head -1 | cut -c1-120); if [ -n \"$prompt\" ]; then echo \"[$ts] $prompt\" >> .claude/prompt-log.txt 2>/dev/null; fi; exit 0"
           }
         ]
       }

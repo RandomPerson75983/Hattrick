@@ -41,7 +41,7 @@ Beyond proving the fix works, prove it doesn't over-correct:
 Check MauiProgram.cs for actual registration (Singleton vs Scoped) and match in test setup.
 
 ## Project Rules
-Read C:\Projects\BaseballManager\CLAUDE.md for conventions.
+Read C:\Projects\hattrick\CLAUDE.md for conventions.
 
 ## When Complete
 Update handoff file, report what tests you created, confirm they compile (expect failures — that's TDD).

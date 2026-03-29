@@ -155,7 +155,7 @@ Update sprint-state.json: advance `currentQuartet`, reset `currentStep` to "test
 ## PHASE 3 — FULL TEST SUITE
 
 ```bash
-dotnet test BaseballManager.Tests/BaseballManager.Tests.csproj
+dotnet test Hattrick.Tests/Hattrick.Tests.csproj
 ```
 
 ALL tests must pass before proceeding.
@@ -175,7 +175,7 @@ ALL tests must pass before proceeding.
 ## RECOVERY (After Compaction)
 
 1. Read `.claude/sprint-state.json`
-2. Rebuild: `dotnet build BaseballManager.Tests/BaseballManager.Tests.csproj --verbosity quiet`
+2. Rebuild: `dotnet build Hattrick.Tests/Hattrick.Tests.csproj --verbosity quiet`
 3. If `.claude/quartet-handoff.json` exists, read it for context
 4. Resume from `currentQuartet` + `currentStep`
 

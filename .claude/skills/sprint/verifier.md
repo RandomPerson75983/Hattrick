@@ -22,7 +22,7 @@ Read `.claude/triplet-handoff.json` for:
 5. Report PASS or FAIL
 
 ## Project Rules
-Read C:\Projects\BaseballManager\CLAUDE.md for conventions.
+Read C:\Projects\hattrick\CLAUDE.md for conventions.
 
 ## When Complete
 Report:

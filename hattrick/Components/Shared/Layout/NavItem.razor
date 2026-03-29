@@ -1,0 +1,23 @@
+@namespace Hattrick.Components.Shared.Layout
+
+<a href="@Href" class="nav-item @(IsActive ? "active" : "")" @onclick="OnClick">
+    <span class="nav-item-icon">@Icon</span>
+    <span class="nav-item-label">@Label</span>
+</a>
+
+@code {
+    [Parameter]
+    public string Icon { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Href { get; set; } = "/";
+
+    [Parameter]
+    public bool IsActive { get; set; } = false;
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+}

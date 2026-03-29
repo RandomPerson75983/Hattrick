@@ -1,0 +1,132 @@
+@using Bunit
+@using FluentAssertions
+@using Hattrick.Components.Shared.Layout
+
+<Fixture>
+
+    [Fact]
+    public void NavItem_WithoutProps_Renders()
+    {
+        // Arrange
+        using var ctx = new TestContext();
+
+        // Act
+        var cut = ctx.Render(@<NavItem />);
+
+        // Assert
+        cut.Markup.Should().NotBeNullOrEmpty();
+        cut.Markup.Should().Contain("<a");
+    }
+
+    [Fact]
+    public void NavItem_WithProps_RendersIconAndLabel()
+    {
+        // Arrange
+        using var ctx = new TestContext();
+
+        // Act
+        var cut = ctx.Render(@<NavItem Icon="icon-home" Label="Home" Href="/" IsActive="false" />);
+
+        // Assert
+        cut.Markup.Should().Contain("icon-home");
+        cut.Markup.Should().Contain("Home");
+        cut.Markup.Should().Contain("href=\"/\"");
+    }
+
+    [Fact]
+    public void NavItem_WithActiveTrue_HasActiveClass()
+    {
+        // Arrange
+        using var ctx = new TestContext();
+
+        // Act
+        var cut = ctx.Render(@<NavItem Icon="icon-squad" Label="Squad" Href="/squad" IsActive="true" />);
+
+        // Assert
+        var markup = cut.Markup;
+        (markup.Contains("active") || markup.Contains("nav-item-active")).Should().BeTrue();
+    }
+
+    [Fact]
+    public void NavItem_WithActiveFalse_NoActiveClass()
+    {
+        // Arrange
+        using var ctx = new TestContext();
+
+        // Act
+        var cut = ctx.Render(@<NavItem Icon="icon-squad" Label="Squad" Href="/squad" IsActive="false" />);
+
+        // Assert
+        var markup = cut.Markup;
+        markup.Contains("nav-item-active").Should().BeFalse();
+        markup.Should().NotContain("active");
+    }
+
+    [Fact]
+    public void NavItem_WithMultipleProps_RendersAllCorrectly()
+    {
+        // Arrange
+        using var ctx = new TestContext();
+
+        // Act
+        var cut = ctx.Render(@<NavItem Icon="icon-finance" Label="Finance" Href="/finance" IsActive="true" />);
+
+        // Assert
+        var markup = cut.Markup;
+        markup.Should().Contain("icon-finance");
+        markup.Should().Contain("Finance");
+        markup.Should().Contain("/finance");
+        (markup.Contains("active") || markup.Contains("nav-item-active")).Should().BeTrue();
+    }
+
+    [Fact]
+    public void NavItem_ClickHandler_FiresOnClick()
+    {
+        // Arrange
+        using var ctx = new TestContext();
+        var clicked = false;
+        var callback = EventCallback.Factory.Create(this, async () => { clicked = true; });
+
+        // Act
+        var cut = ctx.Render(@<NavItem Icon="icon-training" Label="Training" Href="/training" IsActive="false" OnClick="callback" />);
+        var link = cut.Find("a");
+        link.Click();
+
+        // Assert
+        clicked.Should().BeTrue();
+        cut.Markup.Should().Contain("nav-item");
+    }
+
+    [Fact]
+    public void NavItem_WithEmptyLabel_StillRenders()
+    {
+        // Arrange
+        using var ctx = new TestContext();
+
+        // Act
+        var cut = ctx.Render(@<NavItem Icon="icon-x" Label="" Href="/test" IsActive="false" />);
+
+        // Assert
+        cut.Markup.Should().NotBeNullOrEmpty();
+        cut.Markup.Should().Contain("icon-x");
+        cut.Markup.Should().Contain("<a");
+        cut.Markup.Should().Contain("nav-item");
+    }
+
+    [Fact]
+    public void NavItem_CssClasses_AreCorrect()
+    {
+        // Arrange
+        using var ctx = new TestContext();
+
+        // Act
+        var cut = ctx.Render(@<NavItem Icon="icon-test" Label="Test" Href="/test" IsActive="false" />);
+
+        // Assert
+        var markup = cut.Markup;
+        markup.Should().Contain("nav-item");
+        markup.Should().Contain("nav-item-icon");
+        markup.Should().Contain("nav-item-label");
+    }
+
+</Fixture>

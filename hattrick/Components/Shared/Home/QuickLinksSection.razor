@@ -1,0 +1,18 @@
+@namespace Hattrick.Components.Shared.Home
+
+<div class="quick-links-section">
+    <h3 class="panel-title">Quick Links</h3>
+    <div class="quick-links-grid">
+        @foreach (var link in Links)
+        {
+            <a href="@link.Href" class="quick-link">@link.Label</a>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public IReadOnlyList<QuickLink> Links { get; set; } = Array.Empty<QuickLink>();
+
+    public record QuickLink(string Label, string Href);
+}

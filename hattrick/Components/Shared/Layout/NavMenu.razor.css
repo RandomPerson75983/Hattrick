@@ -1,0 +1,8 @@
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    background-color: #2d5a2d;
+    color: #e0e0e0;
+    height: 100%;
+    overflow-y: auto;
+}

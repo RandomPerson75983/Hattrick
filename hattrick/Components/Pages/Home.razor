@@ -1,55 +1,37 @@
 ﻿@page "/"
+@using Hattrick.Components.Shared.Home
 
-<div class="main-menu-container">
-    <h1>Hattrick Clone</h1>
-    <p class="subtitle">Football Manager Simulation</p>
-
-    <div class="menu-buttons">
-        <button class="btn btn-primary btn-lg" @onclick="OnNewGame">
-            <span class="bi bi-plus-square"></span> New Game
-        </button>
-
-        <button class="btn btn-primary btn-lg" @onclick="OnContinueGame">
-            <span class="bi bi-play-circle"></span> Continue Game
-        </button>
-
-        <button class="btn btn-secondary btn-lg" @onclick="OnLoadGame">
-            <span class="bi bi-folder-open"></span> Load Game
-        </button>
-
-        <button class="btn btn-secondary btn-lg" @onclick="OnSettings">
-            <span class="bi bi-gear"></span> Settings
-        </button>
-
-        <button class="btn btn-outline-secondary btn-lg" @onclick="OnAbout">
-            <span class="bi bi-question-circle"></span> About
-        </button>
+<div class="home-dashboard">
+    <div class="dashboard-top-row">
+        <ClubInfoCard ClubName="FC Nordheim" Division="Division I" Fans="8 500" />
+        <UpcomingMatchesPanel Matches="@_upcomingMatches" />
     </div>
+
+    <ActivityFeed Items="@_activityItems" />
+
+    <QuickLinksSection Links="@_quickLinks" />
 </div>
 
 @code {
-    private void OnNewGame()
+    private readonly IReadOnlyList<UpcomingMatchesPanel.MatchInfo> _upcomingMatches = new[]
     {
-        // TODO: Implement new game start
-    }
+        new UpcomingMatchesPanel.MatchInfo("Week 3", "FC Rotwald"),
+        new UpcomingMatchesPanel.MatchInfo("Week 4", "SC Bergtal"),
+        new UpcomingMatchesPanel.MatchInfo("Week 5", "SV Flussheim")
+    };
 
-    private void OnContinueGame()
+    private readonly IReadOnlyList<ActivityFeed.FeedItem> _activityItems = new[]
     {
-        // TODO: Load most recent save
-    }
+        new ActivityFeed.FeedItem("match", "Won 3-1 against FC Rotwald"),
+        new ActivityFeed.FeedItem("training", "Training completed: Passing"),
+        new ActivityFeed.FeedItem("transfer", "Player listed on transfer market")
+    };
 
-    private void OnLoadGame()
+    private readonly IReadOnlyList<QuickLinksSection.QuickLink> _quickLinks = new[]
     {
-        // TODO: Open load game dialog
-    }
-
-    private void OnSettings()
-    {
-        // TODO: Open settings page
-    }
-
-    private void OnAbout()
-    {
-        // TODO: Show about/help dialog
-    }
+        new QuickLinksSection.QuickLink("Set Lineup", "/lineup"),
+        new QuickLinksSection.QuickLink("View Squad", "/players"),
+        new QuickLinksSection.QuickLink("Check Finances", "/finance"),
+        new QuickLinksSection.QuickLink("Transfer Market", "/transfers")
+    };
 }

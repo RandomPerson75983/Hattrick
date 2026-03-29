@@ -1,0 +1,19 @@
+@namespace Hattrick.Components.Shared.Home
+
+<div class="club-info-card">
+    <div class="club-badge"></div>
+    <h2 class="club-name">@ClubName</h2>
+    <span class="club-division">@Division</span>
+    <span class="club-fans">@Fans</span>
+</div>
+
+@code {
+    [Parameter]
+    public string ClubName { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Division { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Fans { get; set; } = string.Empty;
+}

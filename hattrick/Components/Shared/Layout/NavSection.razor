@@ -1,0 +1,33 @@
+@namespace Hattrick.Components.Shared.Layout
+
+<div class="nav-section">
+    <div class="nav-section-header" @onclick="HandleToggle">
+        <span class="collapse-icon">@(IsExpanded ? "▼" : "▶")</span>
+        <span class="title">@Title</span>
+    </div>
+    @if (IsExpanded)
+    {
+        <div class="nav-section-content @(IsExpanded ? "expanded" : "collapsed")">
+            @ChildContent
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool IsExpanded { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<bool> OnToggle { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private async Task HandleToggle()
+    {
+        await OnToggle.InvokeAsync(!IsExpanded);
+    }
+}

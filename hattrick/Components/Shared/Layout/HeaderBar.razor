@@ -1,0 +1,67 @@
+@namespace Hattrick.Components.Shared.Layout
+
+<header class="header-bar">
+    <a href="/" class="header-logo">
+        <span class="logo-text">hattrick</span>
+    </a>
+
+    <div class="header-team-info">
+        <span class="team-name">@TeamName</span>
+        <span class="team-status">@TeamStatus</span>
+    </div>
+
+    <div class="header-center">
+        <span class="page-title">@PageTitle</span>
+    </div>
+
+    <div class="header-stats">
+        @if (!string.IsNullOrEmpty(Budget))
+        {
+            <div class="stat-item">
+                <span class="stat-label">Budget</span>
+                <span class="stat-value">@Budget</span>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(Fans))
+        {
+            <div class="stat-item">
+                <span class="stat-label">Fans</span>
+                <span class="stat-value">@Fans</span>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(TeamSpirit))
+        {
+            <div class="stat-item">
+                <span class="stat-label">Spirit</span>
+                <span class="stat-value">@TeamSpirit</span>
+            </div>
+        }
+    </div>
+
+    <div class="header-user-menu">
+        <button class="user-menu-btn" @onclick="OnSettingsClick">Settings</button>
+    </div>
+</header>
+
+@code {
+    [Parameter]
+    public string TeamName { get; set; } = string.Empty;
+
+    [Parameter]
+    public string TeamStatus { get; set; } = string.Empty;
+
+    [Parameter]
+    public string PageTitle { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Budget { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Fans { get; set; } = string.Empty;
+
+    [Parameter]
+    public string TeamSpirit { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback OnSettingsClick { get; set; }
+}

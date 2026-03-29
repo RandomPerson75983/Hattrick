@@ -1,0 +1,21 @@
+@namespace Hattrick.Components.Shared.Home
+
+<div class="upcoming-matches-panel">
+    <h3 class="panel-title">Upcoming Matches</h3>
+    <div class="match-list">
+        @foreach (var match in Matches)
+        {
+            <div class="match-item">
+                <span class="match-date">@match.Date</span>
+                <span class="match-opponent">@match.Opponent</span>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public IReadOnlyList<MatchInfo> Matches { get; set; } = Array.Empty<MatchInfo>();
+
+    public record MatchInfo(string Date, string Opponent);
+}

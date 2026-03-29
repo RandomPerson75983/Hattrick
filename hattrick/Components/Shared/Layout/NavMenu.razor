@@ -1,0 +1,32 @@
+@namespace Hattrick.Components.Shared.Layout
+
+<nav class="nav-menu">
+    <NavSection Title="Club" IsExpanded="@_clubExpanded" OnToggle="@(expanded => _clubExpanded = expanded)">
+        <NavItem Icon="H" Label="My Office" Href="/" IsActive="false" />
+        <NavItem Icon="P" Label="Players" Href="/players" IsActive="false" />
+        <NavItem Icon="Y" Label="Youth" Href="/youth" IsActive="false" />
+    </NavSection>
+
+    <NavSection Title="Match" IsExpanded="@_matchExpanded" OnToggle="@(expanded => _matchExpanded = expanded)">
+        <NavItem Icon="L" Label="Lineup" Href="/lineup" IsActive="false" />
+        <NavItem Icon="M" Label="Match" Href="/match" IsActive="false" />
+    </NavSection>
+
+    <NavSection Title="Development" IsExpanded="@_developmentExpanded" OnToggle="@(expanded => _developmentExpanded = expanded)">
+        <NavItem Icon="T" Label="Training" Href="/training" IsActive="false" />
+        <NavItem Icon="X" Label="Transfers" Href="/transfers" IsActive="false" />
+        <NavItem Icon="C" Label="Cup" Href="/cup" IsActive="false" />
+    </NavSection>
+
+    <NavSection Title="Management" IsExpanded="@_managementExpanded" OnToggle="@(expanded => _managementExpanded = expanded)">
+        <NavItem Icon="S" Label="Season" Href="/season" IsActive="false" />
+        <NavItem Icon="F" Label="Finance" Href="/finance" IsActive="false" />
+    </NavSection>
+</nav>
+
+@code {
+    private bool _clubExpanded = true;
+    private bool _matchExpanded = true;
+    private bool _developmentExpanded = true;
+    private bool _managementExpanded = true;
+}

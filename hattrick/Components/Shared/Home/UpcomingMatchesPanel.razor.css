@@ -1,0 +1,47 @@
+.upcoming-matches-panel {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.upcoming-matches-panel:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    margin: 0 0 16px 0;
+}
+
+.match-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.match-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    border-left: 3px solid #4CAF50;
+}
+
+.match-date {
+    font-size: 12px;
+    color: #888888;
+    flex-shrink: 0;
+}
+
+.match-opponent {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+}

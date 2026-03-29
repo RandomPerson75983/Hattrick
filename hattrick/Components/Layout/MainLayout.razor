@@ -1,17 +1,16 @@
-﻿@inherits LayoutComponentBase
+﻿@using Hattrick.Components.Shared.Layout
+@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<div class="app-layout">
+    <HeaderBar TeamName="My Club" TeamStatus="Season 1, Week 1" />
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+    <div class="app-body">
+        <aside class="sidebar">
+            <NavMenu />
+        </aside>
 
-        <article class="content px-4">
+        <main class="main-content">
             @Body
-        </article>
-    </main>
+        </main>
+    </div>
 </div>

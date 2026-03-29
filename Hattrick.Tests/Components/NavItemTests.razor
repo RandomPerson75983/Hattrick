@@ -19,16 +19,15 @@
     }
 
     [Fact]
-    public void NavItem_WithProps_RendersIconAndLabel()
+    public void NavItem_WithProps_RendersLabel()
     {
         // Arrange
         using var ctx = new TestContext();
 
         // Act
-        var cut = ctx.Render(@<NavItem Icon="icon-home" Label="Home" Href="/" IsActive="false" />);
+        var cut = ctx.Render(@<NavItem Label="Home" Href="/" IsActive="false" />);
 
         // Assert
-        cut.Markup.Should().Contain("icon-home");
         cut.Markup.Should().Contain("Home");
         cut.Markup.Should().Contain("href=\"/\"");
     }
@@ -40,7 +39,7 @@
         using var ctx = new TestContext();
 
         // Act
-        var cut = ctx.Render(@<NavItem Icon="icon-squad" Label="Squad" Href="/squad" IsActive="true" />);
+        var cut = ctx.Render(@<NavItem Label="Squad" Href="/squad" IsActive="true" />);
 
         // Assert
         var markup = cut.Markup;
@@ -54,7 +53,7 @@
         using var ctx = new TestContext();
 
         // Act
-        var cut = ctx.Render(@<NavItem Icon="icon-squad" Label="Squad" Href="/squad" IsActive="false" />);
+        var cut = ctx.Render(@<NavItem Label="Squad" Href="/squad" IsActive="false" />);
 
         // Assert
         var markup = cut.Markup;
@@ -69,11 +68,10 @@
         using var ctx = new TestContext();
 
         // Act
-        var cut = ctx.Render(@<NavItem Icon="icon-finance" Label="Finance" Href="/finance" IsActive="true" />);
+        var cut = ctx.Render(@<NavItem Label="Finance" Href="/finance" IsActive="true" />);
 
         // Assert
         var markup = cut.Markup;
-        markup.Should().Contain("icon-finance");
         markup.Should().Contain("Finance");
         markup.Should().Contain("/finance");
         (markup.Contains("active") || markup.Contains("nav-item-active")).Should().BeTrue();
@@ -88,7 +86,7 @@
         var callback = EventCallback.Factory.Create(this, async () => { clicked = true; });
 
         // Act
-        var cut = ctx.Render(@<NavItem Icon="icon-training" Label="Training" Href="/training" IsActive="false" OnClick="callback" />);
+        var cut = ctx.Render(@<NavItem Label="Training" Href="/training" IsActive="false" OnClick="callback" />);
         var link = cut.Find("a");
         link.Click();
 
@@ -104,11 +102,10 @@
         using var ctx = new TestContext();
 
         // Act
-        var cut = ctx.Render(@<NavItem Icon="icon-x" Label="" Href="/test" IsActive="false" />);
+        var cut = ctx.Render(@<NavItem Label="" Href="/test" IsActive="false" />);
 
         // Assert
         cut.Markup.Should().NotBeNullOrEmpty();
-        cut.Markup.Should().Contain("icon-x");
         cut.Markup.Should().Contain("<a");
         cut.Markup.Should().Contain("nav-item");
     }
@@ -120,12 +117,11 @@
         using var ctx = new TestContext();
 
         // Act
-        var cut = ctx.Render(@<NavItem Icon="icon-test" Label="Test" Href="/test" IsActive="false" />);
+        var cut = ctx.Render(@<NavItem Label="Test" Href="/test" IsActive="false" />);
 
         // Assert
         var markup = cut.Markup;
         markup.Should().Contain("nav-item");
-        markup.Should().Contain("nav-item-icon");
         markup.Should().Contain("nav-item-label");
     }
 

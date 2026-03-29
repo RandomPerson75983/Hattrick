@@ -30,14 +30,6 @@
     font-weight: 600;
 }
 
-.nav-item-icon {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    text-align: center;
-    font-weight: 600;
-}
-
 .nav-item-label {
     white-space: nowrap;
     overflow: hidden;

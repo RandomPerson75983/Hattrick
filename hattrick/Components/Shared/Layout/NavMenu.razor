@@ -1,32 +1,56 @@
 @namespace Hattrick.Components.Shared.Layout
 
 <nav class="nav-menu">
-    <NavSection Title="Club" IsExpanded="@_clubExpanded" OnToggle="@(expanded => _clubExpanded = expanded)">
-        <NavItem Icon="H" Label="My Office" Href="/" IsActive="false" />
-        <NavItem Icon="P" Label="Players" Href="/players" IsActive="false" />
-        <NavItem Icon="Y" Label="Youth" Href="/youth" IsActive="false" />
+    <NavSection Title="My office" IsExpanded="@_myOfficeExpanded" OnToggle="@(expanded => _myOfficeExpanded = expanded)">
+        <NavItem Label="My Office" Href="/" IsActive="false" />
+        <NavItem Label="Mailbox" Href="/mailbox" IsActive="false" />
     </NavSection>
 
-    <NavSection Title="Match" IsExpanded="@_matchExpanded" OnToggle="@(expanded => _matchExpanded = expanded)">
-        <NavItem Icon="L" Label="Lineup" Href="/lineup" IsActive="false" />
-        <NavItem Icon="M" Label="Match" Href="/match" IsActive="false" />
+    <NavSection Title="@ClubName" IsExpanded="@_clubExpanded" OnToggle="@(expanded => _clubExpanded = expanded)">
+        <NavItem Label="Club" Href="/club" IsActive="false" />
+        <NavItem Label="Manager" Href="/manager" IsActive="false" />
+        <NavItem Label="Stadium" Href="/stadium" IsActive="false" />
+        <NavItem Label="Staff" Href="/staff" IsActive="false" />
+        <NavItem Label="Fans" Href="/fans" IsActive="false" />
+        <NavItem Label="Transfers" Href="/transfers" IsActive="false" />
+        <NavItem Label="Finances" Href="/finance" IsActive="false" />
     </NavSection>
 
-    <NavSection Title="Development" IsExpanded="@_developmentExpanded" OnToggle="@(expanded => _developmentExpanded = expanded)">
-        <NavItem Icon="T" Label="Training" Href="/training" IsActive="false" />
-        <NavItem Icon="X" Label="Transfers" Href="/transfers" IsActive="false" />
-        <NavItem Icon="C" Label="Cup" Href="/cup" IsActive="false" />
+    <NavSection Title="Senior team" IsExpanded="@_seniorExpanded" OnToggle="@(expanded => _seniorExpanded = expanded)">
+        <NavItem Label="Players" Href="/players" IsActive="false" />
+        <NavItem Label="Lineup" Href="/lineup" IsActive="false" />
+        <NavItem Label="Matches" Href="/match" IsActive="false" />
+        <NavItem Label="Series" Href="/season" IsActive="false" />
+        <NavItem Label="Cup" Href="/cup" IsActive="false" />
+        <NavItem Label="Training" Href="/training" IsActive="false" />
+        <NavItem Label="Challenges" Href="/challenges" IsActive="false" />
     </NavSection>
 
-    <NavSection Title="Management" IsExpanded="@_managementExpanded" OnToggle="@(expanded => _managementExpanded = expanded)">
-        <NavItem Icon="S" Label="Season" Href="/season" IsActive="false" />
-        <NavItem Icon="F" Label="Finance" Href="/finance" IsActive="false" />
+    <NavSection Title="Youth Team" IsExpanded="@_youthExpanded" OnToggle="@(expanded => _youthExpanded = expanded)">
+        <NavItem Label="Overview" Href="/youth" IsActive="false" />
+        <NavItem Label="Players" Href="/youth/players" IsActive="false" />
+        <NavItem Label="Matches" Href="/youth/matches" IsActive="false" />
+        <NavItem Label="Series" Href="/youth/series" IsActive="false" />
+        <NavItem Label="Training" Href="/youth/training" IsActive="false" />
+        <NavItem Label="Challenges" Href="/youth/challenges" IsActive="false" />
+    </NavSection>
+
+    <NavSection Title="Hattrick Arena" IsExpanded="@_arenaExpanded" OnToggle="@(expanded => _arenaExpanded = expanded)">
+        <NavItem Label="Overview" Href="/arena" IsActive="false" />
+        <NavItem Label="Matches" Href="/arena/matches" IsActive="false" />
+        <NavItem Label="Tournaments" Href="/arena/tournaments" IsActive="false" />
+        <NavItem Label="Ladders" Href="/arena/ladders" IsActive="false" />
+        <NavItem Label="Duels" Href="/arena/duels" IsActive="false" />
     </NavSection>
 </nav>
 
 @code {
+    [Parameter]
+    public string ClubName { get; set; } = "FC Nordheim";
+
+    private bool _myOfficeExpanded = true;
     private bool _clubExpanded = true;
-    private bool _matchExpanded = true;
-    private bool _developmentExpanded = true;
-    private bool _managementExpanded = true;
+    private bool _seniorExpanded = true;
+    private bool _youthExpanded = true;
+    private bool _arenaExpanded = true;
 }

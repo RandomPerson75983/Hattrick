@@ -1,0 +1,1597 @@
+# Hattrick Manual Reference
+# Source: hattrick.org/Help/Rules/Complete.aspx
+# Purpose: Reference only - rewrite in our own words for in-game help
+# DO NOT copy text directly into the game
+
+1. Introduction
+2. Players: Skills
+3. Players: Other Attributes
+4. Lineup: The Basics
+5. Match: The basics
+6. Training
+7. The Coach
+8. Finances
+9. Fans and Sponsors
+10. The stadium
+11. Staff
+12. Lineup: Experience and confusion
+13. Match: Set pieces and special events
+14. Match: Tactics
+15. Match: Substitutions and Team Orders
+16. Psychology
+17. Transfers
+18. Youth Players
+19. The series system
+20. The cup system
+21. Friendlies
+22. Hattrick Arena competitions
+23. National teams
+24. Hattrick Masters
+25. Additional club
+26. Team Rankings
+Entire manual in a HUGE page
+ 
+Appendix 1. The Hattrick Week
+Appendix 2. Denominations
+Appendix 3. Currencies
+Appendix 4. Transfer Fees
+ 
+ 
+  
+  
+  
+  
+  
+  
+ Star Nebula V.1 USA 3/29/2026 00:09:3 425 online, week 16
+00:06 Welcome bkwusa
+Introduction
+This is the manual for Hattrick. For a quicker introduction to the game go to the beginners' guide.
+Hattrick is a game where you get to lead a virtual football team to glory, in competition with otherparticipants from all over the world.
+Hattrick is a simple game, it's easy to grasp the basics. You can play Hattrick even if you just log in onceor twice a week (but we hope to see you more often). The challenge is not to beat the game, thechallenge lies within the competition with the other participants. While competing, many participantsbecome friends, making Hattrick also a social game.
+Your overall tasks
+You perform the duties of both manager and club owner. You plan tactics and strategy, decide what totrain and select which players that should play. You buy and sell players, invest in stadium improvementsand much more. To be successful a good piece of advice is to form a good strategy and a long termplan. Success and glory will not come for free, after all.
+Your new team
+When you take charge of your team, it will have just got a vacant slot in a series in one of the two lowestdivisions in the Hattrick series system. To start your climb upwards you get a squad of players (somemight be talented and some might not…), a stadium and some money to your aid. Now it's time for you toshow your magic.
+Don't worry about second thoughts when it comes to your team name. You can always change your teamname in between seasons, but it will cost you 10 000 US$ as match kits and marketing material etc.must be changed. You will also lose 3% of your fan club members, as some hardcore fans will not forgiveyou for abandoning the old name.
+Region and weather
+Your team belongs to region, a region which you probably have a relation to. Regions are there so youcan check out other people from the same area as you. Another important function is that each regionhas its own weather. No regions have better weather than others, all regions are equally good so youdon't have to worry about making a bad choice.
+Weather affects a couple of things, but most importantly attendance (less people will watch your gameswhen it's raining) and players' performance. Weather is not totally random, a sunny day is more like to befollowed by another sunny day than by a rainy one.
+At the "Region" page you can see what the weather is like today and how it will be tomorrow. You can usethis information to perfect your match orders the day before your match.
+If you want, you can change region in the season break. It will however cost you 10 000 US$ and 3% ofyour fans will leave your fan club.
+Our best piece of advice
+The best piece of advice we can give you is to read this manual. You don't need to read everything atonce, just reading the first chapters to start with will give you a good clue how to play the game. If thereis any other advice it would be to ask any question you may have in our forums. There is actually a forumdesigned just for questions.
+There is only one thing we insist on: to give you and everyone else the best Hattrick experience there aresome very simple rules of conduct to follow which you can find in our house rules.
+Players: Skills
+Each player has 8 basic skills, while there are also some additional factors affecting their performance indifferent situations.
+Stamina: Decides how much of his ability to perform a player loses during the course of the match.
+Playmaking: The ability to control the ball and turn it into scoring opportunities.
+Scoring: The ball is supposed to go into the net.
+Winger: The ability to finish off scoring opportunities by advancing down the sides
+Goalkeeping:The ball should not make it into your own net.
+Help »  Manual »  Introduction  Manual
+Appendices
+ 
+Help
+OverviewBeginners' guideManualHouse rulesSystem InformationContact UsReport suspectedcheatersAbout HattrickHattrick SupporterHattrick GearsTerms of UsePrivacyDownloads
+My ClubWorldCommunityForum HelpShopbkw
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 1/43
+
+Passing: Players who know how to play the decisive pass are a great help for the team's attack.
+Defending: The ability to stop opponent attacks.
+Set pieces: The outcome of your free kicks and penalties depends on how skilled your set piecestaker is.
+How good is your player?
+In real life you say a football player is a "quite OK winger" or a "really good defender" when you see himplay. In Hattrick, we do the same to describe how good players are. We use denominations (and not onlyfor players), and for players' skills the scale goes from non-existent to divine. You can see the fulldenomination scales in our appendix.
+Different players need different skills
+All players don't need to be good in all skills, but stamina is important for everyone.  Sometimes it isgood enough if a player is good in just one skill (other than stamina), but you will get the most out ofyour player if he is good in several skills.  Which skills (apart from stamina) a player benefits fromdepends on the position he will play:
+Goalkeepers:
+Goalkeeping is needless to say important for goalkeepers. They also make use out of being gooddefenders, whilst set pieces helps to defend against free kicks and penalties.
+Central Defenders:
+Defenders should naturally have a lot of defending. Playmaking is also beneficial, and their passing skillreally makes a difference when counter-attacking.
+Wingbacks:
+Defending is most important, but they also benefit a lot from being good wingers. They contribute a littlewith their playmaking skill, and passing helps when counter-attacking.
+Inner Midfielders:
+Having good playmaking in the inner midfield positions is a key ingredient for most successful teams.They also use their passing and defending skills a lot and a fair amount of scoring.
+Wingers:
+Naturally profit from being good wingers, but playmaking is also important. In addition, they also useboth their passing and defending skill.
+Forwards:
+Their number one task is to score goals, making scoring their number one skill. Passing is also valuable,and so is winger and playmaking.
+Changes in skills
+The skills slowly change over time. All skills can be improved by training as long as the player lives, butas players get older they will also start losing a little of their skills. Everything about changes in skills isdescribed in the chapter about training.
+Players: Other Attributes
+Age
+Every player has a birthday and will age one year for every Hattrick season played. Players in the seniorsquad will be at least 17 years old; youth team players may be younger.
+The Hattrick season, and a player year, is 112 days. A player's age is presented in years and days. Thereis no maximum age for Hattrick players.
+Age itself does not impact a player's performance, but it will become harder to train and maintain skillsand stamina as a player ages.
+Experience and loyalty are attributes that can offset this as they generally improve with age.
+Personality
+All players have a personality. They can be nice or nasty, leaders or loners, temperamental or calm. Skillsmatter more on the pitch than personality, but it's for example wise to appoint a team captain with goodleader abilities. More info about how personality affects the game is found in the psychology chapter.
+Experience
+Players who have played many and important matches become more experienced, and this experiencewill help them in future games in various ways. Being experienced can influence special events to score
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 2/43
+
+or concede goals, and help teams avoid disorganisation, among other things. We track experience as aseparate value, one which is not related to the skills of a player. Every match played, and every type ofmatch played, has a different effect on how quickly a player accumulated experience. In total, a playerneeds about 100 experience points to reach a new level of experience. The points earned for each matchtype are presented in the following table.
+Match Type Experience Points
+League Match 3.5
+Qualification Match 7
+Main Cup match 7
+Secondary Cup match 1.75
+Friendly Match 0.35
+International Friendly 0.7
+HT Masters match 17.5
+Youth League Match 3.5
+Youth Friendly Match 0.35
+(Old) World Cup match 35
+(Old) World Cup finals match 70
+(Old) National Team friendly 7
+World Cup match 28
+World Cup (Semi and Final) 56
+World Cup (Wildcards) 14
+Continental Cups 14
+Continental Cups (Quarter, Semi and Final) 21
+Nations Cup 7
+Nations Cup (Knockout) 14
+National Team friendly 3.5
+Contender League 7
+Loyalty
+Players with high loyalty to the club perform better on the pitch. Loyalty increases with time spent at theclub.
+There are two types of loyalty:
+Player loyalty bonus
+For each consecutive day you have a player in your team, he will get a little bit more attached and loyal toyour team. And the more attached and loyal he gets, the better he will play.
+Loyalty is gained faster in the beginning, then slower and slower over time. Maximum loyalty is reachedafter three seasons, but the halfway point is reached after 12 weeks.
+Maximum bonus: +1 skill level on all skills (stamina excluded)
+Example: Tommy Wright is a solid playmaker with passable defending, and he has max (divine) loyalty. Hewill then perform as if he was an excellent playmaker with solid defending (and this will also be reflected inhis star rating).
+When a player reaches divine loyalty he gets the full bonus. Your youth players start with divine loyalty.
+Please note that a player loses his loyalty to your club if you sell him to another club. So if you later buyhim back, you have to build up his loyalty from scratch again.
+Mother Club Bonus
+Players that play for their mother club, such as your youth players, and have done so through their wholecareer always give a little bit extra on the pitch, as they hold a special place for the club in their hearts.
+Bonus: +0.5 skill level on all skills (stamina excluded).
+Players that have been playing for their mother club their whole career are indicated with a heart icon ontheir player page. Please note that any youth players sold and then re-bought will not get this bonus.
+Gaining both bonuses
+It is perfectly possible for a player to get both bonuses. So when you promote a youth player (it naturallydoesn't matter which youth system you use) to your senior squad, he will get a 1.5 skill level bonus on allskills (excluding stamina) until you sell him.
+Total Skill Index (TSI)
+Total Skill Index is a measurement of how skilled a player is. TSI increases with training and can alsoincrease (and decrease) with form.
+Form
+The better form a player is in, the better he will perform. It's not about the physical context though, it hasnothing to do with how well trained a player is. Form in Hattrick reflects a combination of aspects
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 3/43
+
+making it possible for, or preventing a player, from reaching his full potential – like for example how hisprivate situation in life is at the moment.
+On the player page you can see a player's "current form". It's the figure applied for matches. An "excellent(8)" player in "wretched (2)" form is usually worse off than a "passable (6)" player in "solid (7)" form forexample. Current form is negatively affected by the amount of stamina training in the team; the morestamina you train (percentage-wise) the more negative effect.
+Additionally, there's a hidden "background form", which is used to compute where the player's form isheading. Each week, during training, the current form of every player will change, moving towards thehidden background form. Current form is not changed immediately to the figure of background form.Instead it moves in steps over several weeks, though the further away from background form they are thelarger the steps will be.
+After current form has been changed during training, there is a chance that background form is changedfor each player. Every player has the same individual chance of having his background form change, andthere is nothing you can do to influence this chance. However, when chance decrees that a player'sbackground form will change, there are several factors that influence what the new background form willbe:
+If a player has participated in a match during the week. This is very important!
+Training Intensity – the harder you train, the better form in general
+Your coach – the better skilled he is, the better form in general
+Form Coach - a Form Coach is specialised in improving form.
+Assistant Coaches – Assistants also help improve form
+Speciality
+About half of all players have a characteristic called a "Speciality", which has an impact on matches. Anyplayer with a Speciality receives a salary bonus of 10%.
+There are 5 different main specialities available for players: "Technical", "Quick", "Head", "Powerful" and"Unpredictable". Every main speciality has a good and a bad side, explained in the Special Eventschapter. Specialities can also be useful for certain tactic types as explained in the Tactics chapter.
+Two rare specialties also exist: Resilient and Support. Players with the resilient speciality will find theirinjuries heal slightly faster than for other players, and might overcome a light injury during a match.Support players will try to help team-mates that are close by on the field. If successful, this makes theteam-mates perform better, but it can also, if not successful, cause a drop in organisation for the wholeteam.
+Injuries
+Players can get injured, and part of your job as a manager is to prepare for this eventuality. As amanager, you can do several things to reduce the risk of injury and make sure to have available backupplayers in case something happens.
+The injury risk will increase if you maintain a high training intensity. You can also control injury riskthrough the staff you hire. Every level of assistant coach you hire will increase the risk while hiring skilledmedics will reduce it.
+Most injuries will happen during matches. Their severity can range from a slight bruise to more severeinjuries that may take several weeks to recover from. Again, having a medic on staff will reduce therecovery time. Your player's age is essential here, as well. Older players will always need more time torecover.
+Recovery time is measured in weeks, but this number takes into account the effect your hired staff has.This means that if you get rid of your medic, estimated injury times may go up. For players that approachtheir forties, even light injuries may prove impossible to recover from.
+Players may also pick up lighter injuries during training. Such bruises will not prevent a player fromplaying a match, but the player will perform slightly worse during the game if he plays. Moreover, while abruised player does not run a higher risk of getting injured, if he does get another injury, it will be moresevere than it would otherwise have been.
+Yellow and red cards
+Players may get booked or sent off during games, highly aggressive players (especially those with lowhonesty and lacking experience) more often than others. 2 bookings during a match will automaticallylead to the player getting sent off. Getting sent off means that the player is suspended from the nextcompetitive game. A player will also be suspended for one match after accumulating 3 bookings fromcompetitive games during a season. Bookings from league, cup, and qualifying games are all counted asthe same. If a player has already been booked twice in league matches one season, and receives anotherbooking in a following cup match, he will be suspended from the next competitive match, regardless of ifit's a league match, cup match or qualifier.
+You can check your players list for how many bookings your players have received before a match. Aplayer who has accumulated 3 bookings or has been sent off in his last match will have a red cardsymbol on the players list, to show his suspension. The suspended players booking slate is wiped whena competitive match has been played. Also, all player slates are wiped at the end of the season.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 4/43
+
+Transfers do not affect player slates. A player can't get a suspension (or get his slate wiped) from afriendly game.
+Lineup: The Basics
+As the manager for your team you decide how your team will play and which formation to use. Beforeeach match you submit your decision – your match orders – through the order form found in the matchlist. Your match orders need to be submitted at least 20 minutes before the start of the game, butremember that the watch of the referee may not agree with yours, so try to avoid last-minute orders ifyou can. You can also make a match order a "standard setup" (which we recommend you to do forreasons of precaution). This means that Hattrick will assume this setup for future games but you canalways adjust your setup according to the particular circumstances affecting matches ahead.
+Starting Lineup and Substitutes
+For each match you select your starting eleven players, your substitutes, your set pieces taker and yourteam captain. In the order form you choose which player goes where by drag and drop.
+If one of your players gets injured, the substitute for that position will enter the pitch. If you don't have asubstitute assigned to a certain position, or if the substitute is injured as well, one of the othersubstitutes will automatically get selected to play.
+Any substitute entering as an injury replacement will use the individual order you assigned to him, if onehas been set. If none has been set, he will inherit the behaviour of the injured player. If you don't have anyable substitutes you'll have to continue the game with 10 players. If you're out of subs and yourgoalkeeper gets injured (or if you haven't named any), an outfield player will move to that spot. You canalso set up conditional substitutions. See the substitutions chapter for more info.
+Walkovers
+Remember that you must start your league or cup games with at least 9 players.
+If your lineup contains fewer than 9 players, but you have players available in your squad, other clubfunctionaries will step in and name a team for the particular match. In such matches, your team will havelower team spirit, form, confidence and formation experience compared to if you had submitted thelineup yourself. The effect lasts only for one match, and players will still receive training for the match.
+If there are not enough players in the squad for a valid lineup, your team will do a walk-over. This alsopenalises the team in the way described above, but in this case the negative effects will also carry overto future matches. In the case of a walk-over, training effects are also lost.
+If you fail to field at least 9 players in non-competitive or youth matches, then the boys from theneighbourhood will replace your team. Contrary to competitive matches, this will not have a negativeimpact on the training received by players who have been fielded in a competitive match that week.
+Choosing team formation
+You can play with any formation that can be created in the interface; your training page also includes thefull formation list.
+Worth knowing is that when more than one player plays in a central position (central defender, innermidfielder or forward); they will not be able to contribute to the team ratings with their full capacity. Thiscontribution loss is also greater for three players than for two. The logic behind this is that as soon asmore than one player plays in the same area, they start to rely on each other and thus aren't able tocontribute with their whole capacity.
+In short, a sole player in a central position contributes to 100%. Using two players in a central positionmeans a contribution loss (affecting both), and using three means a bigger loss (affecting all three). Thisloss affects all skills of the player.
+The size of the contribution loss is bigger for inner midfielders than for forwards, and bigger for forwardsthan for defenders. More exactly the loss for inner midfielders is around twice that of defenders, withforwards roughly in the middle of the two.
+Tactics and team attitude
+In the order form you can also set your team's tactic (if any) and the team's attitude for that particularmatch. The different tactic types are described in the Match: Tactics chapter and team attitude isexplained in the Psychology chapter.
+Man Marking Order
+With man marking, you instruct one of your players to follow and try to neutralize a key player on theopposing team. Man marking is never without risks, so use it with care - but with the right player and theright timing, it can be an efficient way to even out the odds in a match.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 5/43
+
+The principle is that you order one of your players to shadow and obstruct a specific player on theopposing team. If the opponent player is on the field, this order triggers after 5 minutes and your playerwill contribute a lot less to your team than he would normally do. In specific, your player contributes 50%less if the opponent is close and 65% less if he is further away. The benefit for you is that, hopefully, thecontribution of the target will also decrease. This depends on how efficient your player is as a manmarker. The trick is, of course, to find the situations where man marking pays off and avoid the oneswhere it will not.
+A player that is given man marking instructions can not be given other instructions: This means thatgiving a player man marking orders cancels out any order he has already received about going offensive,defensive, to the wing or to the middle.
+You can only give one man marking order per match to any of your Defenders, Wingbacks and InnerMidfielders and only with a Forward, Winger or Inner Midfielder on the other team as a target. If theplayer targeted does not show up, or if he plays in a non-markable position, the order becomes void, butyour player will still suffer 10% of his contribution. However, a man marking order that has not triggeredat the start may become active later in the match, if the target is substituted into the game or if hechanges into a markable position.
+While a man-marking order is in effect, a player will not contribute with their skills to team tactics (suchas Pressing or Counter-Attack). However, he will contribute to tactics with his skills if the man-markingorder has not triggered, but only after the 10 % penalty mentioned above is considered.
+The defending skill is what matters most for your Man Marker. It is compared to the highest skill of thetarget player. This check decides how big the penalty will be to the contribution of the target player.Powerful players get a large boost (10%) to their defending skill during man marking calculation, andplayers with no speciality get a smaller one (5%). For the targets, having the Technical speciality will giveyou a penalty on their highest skill (-8%) during the man marking calculation, whereas Unpredictableplayers get a boost (+8%). Form, stamina, experience, loyalty, homegrown, and health are important toboth man markers and target players. Note that all these bonuses and penalties due to specialities aretaken into account only to calculate the man marking effect, and are not considered for the ratings.
+Any penalty for the marking player affects all skills, except Goalkeeping and Set pieces. Penalties to thetarget player also excludes Defending.
+Individual orders
+You can give all your outfield players on the pitch individual orders. You can for example order your innermidfielder to play "defensive". This means he's still an inner midfielder, but he concentrates more on thedefensive side than normal, and less on attacking. There are four individual orders, see this table for fulldetails and what they mean for each position. Also, you can ask a player to man mark a star player in theopposing team. More about it is explained on Man Marking section.
+Position Tactics Effect
+Wing Back Offensive Somewhat more Winger, somewhat more Playmaking, less Defending
+Defensive Somewhat more Defending, less Winger, somewhat less Playmaking
+TowardsMiddle Much more Defending to the middle, less Defending to the side, much lessWinger, somewhat more Playmaking
+CentralDefender Offensive More Playmaking, much less Defending
+TowardsWing Much more Defending to the side, much less Defending in the middle, acertain amount of Winger, somewhat less Playmaking
+Winger Offensive More Winger, somewhat more passing, less Defending, less Playmaking
+Defensive Much more Defending, less Winger, less Playmaking, somewhat less Passing
+TowardsMiddle Somewhat more Playmaking, less Winger, somewhat more Defending in themiddle, somewhat less Defending to the side, somewhat more Passing in themiddle, less Passing to the side
+InnerMidfielder Offensive More Passing, much less Defending, somewhat less Playmaking, somewhatmore Scoring
+Defensive More Defending, less Passing, somewhat less Playmaking, somewhat lessScoring
+TowardsWing A nice amount of Winger, somewhat less Playmaking, somewhat morePassing and Defending on the side, somewhat less Passing/Defending in themiddle, no Scoring
+Forward Defensive Somewhat more Playmaking, more Passing (and even more Passing to thesides for technical forwards), much less Scoring, somewhat less Winger
+TowardsWing More Winger, much more Scoring and somewhat more Passing on the side,much less Scoring and somewhat less Passing in the middle, somewhat lessScoring, Winger and Passing on the other side, somewhat less Playmaking
+Match: The basics
+Finding the right lineup is one of your biggest challenges in Hattrick. In this and the other match chapterswe will focus on how the players' skills come into play in a match. This chapter will give you the basics -the most important things to know.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 6/43
+
+The basics of the match simulation
+In each half a number of attacks are made, and the midfield decides which team gets each attack. Theteam with the strongest midfield (the team with the most ball possession) is most likely to get thelargest number of attacks.  When a team gets an attack it is decided what kind of attack it is. There arethree types of attacks (right wing, left wing, centre), and set pieces (free kicks and penalties) also. Theattacking team's attack for that sector will then try to break through the defending team's defence forthat sector.
+The basic attacks
+In each match a number of basic attacks (as explained above) are made. Some of these attacks areopen, and can be taken by either team, and some are exclusive for one team only.
+For open attacks, the midfield decides which team gets each attack. Exclusive attacks work in the samefashion, with one exception: If your midfield “win” one of your opponent's exclusive attacks; you stop theattack – but you don't get it yourself. You can't get your opponent's exclusive chances, and they can't getyours.
+Most of the basic attacks are reported in the match report, but attacks a long way from leading to goalsare not reported.  You may also gain additional attacks from "Special Events" and from counter-attacks.These additional attacks are described in the other two match chapters.
+Home team advantage
+The home team is helped by their fans. Ordinarily you have a larger percentage of possession at homethan away.  When both teams playing in the match are from the same region, the game is treated as aderby. In this case, the home team still benefits from home advantage, but the away team also receives aboost of around half that received by the home team. Games on neutral grounds do not provide anyhome advantage bonuses, even when a team is from the same region as the neutral ground.
+Psychology and the coach's mentality
+Team spirit, confidence and team attitude affect how well your team performs. You can read all abouthow Hattrick simulates these in the "Psychology" chapter.The coach's mentality (if he's offensive, defensive or neutral) also plays a part. Read more about this inthe "The coach" chapter.
+Team rating is the rating you should focus on
+After a match has been played, you will get a team rating for each part of the team. These ratings tell youhow well different parts of your team performed in the match and these ratings are also what matters inthe actual match calculation.
+The match rating denominations (scale goes from non-existent to divine) are also specified in four sub-levels: very low, low, high and very high. This way it's easier to know how good your rating is within acertain step. For example a "very high solid" rating is a just a little bit worse than "very low excellent", buta lot better than "very low passable".
+Star rating
+After a match your players receive a star rating for their performance in the match. The more stars, thebetter the performance.
+Please note that the star rating only rates the individual player performance on his particular positionand is useful for comparing different players playing in the same position. It's not an ideal way tomeasure team strength. To know how your whole team performed (and compare with other teams), lookat the team ratings.
+Please also be aware that team effects (such as the contribution loss for more than one player in acentral position, see basic lineup chapter) is not reflected in the star rating.
+A normal case
+Shortly put, the state of the midfield decides how many opportunities your team will produce during amatch. The other parts of the team will decide the probability of attacks leading to goals.
+The following table may help you somewhat when you select your team. Note that it's only anapproximation.  Some levels of skills following each other may mean only slight differences inperformance, and for others the differences might be much larger. In addition, individual orders orcontribution loss for two or more players in a central position (see previous chapter) have not been takeninto consideration.
+Part of team Factors (most important first)
+Midfield Playmaking inner midfieldersPlaymaking wingersPlaymaking central defendersPlaymaking forwardsPlaymaking Wingbacks
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 7/43
+
+Attack left wing Winger left wingerWinger left wing backScoring forwardsPassing left inner midfielderPassing left wingerWinger forwardsPassing forwardsPassing inner midfielders
+Defence left wing Defending left wing backGoalkeeping goalkeeperDefending left central defenderDefending left wingerDefending centre central defenderDefending goalkeeperDefending left inner midfielderDefending centre inner midfielder
+Attack centre Scoring forwardsPassing forwardsPassing inner midfieldersScoring inner midfieldersPassing wingers
+Defence centre Defending central defendersGoalkeeping goalkeeperDefending inner midfieldersDefending wing backsDefending goalkeeperDefending wingers
+Attack right wing Winger right wingerWinger right wing backScoring forwardsPassing right inner midfielderPassing right wingerWinger forwardsPassing forwardsPassing inner midfielders
+Defence right wing Defending right wing backGoalkeeping goalkeeperDefending right central defenderDefending right wingerDefending centre central defenderDefending goalkeeperDefending right inner midfielderDefending centre inner midfielder
+Training
+Every week you get to choose what kind of training you want your players to concentrate on in trainingsessions. The effects of the weekly training always appear on Thursday or Friday, depending on yourcountry. The training type selected when the update starts is the one that will be trained that week.Changes in players' current form and background form also occur at this time.
+Player Age and Skill Level
+Younger players are in general faster learners than older players, but how much your player will learnfrom training also depends on the skill level he's at – the lower the skill level the faster the training.Training on very low skill levels is many times faster than on medium skill levels, and training on veryhigh skill levels is slower than on medium skill levels.
+Apart from age and skill level there are four factors deciding the effects of training: the intensity oftraining, training type, the amount of stamina training, and the coaching staff (head coach andassistants).
+Training Intensity
+The harder you train, the better the squad's form becomes in general, and effects from training increase.You decide the intensity of training by supplying a number between 0 and 100. The drawback of a highlevel of intensity is that risks for injuries increase. You'll have to decide yourself what level of intensitywill suit you - do ask other managers on the forums.
+Significantly decreasing intensity can provide a 'one-time' boost to team spirit. Once you order yourplayers to train with more intensity again, their team spirit will understandably drop with this news. If youwant to change the training intensity please keep in mind that the new value must have been entered atthe latest one update before the training update.
+Training type
+There are 11 types of training to choose from. All of them make your players better at something. Thedifferent types of training are shown in the table below.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 8/43
+
+Coaching Staff
+If you have a good coach, training will be more effective than if you have a bad one. Assistant coachesalso increase the effect of training.
+Stamina training
+Stamina must be trained every week, as a percentage of the total training of the team. Its efficiency willdrop at higher intensity levels – it's better to train a little every week than a lot now and then. Olderplayers will need more training every week to maintain a certain stamina level, which in turn means thatmanagers will have to find the appropriate stamina training share for their particular squad andambitions. Players that have played for at least 90 minutes for your team during the week receive 100%of the team's stamina training effect. Players playing less than 90 minutes (subs for example) receive75% of the effect, plus a share for each minute they've played. Other squad players who have not playedfor your team during the week, but who are healthy enough to train (including bruised players) receivehalf the effect. Injured players don't receive any stamina training.
+Stamina training affects the overall form of your team negatively; the more stamina you train the morethe negative effect on form. It should be noted that only current form, not background form, is affectedby stamina training.
+Basic principles
+The amount of training a player receives depends on how many minutes he has played for your team in atrainable position during a competitive or a friendly match. Matches played for other teams will onlycount for the purposes of the form update, and no training will be received. If a player has seen no 'liveaction' or has not played at least 1 minute, he will not train at all. A player can receive 90 minutes trainingduring a week. Playing more than 90 minutes in a trainable position will not give him more training.Playing less, for example 50 minutes, will give him less training – in this case 50 minutes out of 90.
+If a player has played in two or more different positions during the week, the 90 minutes that give him thebest training effect will be chosen at the training update. Individual player behaviours during matches donot affect training.
+Players on a winger position will only receive half of the training when trained in playmaking. The samegoes for wingbacks when trained in winger.
+It doesn't matter if the player plays in a friendly game, a cup match or a league game - they are all just aseffective from a training point of view.
+However, if you do not have enough players in the squad to fill a lineup for a competitive game, you willgive away a walkover victory. In this case, you will only lose training for that specific game. Not alltraining for the week will be lost. In case you didn't set your lineup, your players will enter the field inrandom positions and perform as if their form was lower than it really is.
+On the other hand, if you show up for a competitive match, but your opponent doesn't, you will win bywalkover and the starting XI will receive training as normal, but will earn no playing experience.
+Brackets indicate small effects. Double brackets indicate very small effects.
+Training type Improves ...for...
+Set pieces Set pieces All players playing match, 25% bonus to the setpieces taker and goalkeeper
+Defending Defending Defenders ((All players playing match))
+Scoring Scoring Forwards ((All players playing match))
+Winger Winger Wingers (Wing Backs) ((All players playingmatch))
+Scoring and Set Pieces (Scoring) (All players playing match)
+(Set pieces ) ((All players playing match))
+Passing Passing Inner Midfielders, Wingers and Forwards ((Allplayers playing match))
+Playmaking Playmaking Inner Midfielders (Wingers) ((All players playingmatch))
+Keeper Goalkeeping Goalkeepers
+Passing (Defenders +Midfielders) Passing Defenders, Inner Midfielders and Wingers ((Allplayers playing match))
+Defending (Defenders +Midfielders) Defending (Goalkeepers, Defenders, Inner Midfielders andWingers) ((All players playing match))
+Winger (Winger +Attackers) Winger Forwards and Wingers ((All players playingmatch))
+Individual (Youth teamonly) Valuable skill(s) for theposition played in match (All players playing match)
+Example
+The team trains "Winger" this week. Please note that your actual match day may vary - Sunday refers tothe weekend league match, while Wednesday is the midweek friendly/cup match.
+Adam Adams played 90 minutes as a winger Sunday but missed the Wednesday game. He receives 90minutes full winger training.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 9/43
+
+Bert McBert played 90 minutes as a winger Sunday and 90 minutes as a forward Wednesday. He alsoreceives 90 minutes full winger training.
+Carl Carlson played 50 minutes as a winger Sunday and 90 minutes as a wing defender Wednesday. Hereceives 50 minutes full winger training and 40 minutes winger training with small effect.
+David Davis played 40 minutes as a winger Sunday and 90 minutes as a forward Wednesday. He receives40 minutes full winger training and 50 minutes winger training with very small ("osmosis") effect.
+Freddie Fredericks plays 90 minutes as a wingback both Sunday and Wednesday. He still only receives90 minutes winger training with small effect.
+Gus O'Gumby didn't play on either Sunday or Wednesday. He doesn't improve his skill at all.
+Skill decrease
+When a player gets closer to the age of 30, he loses a little of his skills each week. How big the decreaseis depends on how old the player is.
+The Coach
+Your coach is an important person responsible for training and inspiring your players.
+Coach Abilities
+Skill: A skilled coach knows the right methods to train players in order to make them better. The moretalented your coach is, the more effective training will be. A coach can never be better than level 5(Excellent). All new teams get a level 3 (passable) coach to start with.
+Leadership: Apart from planning training activities, your coach is also an inspirational source for yourplayers. Your team spirit will be better in general if your coach is a good leader.
+Tactics: Your coach can be offensive, defensive or neutral, which (only) affects your team's performanceduring the game. An offensive coach improves your attack at the expense of your defence and adefensive coach improves your defence at the expense of your attack. A defensive coach improvesdefence slightly more than an offensive improves attack, to the same expense. A neutral coach is neitheroffensive nor defensive, which means he doesn't aid any team part or incur any penalties.
+Ability deterioration
+After your coach has been in the job for one season, his leadership skill will start to slowly deteriorate.Once your coach reaches disastrous leadership, the deterioration starts hitting his trainer skill instead.
+Change Coach
+If you are not satisfied with your coach you can either recruit a new external one or make one of yourplayers coach. A player needs to have been in your team for at least 16 weeks before being made coach.You can change your coach on the "Staff" page, found under the “My Club" menu.
+Remember, all new coaches of a certain skill level are equal. If you purchase a coach with level 3(passable) trainer skill for example, he always becomes an "average" level 3 coach (a level 5, excellent,coach is however only 1/2 step greater than a level 4, solid, coach).
+When you hire a new coach your old coach will remain in the team as a player, but he can never becometrainer again and you can not sell him either. If you don't want to keep him, you will have to fire him.
+Recruit an External Coach
+When you recruit a new coach you first decide what style of play you want for your coach, and then youdecide how good you want him to be. Each combination of leadership and skill has a fixed price, thebetter the coach the higher the price.
+Leadership
+Skill Level poor (3) weak (4) inadequate (5) passable (6) solid (7)
+10 000 US$ 10 000 US$ 10 000 US$ 10 000 US$ 10 000 US$
+10 000 US$ 22 800 US$ 41 200 US$ 65 100 US$ 94 600 US$
+79 600 US$ 182 800 US$ 329 700 US$ 521 000 US$ 757 100 US$
+268 700 US$ 617 100 US$ 1 112 900 US$ 1 758 500 US$ 2 555 500 US$
+4 000 000 US$ 4 388 400 US$ 7 914 600 US$ 12 505 200 US$ 18 172 500 US$
+Make a Player-Coach
+Sometimes, it is better to recruit your new coach from among your players. When you turn a player into acoach he will keep his current leadership. His experience determines how skilled he can become.Experience also affects how much money is required to train the player to the skill level you want for him.More experienced players are cheaper to train. If you have a very experienced player with high leadership,this can be a real bargain. However, a player can not achieve a trainer skill that is higher than hisexperience, and the player must have been in your squad for a season (16 weeks) before you can makehim a coach.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 10/43
+
+Normally, a new coach can not play matches, but when turning a player into a coach, you have the optionto make him a player-manager. If you choose this option, the player-manager will stay in the squad andbe eligible to play matches. He will also be paid his normal player salary in addition to his managersalary. While the manager salary is fixed, the player salary will change according to the player skills, justas for any other player.
+Finances
+As the club manager you are also responsible for your team's finances. You pay the expenses and collectthe income at the weekly update. You can see the exact time this happens in your league on the LocalSchedule page. If for example you buy a player for 10 000 US$ the player is accessible immediately, andyour "new signings" entry is increased by 10 000 US$.
+Revenues and expenses
+On the finances page you can see your budget for this week and last week's financial status. This is whatthe entries mean:
+Revenue
+Match takings: Your income from league matches at home and mid-week matches. See Chapter 10 'TheStadium' for more information on crowd income.
+Sponsors: Each week you get a sum of money from your sponsors. Check the 'Fans and Sponsors'chapter for more info
+Player Sales: Whenever you sell a player, the income ends up here. See the 'Transfers' chapter for moreinfo.
+Commission: If you receive any money for being the previous club or mother club of a player, it will showhere. See the 'Transfers' chapter for more info.
+Other: Any other income is accumulated here, such as membership fees from fans and prize money.
+Please note that match takings and sponsor income are reduced in the league Hattrick FemmeInternational. Please read the HFI info page for more information.
+Expenses
+Wages: Each week you pay your players' salaries. For each player you pay 250 US$ plus a certain amountbased on his skills and age. You pay 20% extra for players who are playing abroad.
+Stadium maintenance: The weekly cost for running and servicing your stadium. See chapter 10 'TheStadium' for more info.
+Stadium building: Construction or removal costs if you alter your stadium.
+Staff: Each staff member costs you between 1 020 US$ and 33 840 US$ per week, depending on the levelof the staff member (1 to 5) and the contract's length (1 to 16 weeks).
+Youth Expenses: The weekly costs for your youth team or your scouting network.
+New Signings: Your costs for buying new players from the transfer market appear here. See the'Transfers' chapter for more info.
+Other: The remaining costs are accumulated here, such as firing staff and promoting players to yoursenior team.
+Interest: If you're in debt you will have to pay some interest.
+Sponsors
+Sponsors provide an important source of income for your club as well and it is determined by acombination of factors which are made up of two parts. The first part, called the Standard Sponsorship,is based on your current division and the number of fans in your club. The second part, called the LastSeason Incentive, depends on how well your team performed in both the league and the cup in theprevious season. Additionally, when your team is promoted or relegated, sponsors may react emotionallyduring the first season in the new division, offering slightly higher or lower amounts than usual. Thiseffect only applies for one season. After that, sponsor offers fully adjust to the new division level.
+Sponsor income is paid out with an equal amount per week during the season, with the pay-out amountbeing updated once per season.
+Cash funds and Board reserves
+The Board limits the money available in cash to the manager for expenses such as salaries, playertransfer fees, or stadium projects. Any assets beyond this working capital will be reserved by the Boardto ensure the future stability of the Club. If needed, the Board will release money from the reserves intothe working capital, but only at a measured rate.
+The Financial Director, who you can hire for your staff, can increase both the working capital and the rateof return from the cash reserves.
+Debts and bankruptcy
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 11/43
+
+There's nothing to keep you from spending money even if your balance is zero. You can run a small debtand still spend money on for example buying players or hiring a coach. Once you hit 200 000 US$ in debtyour options to spend are limited. You then still have a line of credit of up to 500 000 US$ at the bank.Whenever you go into red, be prepared to pay some heavy interest on your borrowed money. If you run updebts amounting to 500 000 US$ you'll be given a bankruptcy warning. If you do not return your balanceto within the 500 000 US$ debt limit within two weeks of your bankruptcy warning, you will be forced toleave the Hattrick series system! Note that if a team has players for sale with bids enough to reach the"safe zone" or the team has plenty of cash on the board reserves, the team will not go bankrupt.
+Fans and Sponsors
+Both sponsors and fans control important sources of income. Therefore it is strongly advised to have agood relation with them and keep their mood up - it will pay off in the end.
+Fan mood
+The members of your fan club decide a lot when it comes to your team's finances. Membership fees(30 US$ / member) are paid once per season, but more importantly their mood decides a lot when itcomes to your income from stadium ticket sales.
+The easiest way to keep their mood up, and attract more fans, is to match (or even exceed) theirexpectations. Fans current mood can be seen on the fans page.
+Season expectations
+At the start of every season, fans will tell you what they expect of the team. Their expectations dependmostly on what happened last season, what fans expected then and what the outcome was.
+As your team advances (or drops) in the league system, your fans will slowly get used to the newsituation. If you just got promoted, fans will not expect much from you. But if you are staying put in thesame division year after year, fans will have a tendency to hope for just a little more.
+Match expectations
+The season expectations in turn influence the expectations for each game. On the Fans page you cansee what the fans expect from each game. Generally, fans expect more from you when you play at home.
+If the match result is what they expected, they will like you in case of a win (and not become so verydisappointed if expectations of a loss tallies with a defeat). If the result is better than their expectations,their mood will be even better. But if the result is worse than their expectations, it will affect their moodnegatively. For the first league rounds of the season, your fans' reaction to the results will be a bit moremoderate.
+At the start of the season, match expectations are based on the seasonal expectations of both teams'fans. As the season progresses, the actual league position and amount of points of both teams becomesmore important. In cup matches, fans base their match expectations only on the seasonal expectations(including division level) of both teams.
+Team attitude and your cash reserve influence fans
+Telling your players to "Play it Cool" or play the "Match of the Season" also influences the fan reaction tothe match result. If the result is as expected (or better), Playing it Cool will reduce the positive effect andMatch of the Season will increase the positive effect.
+If the result is worse than expected, playing it cool will increase the negative effect and match of theseason will reduce the negative effect.
+If you have a lot of money in your cash reserve, your fans are a bit harder to please as they feel you havemoney to invest to reach success. Rich teams' fans react stronger to losses and weaker to wins thanfans of poorer clubs. The more money your team holds, the higher significance these feelings have.
+The stadium
+Your club will start off with a small stadium, which you will have the opportunity to improve throughoutyour Hattrick career. On the stadium page you can see and manage all details about your stadium.
+Income and costs
+Your stadium can have four different types of stands, each having their own income possibilities andweekly upkeep costs (which you always have to pay).
+  Income Weekly cost
+Terrace places 7 US$ 0.5 US$
+Regular seats 10 US$ 0.7 US$
+Seats under roof 19 US$ 1 US$
+Seats in VIP lounge 35 US$ 2.5 US$
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 12/43
+
+In the match reports from home games you're able to see how many seats were sold in each separatetype of stand. The income from matches is distributed differently between clubs depending on what typeof match it is:
+League matches: The home team takes all the income.
+Cup matches: The home team takes 67% of the income and away team gets 33%, except for the last sixrounds which are played at neutral venues and income is split evenly.
+Friendlies and qualifiers: Income is split evenly
+Your crowd appearance
+How many spectators visit your stadium largely depends on your fans. Your fans' mood and the size ofyour fan club are the most important crowd factors. Your current position in your series, and thedifference between your position and your opponent's position are also of importance (for seriesgames).
+To some extent your opponents' fan club size and fan mood matters, as some of them might like tocome too. It is also worth knowing that people get more interested in attending games as the seasongoes by. You will generally get bigger crowds at the end of the season than at the start.
+The weather naturally also matters. Fewer spectators will visit your stadium in bad weather, but thosewho come will be more interested in buying more expensive tickets and sitting under a roof. It istherefore possible that your total income will be similar in any weather, provided there enoughappropriate stands.
+Improving the stadium
+To improve your stadium you order a construction company to rebuild your stadium. It'll take some time -a week or more depending on the scope of the conversion. All existing stands stay available during theconstruction time. You pay a set price of 10 000 US$ per conversion, together with a cost for each seatyou want to add or remove:
+  Construction cost Removing cost
+Terrace places 45 US$ 6 US$
+Regular seats 75 US$ 6 US$
+Seats under roof 90 US$ 6 US$
+Seats in VIP lounge 300 US$ 6 US$
+It's a good idea to have a mix of different types of stands to offer your fans. Most people want to buytickets to the terraces, therefore these should be the largest in number among your seat types. Somepeople only attend matches if they can have comfortable seats (and some will also demand a roof overtheir seats), so you should have quite a lot of those too. There is also the "prawn sandwich" brigade whoonly want to sit in fancy VIP lounges, they're not that many but you may not want to forget about them.Seats under a roof and in VIP lounges aren't affected as much by bad weather as the other types.
+Staff
+Hiring the right staff members is important to your team and to the development of the club. Your staffmay not be found in the dugout on match day, but they will work with the players during the week or fulfillother key tasks for the club. They complement the head coach and for you as manager it is crucial tomake sure you have the right people on the team.
+Staff effects and skill levels
+Any contribution you get from hiring a staff member is applied as a static bonus on top of an existingteam stat. This bonus will always be visible to you. But since team stats are dynamic to begin with, andare influenced by different factors, the final effect achieved with a hired staff member can be hard topredict exactly. What you can be sure of is that you are moving the needle in the right direction. Staffmembers with higher skill levels naturally contribute a higher bonus effect. These bonuses are linear -which means that each additional skill level always contributes as much again as the skill level before. Ifyou have several staff members within the same category, their bonuses are combined and applied onlyonce. In this way, a single level 4 Assistant Coach has the same effect as two level 2 Assistant Coaches.To make things easier, you will always see the actual bonus given by your current backroom staff or anystaff you plan to hire written out on the Staff page. A table with all staff categories and bonuses can alsobe found at the end of this section.
+Size of your staff
+You can employ up to 4 staff members in total. You may employ up to 2 Assistant Coaches at a time. Forall other staff categories your board will only allow one staff member at a time.
+Hiring and firing
+When you hire a staff member, you need to choose a duration of up to 16 weeks for the contract. Thelonger the contract, the less expensive it will be per week. You have the option to break a contract aheadof time if your plans change and you need a staff slot to open up, but if you do you will need to pay thesaving up to that time, twice, so it can be very costly to change your mind. Also, a staff member can
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 13/43
+
+never be fired in the first week of employment or during the last week of a contract. Beyond this there areno limitations as to how often you can make changes to your staff.
+Breaking a contract
+When you break a contract, you need to pay a fee of the savings up to that time, twice. If for instance,you have a contract of 13 weeks length with a staff level 3 and you want to break it on 8th week, youhave paid up to now, 8 times the weekly salary of 4 800 US$ or 38 400 US$ in total. However, if you had acontract of 8 weeks length you would have paid 8 times of 6 000 US$ or 48 000 US$. The saving is9 600 US$ and the breaking fee will be 19 200 US$.
+Cost/Week
+Length of contract Skill Level 1 Skill Level 2 Skill Level 3 Skill Level 4 Skill Level 5
+1 week 2 115 US$ 4 230 US$ 8 460 US$ 16 920 US$ 33 840 US$
+2 weeks 2 055 US$ 4 110 US$ 8 220 US$ 16 440 US$ 32 880 US$
+3 weeks 1 890 US$ 3 780 US$ 7 560 US$ 15 120 US$ 30 240 US$
+4 weeks 1 770 US$ 3 540 US$ 7 080 US$ 14 160 US$ 28 320 US$
+5 weeks 1 710 US$ 3 420 US$ 6 840 US$ 13 680 US$ 27 360 US$
+6 weeks 1 650 US$ 3 300 US$ 6 600 US$ 13 200 US$ 26 400 US$
+7 weeks 1 575 US$ 3 150 US$ 6 300 US$ 12 600 US$ 25 200 US$
+8 weeks 1 500 US$ 3 000 US$ 6 000 US$ 12 000 US$ 24 000 US$
+9 weeks 1 440 US$ 2 880 US$ 5 760 US$ 11 520 US$ 23 040 US$
+10 weeks 1 380 US$ 2 760 US$ 5 520 US$ 11 040 US$ 22 080 US$
+11 weeks 1 320 US$ 2 640 US$ 5 280 US$ 10 560 US$ 21 120 US$
+12 weeks 1 260 US$ 2 520 US$ 5 040 US$ 10 080 US$ 20 160 US$
+13 weeks 1 200 US$ 2 400 US$ 4 800 US$ 9 600 US$ 19 200 US$
+14 weeks 1 140 US$ 2 280 US$ 4 560 US$ 9 120 US$ 18 240 US$
+15 weeks 1 080 US$ 2 160 US$ 4 320 US$ 8 640 US$ 17 280 US$
+16 weeks 1 020 US$ 2 040 US$ 4 080 US$ 8 160 US$ 16 320 US$
+Staff Categories
+Assistant CoachMedicSports PsychologistForm CoachFinancial DirectorTactical Assistant
+Assistant Coach
+The training speed bonus given by Assistant Coaches is added to your team's existing training efficiency.Make sure you have a good regular coach before considering spending much money on assistantcoaches. But when you do have a competent head coach, hiring a number of skilled Assistant Coachescould be a good strategy for any team focused on training.
+Skill Level Training Speed Injury Risk Form
+No bonus 40% No bonus
++3,5% +2,5% +0,05
++7% +5% +0,1
++10,5% +7,5% +0,15
++14% +10% +0,2
++17,5% +12,5% +0,25
+Effect Details
+This bonus is added as a multiplier on top of the existing training efficiency as decided by the coachingskill of your head coach, your chosen training intensity, and your chosen stamina share. As an example, ifyou had a solid coach, 100 % training intensity, and 10 % stamina share, the following training speedswould be achieved for a 22 year old formidable playmaker:
+No Assistant Coach: 8 weeks until next level.Level 5 skill coach combination: 7 weeks until next level.Level 10 skill coach combination: 6 weeks until next level.
+You can hire up to 2 Assistant Coaches at a time. If you have a couple of Assistant Coaches, theircombined skill levels will create one single bonus. This means a Level 4 Assistant Coach contributesexactly the same as two Level 2 Assistant Coaches would.
+Alongside the effects on training, Assistant Coaches also have two side effects. Form is increased, butso is injury risk.
+Injury Risk is calculated as the average number of injuries per game, not per player but per team. Thebase value is 0.4 injuries per match for your team. With a level 5 Medic this can be reduced to 0.025.Assistant Coaches contribute to a higher injury risk by 0.025 injuries per match per skill level hired. Thismeans a level 5 Assistant Coach increases your base injury risk to 0.525 injuries per match (0.15 with a
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 14/43
+
+level 5 Medic), and two level 5 Assistant Coaches gives you a base injury risk of 0.65 injuries per match(0.275 with a Level 5 Medic).
+As already mentioned, on the positive side Assistant Coaches do increase the background form of yourplayers. If you have a full 10 skill levels of Assistant Coaches, background form will increase by 0.5levels. In other words, two level 5 Assistant Coaches contribute half as much to form as a level 5 FormCoach would.
+Back to categories
+Medic
+Medics are responsible for the overall physical condition of your players. This means they work bothproactively to prevent injuries as well as with the rehabilitation of any players that do get injured. Havinga Medic on the team will reduce injury risk as well as decreasing the recovery time for injured players.
+Skill Level Recovery Speed Injury Risk
+No bonus 40%
++20% -7,5%
++40% -15%
++60% -22,5%
++80% -30%
++100% -37,5%
+Effect Details
+Every time your team plays a match, there is a certain injury risk for your players. Having a Medic in thebackroom staff will reduce the base injury risk for your team. A level 5 Medic will reduce the base injuryrisk from 0.4 injuries per match to 0.025, but be aware that other factors - such as hiring AssistantCoaches - may increase the risk.
+If a player experiences an injury, Medics also help speed up their recovery. In Hattrick, injuries show upwith an estimated recovery time in weeks. During every daily update, the player recovers a little bit on hisway to 90 % health (when he can play again, but is still bruised) and then, ultimately, to 100 % health,when he has no sign of the injury left.
+The graph shows how much faster a player will recover fully from the same injury, depending on whetheror not you have a Medic. With no Medic, a 19 year old player will take 3 weeks to recover. With a level 2Medic he will take around 2 weeks to recover. With a level 5 Medic this reduces to approximately one anda half weeks.
+A 29 year old player with the same injury would take 6 weeks to recover with no Medic. A level 1 Medicreduces this to about 5 weeks. A level 5 Medic reduces it further to just under 3 weeks.
+Back to categories
+Sports Psychologist
+The mental game is almost as important as the physical one. Hiring a Sports Psychologist can reallyhelp you create a winning atmosphere. This staff member will help you maintain your team's confidencein their own game as well as help nurture the team spirit of the whole squad.
+Skill Level Team spirit Confidence
+No bonus No bonus
++0,1 +0,24
++0,2 +0,48
++0,3 +0,70
++0,4 +0,92
++0,5 +1,12
+Effect Details
+Team Spirit is driven by the team attitude you set for previous games. Immediately after a game teamspirit may get a boost or drop lower, depending on which team attitude was used. But at each dailyupdate the team spirit then tends to normalise, which means if it is high then it will slowly drop and if it islow then it will slowly recover. A Sports Psychologist can help you improve this process by raising thebase value toward which your team spirit moves naturally. A higher base value means that high teamspirit values will fall slower and low ones will rise faster. The bonus received is one tenth of a level per
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 15/43
+
+skill level employed. This means a level 5 Sports Psychologist will increase your team spirit base valueby half a level of team spirit.
+Your team’s confidence is primarily driven by your team results and how many goals you’ve scored. Onevery daily update, team confidence moves towards a midpoint. For every Sports Psychologist level, thismidpoint is raised, resulting in a higher level of confidence overall. However, the impact is not linear andit depends on the actual confidence level. The table is an example of how the midpoint will be increasedfor a confidence of level strong (5). The Sports Psychologist also affects the rate of change towards thismidpoint. With a higher staff level, confidence drops are less severe after a significant loss, making iteasier to maintain a high confidence level. With lower staff levels or none, confidence drops are morenoticeable.
+Back to categories
+Form Coach
+Player performance is not only down to technical skills and physical stamina. Players tend to go in andout of form, and many factors can influence this, not least mental ones.
+The Form Coach specialises in getting the most out of the player material you have. He keeps the squadmatch fit and motivated. Hiring a form coach is not a quick fix, neither is the effect permanent - but forsome teams and some situations it can be a good solution.
+Skill Level Form
+No bonus
++0,2
++0,4
++0,6
++0,8
++1
+Effect Details
+The form of a player is a measure of how close he is to be performing at his maximum potential. Thevalue you see on the player is the current form, and this is what is used in the match simulation.However, the current form always has a trend and the value the form is moving toward is called thebackground form. By using a Form Coach you will receive a bonus to your background form updates.Whenever background form is recalculated (this happens on average every second week) each skill levelof the Form Coach will bump the background form higher by 0.2 levels. This means a level 5 Form Coachwill add a whole level of background form to your player when the update is applied. Please note thatbackground form can still drop, but that your average over time will be higher.
+Back to categories
+Financial Director
+The Financial Director increases the manager’s economic flexibility. This is ONLY useful for managers ofwealthy Clubs.
+(If you are a new user, there is no need to consider a Financial Director at all.)
+Normally, the Board will limit the money available in cash to the manager for expenses such as salaries,player transfer fees, or stadium projects. Any assets beyond this working capital will be reserved by theBoard to ensure the future stability of the Club. If needed, the Board will release money from the reservesinto the working capital, but only at a measured rate. Surplus working capital will be converted intoreserves at a rate of 2% of the total cash per week.
+By hiring a Financial Director the Board will allow both a higher working capital and a faster rate of returnfrom the cash reserves. In turn, this will allow the manager to invest more aggressively than the Boardwould otherwise have agreed to. Having a Financial Director may be necessary for teams that want tosave up for a few seasons to make an expensive run for the cup or league title.
+Skill Level Max Funds Return/week
+15 000 000 US$ 100 000 US$
+17 000 000 US$ 200 000 US$
+19 000 000 US$ 400 000 US$
+21 000 000 US$ 600 000 US$
+23 000 000 US$ 800 000 US$
+25 000 000 US$ 1 000 000 US$
+Example: Team Tycoon has accumulated 40 000 000 US$ in funds. Without a Financial Director, theBoard will only allow the manager access to 15 000 000 US$ at a time. If the manager spends2 000 000 US$, and the new cash balance is 13 000 000 US$, the Board will again make investmentfunds available to the manager, but only at the slow rate of 100 000 US$ per week.
+Now Team Tycoon hires a Level 3 Financial Director. The Board becomes more confident that cash ishandled responsibly. The allowed working capital is increased to 21 000 000 US$ and the weekly releaserate is bumped up to 600 000 US$. As long as the Club's current balance stands below 21 000 000 US$,an extra 600 000 US$ per week will be transferred automatically by the Board from the reserves. If thecash funds grow beyond 21 000 000 US$, for example through player sales, money instead starts flowinginto the reserves, at a rate of 2% of the total cash per week.
+Back to categories
+Tactical Assistant
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 16/43
+
+Hiring a Tactical Assistant will improve the team’s flexibility with more strategic moves and advancedlineups. The results are mainly a short term decision, since a Tactical Assistant affects only theupcoming match - make sure that you will hire one when your club needs him.
+Skill Level Extra subs / orders Style of play flexibility
+No bonus No bonus
++1 +20pp
++2 +40pp
++3 +60pp
++4 +80pp
++5 +100pp
+Effect Details
+Instead of the maximum five custom orders per game (that can be used for substitutions, changedplayer behaviour or position swaps) you can now get one extra order per level of your Tactical Assistant,up to a maximum of 10 orders with a level 5 Tactical Assistant. Keep in mind that the limit of 3substitutions per match still applies, even when you have a Tactical Assistant.
+The style of play ranges between 100% defensive (which is default for defence-minded coaches) and100% offensive (which is default for coaches who prefer attacking play) with neutral being the middlepoint. You'll be able to set this for each match in the match order interface where you'll get 20pp(percentage points) flexibility per level of your Tactical Assistant from your coach's style of play.
+For example, if you have a defence-minded coach and also a level 5 Tactical Assistant, you now have anavailable range of style of play that spans from 100% defensive to neutral. If you have a neither attacknor defence-minded coach along with a level 5 Tactical Assistant your available range will be span fromNeutral half way to both defensive (50%) and offensive (50%).
+You need to have your Tactical Assistant on the payroll at the time of the match. In case you have placedmatch orders with a tactical assistant, then fired them or have the contract end without renewing it, thematch will be simulated without the extra sub/orders and using the default style of play of your currentcoach.
+Lineup: Experience and confusion
+Formation experience
+Your team can play any formation you wish, but your players might get confused and play below theirordinary capacity if you use a formation they aren't experienced with. To get the formation experience upand avoid confusion your team simply needs some practice. You gain some experience for a formationevery time you use it (friendlies and competitive matches count just as much, but not Arena matches orthe Hattrick Masters). The amount of experience you get for each formation you use is minute based(max 90 min per match), just as training. If you win by a walkover and fielded 11 players in your startingline-up, you also get formation experience as if the match was played for 90 minutes. If you fail to submita lineup of 11 players, your players will not get any formation experience.
+Gaining more formation experience becomes harder on high levels of formation experience. If you don'tplay with a certain formation, the experience will decrease over time. There is also a risk of losing a littleformation experience when you sell a player.
+Confusion
+If your players aren't experienced enough with a formation they risk getting confused at any time duringthe match, which negatively affects their performance. An excellent formation experience level (orbetter) is enough to keep you on the safe side. For lower levels, the risk of getting confused rises thelower your formation experience level is. If your players' accumulated individual experience (see below)is high, the risk decreases though.
+In case of confusion your formation experience also decides how confused your players will be; thelower your formation experience level is, the more confused your players will be. If your players getconfused, a text showing the current level of your team organisation will be displayed in the matchreport. A confusion event saying that your team organisation fell to "wretched" means that it was verybad, while a drop to "solid" only had a very limited effect. If your players are confused at half-time (orbefore extra-time) your coach can improve the situation somewhat by giving an extra briefing.
+Players' individual experience
+Experience positively affects a player's actions on the field. The players get their experience throughplaying matches. The National Cup and Divisional Cup gives the player on the field the double amount ofexperience compared to a league game. Challenger and Consolation Cup matches gives your players halfthe experience they would get in a league game. An International friendly match gives about a fifth of theexperience that a league match gives and a friendly against a team from your own country gives abouthalf as much as an international friendly. National team matches give the most experience, followed byHattrick Masters matches.
+The amount of experience a certain player gets is minute based, just as training. A player can not gainmore than 90 minutes of experience from each match.
+Team Captain and Total Experience
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 17/43
+
+You can appoint a team captain for each match. Experience and leadership are important abilities for theteam captain, as the captain's level in those abilities give a bonus when calculating your team's totalexperience – which can prevent your team both from suffering confusion and from getting nervous inimportant and dramatic matches. In such situations, only the team with the lowest amount of experienceat that particular moment in the match risks a negative event due to nervousness. The differencebetween the two teams' experience levels decides how nervous the players will get. Teams will neversuffer from this in league matches or friendlies.
+The team captain has to be in your starting lineup. If you haven't appointed a team captain, the playerswill choose a captain they think will do a good job.
+Penalty takers
+Cup and qualifier matches can end in a penalty shoot-out if the scores are still level after extra time. Youchoose your penalty takers through a sub-page to the order form. When choosing the order pleaseremember that nothing is more nerve-wracking than a penalty contest, and at every penalty (not duringregular match time, though) a test of the shooter's experience is made. Apart from experience, theshooter's scoring and set pieces skills (as well as Technical speciality) are taken into consideration. Forkeepers the keeper skill and the quick speciality are all that matters.
+Match: Set pieces and special events
+In this match chapter we will move a little bit deeper and focus on two important match details: how youscore from set pieces and what you can gain from "special events" (and other additional match events).
+Set pieces
+Some of your regular attacks will result in a set-piece opportunity, either as a free kick or a penalty kick.
+Whilst a regular attack cannot result in a corner kick, corners can instead happen as a Special Event (seebelow).
+As in real football, mastering set pieces can be very valuable in Hattrick.
+Direct Free Kicks
+If your team gets a free kick in a good spot, it will be entrusted to your designated Set Pieces taker (seebelow).
+This player will test his skill against the goalkeeper directly, using his set pieces skill and experience. Thegoalkeeper will defend using his set pieces skill, goalkeeping skill, and experience.
+Indirect set pieces
+About one-third of your set pieces' chances will be indirect free kicks, and the outcome of these dependson team effort.
+To attack you use (in order of importance):The average scoring skill of the outfieldersThe average set pieces skill of the outfieldersThe set pieces skill of your set pieces takerThe experience of players also matters.
+To defend, you use (in order of importance):The average defending skill of the outfieldersThe average set pieces skill of the outfieldersThe goalkeeping skill and set pieces skill of your keeperAnd again, the experience of all players mentioned.
+These ratings are known as your offensive and defensive indirect Set Pieces ratings.
+Penalty Kicks and Penalty Shoot-Outs
+There are two types of penalty kick situations in Hattrick, and they work differently.
+Regular Penalty Kick
+If the referee calls for a penalty for a foul during the match, your designated Set pieces taker (see below)will step up. The following skills and specialities matter:For the penalty kick taker: Set Pieces and ExperienceFor the goalkeeper: Set Pieces, Goalkeeping, and experience. Quick specialty.
+Penalty Shoot-Outs
+Some matches, such as Cup matches or qualifiers, can not end in a draw. If such a match has not beendecided after full-time and extra time, it will go to a penalty shoot-out. Each team gets five penalties inthe initial round. If the match still needs to be decided after this, the teams will get one penalty each untilone has outscored the other.
+In a shoot-out, momentum matters. A player who scored a penalty earlier in the match will have a 10 %bonus during the shoot-out. Keepers who saved a penalty earlier in the game, including in the shoot-out,will get a 10 % bonus to save the subsequent penalty. This momentum is lost when the streak is broken.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 18/43
+
+The following skills and specialities matter during a Shoot-Out:For the penalty kick taker: Set Pieces, Scoring, and Experience. Momentum bonus, as described above,matters, as does Technical speciality.For the goalkeeper: Goalkeeping, momentum bonus. Quick speciality.
+Picking your set piece takers
+Your nominated Set pieces taker will, in most cases, be in charge of penalties, direct free kicks andcorner special events during the match.
+If you do not select a player for this role in the match order form, the coach will pick the player with thehighest set pieces skill to do the job instead.
+If your chosen player is injured, sent off or substituted, another player will assume his role. In thissituation, the first player of your penalty kick order (see below) will be used. If you have not set a penaltykick order, the coach will pick a player for the role.
+For penalty shoot-outs, the list on the Penalty Kick Takers tab in the match order form becomesimportant. It is used to decide in advance by who and in which order any penalty shoot-out kicks will betaken. If this list has not been set, the coach will pick the players based on their set pieces and scoringskills.
+Special events
+Apart from the basic attacks, you can also have "special events" happen. Special events are matchevents depending on players' attributes, their specialities in particular, which makes it a strategy itself tocompose a squad that has a good balance of player specialities.
+There are two types of special events:
+1. Ball Possession-Related Special Events: These events are influenced by midfield control. A team withhigher ball possession has a greater chance of triggering them. (If you have 55% ball possession you alsohave a 55% chance to get a team special event)
+2. Individual Special Events:These depend on specific players’ specialties and positions, regardless ofball possession.
+For each special event that occurs in a match, the probability of another special event decreases.
+Individual Special Events
+These events depend on player specialties, skills and positions. A team with more players with a certainspecialty will have a higher probability of triggering the individual special events related to that specialty.
+In addition to what is listed below, the player who ends up with the chance to finish (often, but notalways, the same player who creates the chance) also needs some scoring skill in order to score fromthese attacks.
+Unpredictable players can use their passing skill to create unexpected long passes if they are keepers,wing-backs or central defenders, and their scoring skill to intercept the ball if they are inner midfielders,forwards or wingers. If they are outfield players, their unpredictability itself may also create unlikelyscoring opportunities. The lower the defence skill of an unpredictable defender or inner midfielder, thehigher the probability that they can also make a reckless error that will give the opponent a chance toscore. Besides this, an unpredictable winger or forward with low passing skill is more likely to causechaos in your defence, possibly resulting in an unfortunate own goal.
+Quick wingers, inner midfielders and forwards can create a chance by using a burst of speed. This canbe countered by the opposing team using a defensive player (central defender or wing back) who is alsoquick. You will also have a boost on your counter attacks tactic level for every quick winger, innermidfielder, and forward on your team. The opponent can still diminish this effect with quick innermidfielders, wing backs, defenders or keeper (just the extra boost can be nullified, not the initial tacticlevel).
+Technical wingers, inner midfielders and forwards can create chances if an opposing keeper, defender orinner midfielder is a head specialist (the head specialist doesn’t have to be in the exact opposite slot).Moreover, every technical defender and wing back will give you a small chance to create a non-tacticalcounter attack from a missed normal chance of your opponent. The higher the passing of the defender,the bigger the chance.
+Wingers with sufficient winger skill can create chances that will have to be finished off by anotherwinger, a midfielder or a forward. If that other player has sufficient scoring skill, he will be more likely toscore; if he is a head specialist, it will be even easier for him to score.
+Tiredness: Tired central defensive players can make mistakes. Unless the opposing attacker is also tootired, this may create a chance for the opponent.
+Other additional match events
+There are also some additional events you can get in a match. The chance to get these events is notdependent on midfield strength, so the chance doesn't increase if you're dominating the midfield.
+Counter-attacks: Even if you don't use the counter-attack tactic there is a slim chance that your teamgets to counter. These "tactic-independent" counter-attacks do not require your team to have an inferiormidfield (which otherwise is necessary to counter). See the chapter about tactics for more info aboutcounter-attacks.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 19/43
+
+Long shots: Even if you don't use the long shot tactic there is a slim chance that your team gets a longshot opportunity. Read the tactics chapter for more info about long shots.
+Powerful Inner Midfielders, if playing defensive (also called sitting midfielders) can concentrate onbreaking up attacks and winning the ball. If he succeeds in pressing, the opponent’s attack breaks down.To do that, he will rely on his defending skill and stamina.
+Powerful Forwards, if playing normal (also called power forwards) can put their bodies in the right place,forcing a second chance to shoot and score after a normal chance for your team has been missed. Theywill need sufficient playmaking and scoring skills to do that. Note that their physical play can result inyellow cards; however, if your player has already been carded, he will tread more carefully in thesesituations.
+You will suffer an overcrowding penalty if you field two or three players having the same combination ofspecialities and positions, among the following types: technical defensive forwards, powerful normalforwards and powerful defensive inner midfielders. If you field two players of the same type, you willsuffer a penalty on their contribution (4% each). If you field three of them, the penalty will be bigger (7.5%each).
+Weather and Specialities
+Certain specialties are better suited to certain weather conditions. All players’ performance are affectedunder specific weather conditions from the very start of the game.
+Technical players gain 5% on all their skills in the sun, but lose the same percentage in the rain.
+Powerful players gain 5% in the rain, and lose 5% in the sun.
+Quick players lose 5% in the rain and in the sun.
+When the weather has an influence on the players, you will get information about it in the match report,and the affected players' star rating will also reflect their performance accordingly.
+Ball Possession-Related Special Events
+These events depend on the midfield rating. The team with stronger midfield control has a higher chanceof triggering them.
+Corner Special Event
+Corners are handled as a team special event. Your designated set pieces taker will take the corner.
+To score from a corner kick, you can improve your chances by having a high set pieces skill on the playerthat takes the corner and by having a high offensive indirect set pieces rating against the opponent'sdefensive indirect set pieces rating.
+There are two types of corner kicks. In one, the higher the number of outfield head specialists in yourteam (your set pieces taker does not count), and the lower the number of head specialists among youropponent's, the better your chances to score. Having no head specialists at all will make you very weakat defending against corners and very weak at scoring from your own corners.
+In the other, the chance to score will depend on the scoring skill of the player that receives the ball. Notethat corners might lead to a yellow card for the offensive team, but if your player is already carded, hewill be extra careful, so the risk of a second yellow is lower than it would otherwise have been.
+Experience: experienced forwards can score using their experience. Inexperienced central defenders andwing backs can give their opponents an extra chance.
+Match: Tactics
+For each match you can order your team to use a certain tactic. Each tactic has its advantages, but alsodisadvantages – so choose carefully. There are six tactic types (and normal) available. If you don'tspecify a tactic you will play "normal".
+Tactical skill
+How well you master a tactic depends on the tactical skill for that particular tactic. This skill iscalculated from different players' skills together with an experience bonus for each involved player.
+How effective your tactics are also depends on how good the players on the pitch are. The better theplayers on the pitch, the higher tactical rating you need to achieve the same efficiency. In practice thismeans you need better tactical levels when you and your opponent have strong players on the field.
+Pressing
+Pressing means that your players put pressure on your opponent and focus more on breaking youropponent's attacks than creating their own. Pressing could be a good option when you feel inferior andwant to keep the score down.
+Advantage: You can reduce the number of potential chances (for both teams) in a match.
+Disadvantage: It will drain the stamina of your players faster than normal.
+Relevant Skills: The total defending skill and the total stamina of all your players determine yourPressing tactical skill. If a player has the "Powerful" speciality, his defence skill counts as double. Themore tired your players get, the less able they are to put pressure on their opponents.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 20/43
+
+Whenever a potential chance is foiled by a team using the pressing tactic, it is reported in the matchreport. You will never find out which team could have benefitted from the chance. If both teams playpressing the effect is, on average, doubled. Additionally, when playing against a team focusing on longshots, a pressing team has a great chance of preventing a long shot opportunity.
+Counter-attacks
+Counter-attacks mean you deliberately let your opponent control the ball, and as soon as they fail with anattack you try to make a fast counter-attack. Playing counter-attacks could be a good option if you havea very good defence and attack (but a bad midfield), and especially in combination with your opponenthaving an ineffective attack.
+Advantage: You can gain additional attacks (you get the chance to counter-attack when your defencehas managed to stop an opponent's attack).
+Disadvantage: You lose 7% of your midfield capacity.
+Relevant Skills: The total sum of your defenders' passing and defending skills determines your CAtactical skill. Passing is twice as important as defending. Quick wingers, inner midfielders and forwardsgive a boost to the CA tactical skill. This boost will be diminished (and may be nullified) by Quick innermidfielders, wing backs, defenders or keeper on the opponent's team (see also Chapter 13 - SpecialEvents section).
+Only the team that is not dominating the midfield at the time of a failed attack is able to make use of theadvantage of this tactic (and note that you have to be losing midfield before the 7% tactical penalty isapplied). If you're dominating the midfield, then you will just suffer the disadvantage. All counter-attacksare reported in the match report. Whenever your team receives a counter-attack attempt, the chance tohave another one will decrease.
+Attack in the middle
+Attacking in the middle (AIM) means your team focuses on attacking down the centre of the pitch, at theexpense of attacks on the wings. In practical terms, this means your team may successfully trade whatwould have been a wing attack for an attack in the middle. When this happens, however, the chance for itto happen again will decrease further.
+Advantage: Around 15-30% of your wing attacks will be converted to attacks in the middle.
+Disadvantage: Your wing defence (on both sides) gets somewhat worse.
+Relevant Skills: The total passing skill of all your outfield players determines your AIM tactical skill.
+Whenever an attack is switched from the wings to the middle, it is shown in the match report.
+Attack on wings
+Attack on wings (AOW) works in the same way as “Attack in the middle”, only in reverse; meaning there isa chance that middle attacks are traded for attacks on the wings. As there normally are less attacks inthe middle than on the wings, you convert percentage-wise slightly more of them. Also here, for everytime it does happen, the chance for it to happen again will decrease further.
+Advantage: Around 20-40% of your middle attacks will be converted to wing attacks.
+Disadvantage: Your central defence gets somewhat worse.
+Relevant Skills: The total passing skill of all your outfield players determines your AOW tactical skill.
+Whenever an attack is switched from the middle to the wings, it is shown in the match report.
+Play creatively
+Play Creatively (PC) means players try to make more use of their specialities, and other attributes.
+Advantage: You increase the maximum number for special events occurring during the match - for bothteams, but your own team will get slightly higher chances to get them (both positive and negative).
+Disadvantage: Your team defence gets somewhat worse.
+Relevant Skills: PC requires your field players have high passing and experience skill (with the first beingthe most important). If a field player is also Unpredictable, his contribution to the tactic will be doubled.To make good use of it, a SE-optimized team (i.e. one with many players with specialties, and the rightcombination of skills) is recommended.
+Long shots
+When playing Long Shots (LS) your players are instructed to rather go for a long shot than playing thewhole attacking sequence through. In other words, you trade attacks through the middle and on the wingfor long shots. A long shot then pits the shooter against the goalkeeper. This can be useful if you have ahard time scoring using your middle/wing attacks, and have decent shooters.
+Advantage: The long shots tactic converts up to around 30% of side and middle attacks.
+Disadvantage: Your wing and middle attack, as well as your midfield, get a little bit worse.
+Relevant skills: Your outfielders' scoring and set pieces skills determine the LS tactical skill. Scoring isthree times more important than set pieces.
+When an attack has been converted to a long shot, any defending team using the pressing tactic has achance to steer off the shooting opportunity. If the shot is not steered off, an outfielder (inners and
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 21/43
+
+wingers are twice as likely) takes the shot. The quality of the shot depends on the appointed shooter'sscoring and set pieces skills, and then the goalkeeper can attempt to save the shot using hisgoalkeeping and set pieces skills. For both shooter and keeper: A bit of both skills is needed, and it'sbetter to have some of both skills than much of one.
+All long shots are reported in the match report, including any missed or saved opportunities.
+Match: Substitutions and Team Orders
+Substitutions can happen in two ways. You can be forced to do them due to an injury, or you can plan asubstitution to happen if a certain condition triggers it. You need to be prepared for the first, and canbuild tactics around the second.
+Planning substitutions and other orders
+You can use the Team Orders system to plan tactical changes in advance. Such orders arepreconditioned, meaning they will only be executed when a certain trigger condition becomes true.
+With a good set of planned Team Orders, you can react to how a match develops, even if your are notonline.
+A good idea can be to always substitute an old midfielder whose stamina tends to drop at the end ofyour matches. But you can also use it to tweak your tactics if a match is going the wrong way. A teamorder can be a substitution, a player position swap, or a change to a player's individual orders during thematch.
+You can, for example, change a forward for an extra defender to secure your lead in a game, or swap adefender for a forward if you're down. You could also let a player stay in position, but just change hisbehaviour in that position.
+Adding a planned substitution
+To plan a preconditioned substitution you go to the "Team Orders" tab in the match order form. There youclick on "New Team Order", select "Substitution", then pick the players you want to be affected by theorder. You can also make a shortcut by dragging the reserve player onto the substituted player, which willopen the substitution box with these players. You can set up the substitution to happen after a certainminute, and/or depending on the standings in the game.
+Moreover, in the "Advanced Conditions" below you can also add a condition if one of your (or youropponent's) players gets red-carded or injured and change the player's position using the small diagramof the lineup.
+Adding a behaviour change or position swap
+Planning a behaviour change or position swap works in the same way. Go to "Team Orders", add a "NewTeam Order". Pick the order type you want to add, then the player(s), and finally add the conditions forwhen you want the change. For setting a position swap you can also drag one of the players onto theother.
+Team Orders Limit
+You may always add up to five different team orders (substitutions, behaviour changes and positionswaps). With a Tactical Assistant, you can add up to 5 more orders, depending on the level of theassistant.
+But remember, the referee will not let you make more than three substitutions from the bench in a match.
+Orders are carried out when the conditions are met
+All your player orders will be carried out in the match as soon as all the conditions set before the matchis met. If the condition isn't met, the order will not be carried out. If you order a substitution in the 65thminute at any standing, the substitution will be carried out in the 65th minute. If you order a substitutionin the 70th minute if you're in the lead, the substitution will be carried out at any time after the 70thminute when/if the condition is met. So if you get into the lead in the 80th minute, your substitution willbe carried out first then.
+If you set up two orders for the 70th minute, one if you're in the lead and the other if you're in the lead bymore than one, and is in the lead with 3-0 when that time comes – both orders will be issued.
+Please note: If you have set up two orders with the same conditions (match minute and result, forexample) they will NOT be executed at the exact same moment but in the order they were created.
+After the match you can see (but not your opponent) a list over all your player orders via a link on the starrating page, together with information when they were issued or why they weren't issued.
+Reacting to injuries
+If a player gets injured during a match, you cannot select a substitute in real-time. Your assistant willhandle the situation as best as possible, while you can plan ahead to anticipate such scenarios.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 22/43
+
+The assistant will choose a substitute from the bench who was designated for the now-vacant position.This player will, by default, inherit the individual instructions of the injured player. You can override this bysetting a personal instruction for your substitutes in the match order form. They will then replace theinjured player in the same position, but with a different tactical approach.
+This can be useful, for example, if you replace an attacking winger with one who has strong playmakingabilities, making it more effective for him to play toward the middle.
+You can also adapt to injuries in advance using a conditional order that will activate only if a player in acertain position gets injured. This could again be new instructions for the player that comes on, but alsopre-set tactical changes, such as shifting players already on the field from one position to another, incase a player on a certain position gets injured.
+Psychology
+Managing a football team is not only about training and tactics, it's about psychology as well. Your teamhas to want to win and they have to believe in themselves. Your team psychology affects your matchresults, and in return your match results also affect your team psychology.
+Team spirit
+The atmosphere at your club has a great influence over the performance of your team. Team spiritaffects your midfield ratings, and the higher team spirit you have, the better your midfield will perform.This, in turn determines the amount of ball possession you will get. Team Spirit itself can be affected bya lot of things, but in particular your coach's leadership, the team attitude you set for each match,transfers and psychologist.
+Confidence
+Your players have to believe in themselves to perform well, and a team with low confidence has troubleputting their opportunities away. High confidence is normally a good thing, but if it gets too high playersmay underestimate weaker teams (see below for more info). Team confidence is reflected in the attacksector ratings. Confidence is largely dependent on the results of previous games, but having apsychologist and a coach with high leadership is also known to boost it.
+Team attitude
+Before each competitive match you tell your squad how important the match is. Your team attitudesetting affects how much ball possession you will get. You have three alternatives:
+Match of the Season: Your players will do anything to win this one. However, directly after the match theteam spirit will fall, which means your players will not perform at their best for the following matches.
+Normal: The players perform as usual.
+Play it Cool: Your players are instructed to take it easy, as there are other more important games tofocus on later. Directly after the match, Team Spirit will increase and your players will perform better inthe next matches.
+Player Personality
+All players have a personality. Dishonest and aggressive players tend to get booked and sent off moreoften. Leadership is important for your appointed team captain and for your coach.
+Psychological match events
+The way a match unfolds can impact the behaviour of the players beyond the instructions laid out by thecoach. Such psychological events can have big impact on a specific match, but they do not bythemselves affect the team spirit or confidence of future matches. A team that gains a lead of two goalsin a match will automatically start to lose its attacking momentum and to focus more on defence. Thiseffect will further increase as the lead is extended: each goal increase in the goal difference decreasesattack by 9% and increases defence by 7.5%. Each goal reduction in the goal difference reverses theprevious effect. There is an upper limit of a goal difference of 8, after which the team’s ratings will stopchanging.
+In some situations teams are able to withstand this psychological effect. If the team has been given“Match of the Season” instructions, they won’t back down even when in a large lead. The same goes for ifthe team plays a final in one of the national Cups, the World Cup or the Hattrick Masters and on the lastseries round of the season. In national teams competitions, the team won't back down from the semi-finals of the World Cup, while in the Continental Cups and Nations Cup there will be no pullback from thequarter-finals matches onwards.
+Moreover, a team performing unusually badly in the first half might get a telling off from the coach duringthe break, and pull themselves back together.
+Underestimation
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 23/43
+
+If you're facing a team in a worse position than you and your confidence is strong or better, your playersmay underestimate your opponent and play below their normal capacity. The risk to underestimate youropponent is dependent on the points and position difference between the teams, your confidence level,and your team attitude for the match. The risk is higher at higher confidence levels and when there's abigger gap in the standings. Choosing the "Play it Cool" team attitude can triple this risk. The only way tocompletely avoid underestimation is to play "Match of the Season".
+If you do underestimate your opponent, the points difference, confidence level, team attitude andwhether you are home or away decides the exact amount of underestimation. Depending on the scoreyou may recover somewhat at half time. You'll see a full recovery if you're behind, 2/3 in the case of adraw and 1/3 if you have a narrow one goal lead.
+Note that underestimation can only happen in league matches, but not in the first three rounds.
+Transfers
+The transfer list is where you acquire new players and try to sell those players you don't want to keep.You are allowed a maximum of 50 players at any time. The bid page gives you an overview over all theplayers you're either selling or bidding on. It also shows any transfers of former players from which youwill receive money.
+Selling a player
+To sell a player you place him on the transfer list, which you do from the page of that particular player.You choose what price you're asking for him and he is placed on the transfer list. To get an idea of theplayer's value, you can use the Transfer Compare feature, and we would always suggest listing at arealistic price. A player however needs to have played at least one game for your team to be transferlisted, and you can't transfer list a player more times than he has played games for your team. Thisrestriction does not apply to players promoted from your youth team, or to players that were on yourteam when you first became manager. The player will be on the transfer list three days before going tothe club that has offered the most, provided somebody has bid for him. A sold player disappears off tohis new club after the deadline expires, unless one of the clubs involved in the transfer is playing a matchat the time, in which case he will arrive as soon as the match finishes. If a buyer is not found he will stayat your club. If you put a player up for sale by mistake, you may cancel the transfer. This is possible for10 minutes after listing the player, as long as there have been no bids. Your listing fee will not berefunded. Outside this window, you always have the option to buy him again yourself!
+Buying a player
+To buy a player you visit the player market, the transfer list, under the Club menu, via the World menu orvia the transfer search icon in the top right corner. You search for what kind of player you want and tomake an offer you enter the page of the player by clicking on his name. You must raise the bid by1 000 US$ or 2%, whichever is greater. If there is no current bid on the player you can bid the asking price,as long as this is equal to or greater than 1 000 US$. Note that the sum of your bids plus the wages ofthe players you are bidding on (you always pay a player's first salary immediately after the purchase)cannot put you more than 200 000 US$ into debt.
+You may bid on a player right up until the deadline. If someone places an offer less than 3 minutesbefore the deadline, the deadline will be extended for another 3 minutes right on top of the point in timethat the offer was made.
+A great help when buying players is the information concerning his skills, personality etc. You can alsouse the 'Transfer Compare' to see what a similar player has recently been sold for on the market.
+Autobidding
+Autobidding works in the same way as a normal bid would do. If you place a maximum bid the systemwill automatically bid for you when needed, always raising the bid by the lowest possible amount (2% ora minimum of 1 000 US$).
+You can change (either increase or decrease) your maximum bid at any time, but you can't remove yourcurrent bid. Your maximum bid is only visible to you personally, other managers can only see your currentbid.
+You can have one active maximum bid at a time. If your maximum bid has been reached, it does notcount as an autobid anymore and you can set another maximum bid as needed.
+For some special cases (such as when two teams make the same autobid or when two autobidders arebattling against each other) we have built in some smart logic, here are some examples to help explainthis logic.
+The agent, the mother club and transfer fees
+Placing a player on the transfer list costs 1 000 US$. After the completed deal the player's agent, motherclub, and previous club will all take their cut of the sale price. On the player page you can always see howmuch you will keep if you sell a player. Here are the basics:
+How much the agent takes depends on how long the player has been in your team.
+The mother club always takes 2% of the selling price. When you're the mother club you always receive 2%each time that player is sold. Please bear in mind you neither pay nor receive any mother club money
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 24/43
+
+when selling a homegrown player for the first time.
+The previous club fund always takes 3% of the selling price. When you're the previous club the money youreceive depends on how many matches the player played for your team.
+See these tables for more info.
+When you sell a youth player you are not considered the previous club. But the next time he's sold you areconsidered the previous club, provided he has played at least one match for your senior team.
+Transfer proceeds to Board reserves
+For some player sales, the Board may decide to transfer a part of the money for the Board reserves forlater use by the club.
+This happens only for specific players, and for most managers it will be a very rare occurrence.
+The Board will tell you during the transfer listing process if this is about to happen and, if so, thepercentage of the proceeds that will go to Reserves.
+The Board may do this when they think a player is being traded for speculative reasons, or as a way tostore value. They will reason that the team does not need to replace the player for competitive reasons.(Historically, such players have been called “Gold Bars” by the community, for their ability to hold valueover time).
+Currently, Boards will only consider retaining money for Goalkeepers (at least solid Goalkeeping skill) orpotential future coaches (at least solid leadership plus at least inadequate experience).
+The percentage of the sale that the Board sends to Reserves depends on how many matches the playerhas recently played for your team.
+The general rule is that for regular starters, all money stays as cash - no money goes to Reserves. Beinga regular means playing at least 60 minutes once a week.
+If a player has been unable to play while recovering from injury, his absence does not count as beingsidelined. However, no such exception is given for permanently injured players that are sold.
+Example: A player that fits the “Gold Bar” criteria has been starting league matches all season. When themanager considers selling the player, the Board stands back- All proceeds (after agent fees) would beavailable for the coach as cash. However, the transfer listing does not happen and the player is insteadput on the bench. After two weeks, 12 % of transfer proceeds will now be earmarked for Board Reserves.After four weeks on the bench, the number is up to 24 %. The manager instead decides to start the playeragain. After six weeks back on the team, playing league or Cup matches, the player can yet again be soldwith no money ending up in Board Reserves.
+As a rule of thumb it takes three weeks of playing in a league or Cup match to recover every two weeksof inactivity. If only playing friendlies, the recovery takes twice the time.If a player was raised in yourteam, no money will go to Board Reserves, whatever the skills and starting status of the player may be.This also goes for players that joined the club in the last two weeks and have not had the time to becomestarters.
+Transfers may affect team spirit
+Whenever you sell or buy a player you risk a drop in team spirit. The risk increases when you sell a niceplayer and when you buy a nasty player. There is no risk of a team spirit drop if you sell a youth playerwithin 6 days of him joining the senior squad.
+Server shutdowns
+Transfer deadlines can be extended (in the fairest possible way) in case of server shutdowns. Also keepin mind that the server might be down just as the deadline approaches. A transfer is only completedonce the new player arrived at his new club and may until then still be subject to an extension of thedeadline when interruptions occur.
+You'll be taking a chance by waiting until the last minute before making your move. It is advised totransferlist your players at a price you think is reasonable, as you else may risk selling your player at alower price than you have hoped for, in order to avoid any disappointment because of an unexpectedserver down.
+Fair Play in the Transfer Market
+Good players and money are key aspects of Hattrick, which makes it very important that no teambenefits from abnormal activities in the transfer market. This means that buying players at inflatedprices is prohibited, and so is any activity that is designed to give a team a financial benefit of any kind.Only the player's attributes which have an influence on the game, such as skills, age, uniqueness andNT/U21 potential, play a role in determining his market value.
+The GameMasters are fully authorised to cancel or adjust abnormal transfer prices, hand out fines toteams or even ban the users involved. If you have received a clearly inflated bid on your own player fromsomeone, then please contact the GMs immediately. To contact a GM, please visit our contact page.
+Youth Players
+Youth Players
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 25/43
+
+You can acquire new players for your first team squad by recruiting young players. There are twodifferent ways to achieve this.
+The simplest way is to use your club's scouting network. Using this network, you can instruct scouts tolook for players that they think are suitable to play for your senior team right away.
+The second option is to start a youth team. Your scouts will then look for talent for this team instead.You will recruit younger players that need more time to develop. With a youth team, you can playmatches against other youth teams in private or public leagues. Through these matches, you will be ableto discover your players' true potential as well as train them before they are ready for the first team.
+Finding a player through the scout network and recruiting them directly to your senior squad is a simpleand time-efficient way to acquire talent. Running a youth team is more challenging, but if you do a goodjob it can also be more rewarding.
+In both systems, you rely on youth scouts to do the work. Each scout will present one prospect per weekfor you. Hiring more scouts costs more money but also give you a better range of prospects to choosefrom. You can only use one system at a time. The scouting network is used by default, but you can starta youth team at any time. It's a long term commitment as you can't expect any players for your seniorteam for at least one season. Once you are running a youth team, you cannot promote a youth playerfrom the scouting network. However, you can of course change back. You do that by closing your youthteam and start using the network instead. Beware, as by doing this you will lose any progress and allplayers you have in the youth team.
+Scouting Network
+You can acquire a new player each week by sending your scouts out to find a new talent for the seniorsquad. For each scout you hire, one prospect will be presented every week. However, only one can bechosen.
+You don't have any options on what kind of player you'll get, apart from choosing between a goalkeeperor an outfield player. Don't count on receiving top notch players each week.
+Most players the scouts recommend won't even be suitable for the reserve team. If you have one or twoof them moving directly up into the team you should be satisfied - think about how things work in reality!
+You can hire up to three scouts, who will each be paid a weekly salary. Each scout on your payroll can begiven instructions what to do. You choose what region in your country they will search for talent, and youcan choose if they should primarily look for a particular position or for any kind of player. When lookingfor a certain position, you will find talent that have a better fit for what you need, but you may miss outon players that have more talent overall.
+You can hire and fire additional scouts at will, but you can never have less than one scout.
+You're only able to recuit one young player per week through the scouting network.
+Information on your youth squad activities can be found in the "My club" menu, under the "Youth Team"caption.
+Youth Team
+Having a youth team means you will actively manage your youth players. You set line-ups, plan theirtraining and discover their true potential. Understanding what skills your youth players can reach whilestill in the youth team is a key factor in running a successful youth team. Sometimes, you will be able todiscover rare gems that can become important players for your teams for many years, or who can besold for a lot of money on the transfer market. Your youth team can join and compete in a youth leagueof your choice; you can, for example, play in a league together with your friends or colleagues. Everythree weeks your youth team can also play friendlies against other youth teams in the world.
+Starting up a youth team
+You activate your youth team from the "My Club" menu, under "Youth Team, Overview" caption. You willget a trainer assigned to the team. Your scouts will be the same as when you ran only the scoutingnetwork. You will also get some youth players immediately to allow your youth team to play matchesright away. However, those players are randomly picked boys from a local school and far from talented.
+The Youth League
+Your youth team can join a youth league of your choice, or you can choose to create your own. A youthleague can have 4, 6, 8, 12 or 16 teams, and the league can be private (the creator of the league invitespeople to the league) or public (free for everyone to join). The league creator can also choose when theleague matches should be played. Once a league is filled with teams it starts automatically.
+The Scouts
+Scouts work in the same way as they did with the scouting network. You can hire up to three scouts, butnever have less than one on the payroll. You can tell them in what region they should look for talents, andalso if you want them to look for a specific kind of player. When you ask a scout to look for a certainposition, players tend to have a little lower overall quality.Every week, they will present one prospect eachfor you. You need to choose based on the limited information available to you. You can only recruit oneplayer per week, and the players you pass on will never show themselves again around your club...Youmay also hire additional scouts if you want, but you cannot have more than three scouts (and not lessthan one).
+The Players
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 26/43
+
+Your youth team can host a maximum of 18 players at the same time. Players joining your youth teamwill be 15-16 years old. Most of their skills are yet to be discovered, so you will not see all their skills orpersonalities like you do for senior players. To explore your players you have got to try them out indifferent positions on the pitch, to see where they play the best. To your aid you have the star rating, thescout's comments and the trainer's report. Through training you will also be able to reveal their skills,more info about this in the training section. Additional hints are also to be found in the match report.
+Matches
+Once every week your youth team plays a league match and every third week you will also have theopportunity to play a friendly game. You place your orders in advance and choose the tactic you want toplay exactly as you do for your senior squad. If no order is placed, or if the lineup is incomplete, the boyswill fill the lineup themselves. They will nominate a keeper first, then fill open defender slots (max 5),followed by midfield and wingers (max 5), and finally forwards (max 3).
+Training
+Youth players can focus on two types of training at the same time, one primary and one secondary. Theprimary training has more effect than the secondary. You can choose to train the same thing (forexample defending) as both primary and secondary training, but the training effect will be bigger if youchoose two different training types.
+Youth players receive training from both league games (full effect) and friendly games (smaller effect).Training for youth players is calculated per match, so they can receive training twice the same week. Youneed to give your training instructions at least 10 minutes before the game starts. The effect of trainingappears after the game is finished. Right after the end of the match your trainer will give you a reportabout what has happened in the team, with a lot of good hints about the players' progress. You may alsoget the chance to reveal skills:
+For your primary skill training, your coach will inform you about the current skill level for one player who'splayed at least 44 min in a trainable position (i.e. receiving more than very small effect). The same goesfor your secondary skill training, but in this case he will inform you about the maximum potential in thatskill instead of the current level. A player potential report will not be shown if that player hits hismaximum trainable skill level the same week, in such a case the coach will report that the player can nolonger continue training that particular skill.
+Note that you do not receive a report for the secondary training if you train the same as the primarytraining. If all players in a trainable position have had their skills revealed, your coach is naturally not ableto give you a report of this kind. Also, if you have less than 8 players on the pitch when the match ends,you will not get any skills revealed.
+Additionally, your coach will normally report one of the three players with the most potential (highestmaximum skill level) in a non-trained skill.
+Promotion to the Senior Team
+A youth player must at least be 17 years old and have been a member of your youth team for at least aseason (112 days) before you can promote him. You cannot promote a youth player if it leaves youryouth team with less than 11 players that are eligible to play matches. You can also not promote a playerif you already have 50 players on your senior team squad. Once a player reaches 19 years old, he will nolonger be able to play in matches for your youth team. He does not have to leave the youth squad, butyou will not see him on the pitch again until you promote him to the main team.
+The costs
+When you start a youth team you pay a one-time registration fee of 5 000 US$ out of your Club temporarycosts. Running a youth team with one scout costs 10 000 US$ per week and each additional scout costs5 000 US$. You will also pay an additional 5 000 US$ as a signing bonus in the first week of hiring a newscout. The weekly costs for the youth team will be listed as "Youth Expenses" in your weekly financialreport. The youth team does not have any other staff, they rely on their parents taking care of transport,bruises, injuries etc - which they do without any additional cost. At the same time youth teams have noincome either, the only spectators are usually just parents and friends to the youth players.
+Promoting a youth team player to your senior squad costs 2 000 US$.
+Apart from that the only additional cost you will get is if you tell your scout to search for players inanother region, then you might have to pay for his plane ticket.
+Closing the youth team
+If you want to deactivate your youth team, you can do that in between youth seasons or if your youthteam is not a member of any youth league. You must keep your youth team for at least six weeks though.You can also "restart" your youth team, even during a youth team season, by using the "Restart youthteam" feature on your Youth team overview page. This action is irreversible. It means that all your youthplayers and scouts will be fired, your closed youth team will remain in its league and you will have to finda new league for the new youth team. This option may be used only once in 3 seasons (48 weeks).
+Please note that the 'restart youth team' box is only shown if the youth team has been inactive (no scoutcalls) for at least the past 3 weeks or if you haven't called your scouts this week and have less than 9eligible (under 19) players in your youth team.
+The series system
+A Hattrick season is 16 weeks long: 14 league rounds (8 teams in each series who play each othertwice), one week for qualifiers and one week with no league activity.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 27/43
+
+The League Pyramid
+Every league in Hattrick builds on the same principle: You start from the bottom of the pyramid, aiming toearn promotion to the highest level over time.
+The top three divisions look the same in every league. The top division has only one series with eightteams; this is where the league champion is decided.
+Below this, there is a division with four series and 32 teams. The four series winners may gain directpromotion to the top level or play a qualification match, depending on their season record.
+The third level has 16 series with 128 teams, again an expansion by a factor of four, and again the samepromotion rules.
+In the divisions below, not all leagues look the same. Depending on how many active managers a leaguehas, the league structure may be flatter (allowing more teams per level but making promotion harder) orexpand in a taller, more narrow way (which gives more division levels but with more accessiblepromotion paths).
+The league structure in your league matters because it decides the promotion rules for your series.Check your league table for exact information on how promotion works in your series. You can alsobrowse other divisions in your league from the arrows on the series page to see how promotion works indifferent places.
+The Hattrick Football Association may occasionally choose to adjust the league structure by reducing orincreasing the size of a particular division. If so happens, it will be communicated in advance.
+Promotion, relegation and qualifiers
+Promotion can happen in three ways, depending on the size of your division compared to the one aboveyou.
+1. The winner promotes or plays a qualifier: If your division is much bigger (x4), fewer teams canpromote. In this scenario, 50 % of the series winners in the division promotes directly and the rest of thewinners have to play a qualifier. Who gets the direct promotion is decided by points and goal differenceduring the season.2. The winner promotes directly, the runner-up plays a qualifier: If your division is twice the size of thedivision above, the winner will always promote and the runner-up plays a qualifier against a team fromthe level above.3. Two teams promote directly, two teams play qualifiers: If your division is the same size as the divisionabove, four teams have the chance to promote. Teams placed 1 and 2 promote directly, teams placed 3and 4 play a qualifier.
+Relegation rules are simpler. Unless you are already playing in the bottom division, the teams placed 7and 8 will always be demoted directly, while teams placed 5 and 6 play qualifiers to stay up.
+Please note that the promotion and demotion rules for your series can always be found in your seriestable.
+Please note that league, cup and promotion bonuses are are reduced by 25 % in the league HattrickFemme International. Please read the HFI info page for more information.
+Switch series
+If your team competes in one of the three bottom divisions in your league (provided that division is notone of the league’s top two divisions), it may be possible to switch from one series to another in thesame division. For this to work, there needs to be a free slot in the series you want to join.
+There are two ways to initiate a change of series:
+1. In the Next Season Planner, available on your Series page, you can set a Preferred Series. This optionopens up around one month before the season ends and will give you priority to a specific series whenthe season ends. All viable moves will happen immediately after Qualification matches have beenplayed. If the division above or below your current one also has series switching enabled, you can alsoset a Preferred Series in these divisions. This preference will be used if you promote or demote at theend of the season. Your Preferred Series choices are reset once all viable planned moves have beencompleted, and the new season starts.
+2. In the week after Qualification matches, a second opportunity to change series opens up. UsingSwitch Series, you can browse other series and move directly to a new one if there are available slots.Please note that if you have an additional team under your management, as part of your Supportermembership, your teams can never move to play in the same series.
+Bot demotion
+At the end of each season all bot teams in division VI and lower will demote to the lowest possibledivision. The only exception to this is at the very top of division VI, where any bot team that wins theseries will either promote or play a qualifier as normal. Bot teams in division V or above are treated in thesame way as human owned teams in terms of promotion and relegation.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 28/43
+
+As these bot teams are demoted, additional teams will be given space in the higher division. Theseteams will be labelled "Lucky Losers", and will either be teams that lost qualification matches, or in somecases even teams that were demoted directly. You can opt out from this kind of promotion in the teamsettings.
+If there are more bots above the bottom division than human managers in the bottom division, thesystem automatically closes the bottom division, and hence makes preparations for it.
+League position and ranking
+The final standings are determined by, in order of importance, points, goal difference and goals scored.This in turn determines your ranking, which is used to decide who meets who in qualifiers and cupgames. The ranking is based on, in order of importance: series level, place in the series, points, goaldifference and goals scored. For both ranking and league position: if all of these things are equal a cointoss decides.
+Prize money
+If you finish first, second, third or in fourth place you will get some prize money. How much you getdepends on your place and in which division you play:
+Please note that league, cup and promotion bonuses are are reduced by 25 % in the league HattrickFemme International. Please read the HFI info page for more information.
+Series Level 1 2 3 4
+Division I 2 000 000 US$ 1 175 000 US$ 825 000 US$ 500 000 US$
+Division II 1 350 000 US$ 1 050 000 US$ 750 000 US$ 450 000 US$
+Division III 1 200 000 US$ 925 000 US$ 675 000 US$ 400 000 US$
+Division IV 900 000 US$ 700 000 US$ 500 000 US$ 300 000 US$
+Division V 600 000 US$ 475 000 US$ 325 000 US$ 200 000 US$
+Division VI 525 000 US$ 400 000 US$ 300 000 US$ 175 000 US$
+Other divisions 450 000 US$ 350 000 US$ 250 000 US$ 150 000 US$
+There is also a 10 000 US$ bonus paid for having the top scorer in a series. The money is paid out afterthe last league match of the season. If two players tie for this award, both current owners of the playerswill receive the award; however, if two of your own players tie, then you only receive one prize.
+Promotion bonus
+If you are directly promoted to a higher division you get a promotion bonus on top of the prize money.Moreover, promotion will also boost your fan club: you get a 10% increase in fans (similarly, if youdemote you will lose 10% of your fans).If you promote "for free”, outside the regular promotion slot, youonly get the fan club boost though. Examples of this include bonus promotion due to bot removal andthe temporary extra promotion slots available in the Hattrick International league.
+Series Level Directly promoted Promoted after qualifier
+Division I - -
+Division II 500 000 US$ 175 000 US$
+Division III 450 000 US$ 150 000 US$
+Division IV 400 000 US$ 125 000 US$
+Division V 300 000 US$ 100 000 US$
+Division VI 200 000 US$ 75 000 US$
+Other divisions 175 000 US$ 50 000 US$
+The cup system
+Participating in one of the Hattrick cups is an exciting challenge for every manager, as well as a goodway to gain experience for your players and to earn extra cash for your club. The Hattrick cup system hasbeen designed to offer a meaningful experience for teams at every level. It has also been designed toensure that every team is guaranteed at least three cup games every season.
+Every team in Division 6 and above will get to play in the National Cup. If eliminated early from theNational Cup, the team will instead get to participate in a lower tier cup. If your league has more than sixdivisions, there will also be a Divisional Cup for each division below Division 6. Teams in these divisions(Division 7 and below) will play in their respective Divisional Cup instead of in the National Cup.
+If your team is eliminated early from the Divisional Cup you will, as in the National Cup, get the chance toparticipate in a lower tier cup instead.
+Cup fixtures
+Cup matches are always played midweek. The first round of the National Cup and Divisional Cup alwaystakes place a few days before your first league match of the season. The Challenger cups consists of
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 29/43
+
+teams that have been eliminated from either the National or Divisional Cup, and for this reason the firstChallenger cup starts one week after the National Cup and Divisional Cup. There are separate Challengercups that correspond with the National Cup and with each Divisional Cup. Your first cup opponent andthe cup you will play in is announced one week in advance. In coming rounds your next opponent andcurrent cup will be announced shortly after all matches for the current cup round have ended.
+Cup venues
+The main rule is that the strongest team still in the Cup will play away against the weakest team still inthe Cup. To decide this, we use a Cup ranking, explained further down.
+In the Cup's last six rounds, ranking no longer influences home or away advantage as all matches areplayed at neutral venues.
+Cup draw
+How is your opponent in the Cup decided?
+In the first round of the Cup, the highest-ranked team will always play away against the lowest-rankedteam in the Cup.
+Before the first round kicks off, the draw for the second round is made. For this draw, it is assumed thatall high-ranked teams progress from the first round.
+If a lower-ranked team wins in the first round, it will inherit the place of its opponent in the second round.This could give it an easier opponent than it would otherwise have gotten in that round.However, this advantage does not last. Before the second round starts, the draw for the third round ismade. Again, all remaining top-ranked teams are matched against the remaining low-ranked teams.
+The advantage of this system is that for any Cup round, all remaining teams will know what happens ifthey progress to the next round. There is always another match, the winner of which will play the winnerof your match in the next round.
+Here is an example of how the Hattrick Cup draw works:
+1. In the first round, we have the following 16 teams and match-ups:
+First Round
+TeamRank16-TeamRank1TeamRank15-TeamRank2TeamRank14-TeamRank3TeamRank13-TeamRank4TeamRank12-TeamRank5TeamRank11-TeamRank6TeamRank10-TeamRank7TeamRank9-TeamRank8
+The expected Round 2 Matchups, as made known before Round 1 starts, are these:
+TeamRank8-TeamRank1TeamRank7-TeamRank2TeamRank6-TeamRank3TeamRank5-TeamRank4
+However, two matches ended in surprise wins for the underdogs - Teams 16 and 14 outperformed.Because of this, the actual matchups in Round 2 will be:
+TeamRank8-TeamRank16TeamRank7-TeamRank2TeamRank6-TeamRank14TeamRank5-TeamRank4.
+Now, when the draw for Round 3 is done, the system again assumes that the top-ranked teams will win,hence creating this draw:
+Team Rank8-TeamRank2TeamRank6-TeamRank4
+If Team 16 wins again, it will acquire the seat of Team 8.If Team 14 wins again, it will get the seat of Team 6.
+Cup ranking
+The Cup ranking is used when creating the Cup draw. It is a static ranking that does not change once theCup has started. The first factor for the ranking is what division the team plays in during the currentseason. Teams are then ranked within these divisional groups as follows:
+1. Active demoted teams2. Active teams that neither demoted nor promoted3. Teams that promoted by their own strength4. Teams that promoted for "free" (replacing a demoted bot)5. Bots, in case of vacant spots
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 30/43
+
+Teams within each group above are sorted according to the ranking at the end of the last season. Theranking stays the same for the duration of the cup.
+Joining a Secondary Cup Later
+For Challenger and Consolation cups, the time of entry is also factored into the seed. Teams that enteredlater are guaranteed to be seeded higher than those that joined earlier. The Cup ranking of each team stillmatters, but only to decide in which order teams that entered on the same date will be seeded.
+One example would be that your team manages to stay in the National Cup until round 5 or 6 beforegetting eliminated. As your Cup journey continues in a lower-tier Challenger Cup, you will always beseeded higher than teams that joined before you. The highest-ranked team of those who entered in thefirst round will play against the lowest-ranked team of those who entered most recently.
+The different Cups and their formats
+The most important cup in every league is the National Cup. This is open to every team in Division 6 andabove that has a human manager. Only the very best teams will have a chance to win the National Cup,but any team that progresses far in this competition will be well rewarded.
+However, if your team is eliminated early from the National Cup you will get a second chance. If you areeliminated in any of the first six rounds of the National Cup, you will instead gain a place in one of thethree National Challenger Cups. Participating in the Challenger cups will still be attractive for your club,but rewards are a lot lower than for the National Cup. If you can, staying in the National Cup shouldalways pay off.
+The three Challenger Cups are originally called Emerald, Ruby and Sapphire. The Emerald Cup takes onany team that is eliminated from the National Cup in round 1 or 6. Teams eliminated in rounds 2 and 5are moved to the Ruby cup. And teams eliminated in rounds 3 and 4 are moved to the Sapphire cup. Thethree cups run parallel to each other and to the National cup, and one winner will be crowned in each oneof them. Please keep in mind that the Challenger Cups may have names that are different from theiroriginal ones in some leagues.
+Teams that are eliminated in round one of the Emerald Challenger Cup and round one of the RubyChallenger Cup will gain a place in the Consolation Cup. This Cup does not give any prize money or otherperks, but the winner still gets a trophy.
+In leagues with more than six divisions Divisional Cups are organised for Division 7 and below. TheDivisional Cups follows a similar pattern with one main cup, the three Challenger Cups Emerald, Rubyand Sapphire, as well as one Consolation Cup. The only difference is that the overall prize money islower.
+The size of the Cups is determined by the number of teams that are qualified for the cup and that havehuman managers. The smallest possible Cup size that still makes room for all qualified human teamswill be chosen. Once all human teams are in, the Cup will be filled up with bot teams to complete thestarting field.
+1. The number of qualified teams managed by humans is counted2. The smallest cup size that fits all the teams managed by humans is chosen3. This Cup is then filled out by the human teams first4. Then "regular" bots from the league system are used5. If this is not enough, new bot teams are created for the purpose of the Cup only.
+Week National cup Challenger cup(Emerald) Challenger cup(Ruby) Challenger cup(Sapphire) Consolation cup
+Teams Teams Teams Teams Teams
+1 16384
+2 8192 8192
+3 4096 4096 4096 4096
+4 2048 2048 2048 2048 4096
+5 1024 1024 1024 2048 2048
+6 512 512 1024 1024 1024
+7 256 512 512 512 512
+8 128 256 256 256 256
+9 64 128 128 128 128
+10 32 64 64 64 64
+11 16 32 32 32 32
+12 8 16 16 16 16
+13 4 8 8 8 8
+14 2 4 4 4 4
+15 - 2 2 2 2
+16 - - - - -
+Losing teams in rounds one and six of the National Cup will move on to the the Emerald ChallengerCup.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 31/43
+
+Losing teams in rounds two and five of the National Cup will move on to the Ruby Challenger Cup.
+Losing teams in rounds three and four of the National Cup will move on to the Sapphire ChallengerCup.
+Losing teams in round one of the Emerald Challenger Cup and round one of the Ruby Challenger Cupwill move on to the Consolation Cup.
+Team effects
+One important aspect of the Cups is the tactical options that they present. Staying in the Cup for a longtime gives you more competitive games, which also means more opportunities to increase confidenceand team spirit in preparation for the league. Cup games also give your players more experience, whichalong with higher ticket sales makes a long cup run even more valuable. However, not all Cups willimpact your team in the same way.
+Cards and injuries are in full effect in all the cups. If you pick up a card in a cup game, your player mayget suspended in a following league game.
+Team spirit, confidence & fan mood: Only National Cup and Divisional Cup games will have an effect onthese values. Matches played in any other cup behave like a friendly when it comes to the impact onfuture team spirit, confidence and fan mood.
+Experience: The National Cup and Divisional Cup gives the player on the field double the amount ofexperience compared to a league game. Challenger and Consolation Cup matches gives your players halfthe experience they would get in a league game.
+Cup income
+Ticket sales is an important benefit from a successful Cup run. The longer you progress in any Cup, themore spectators will come and thus more revenue will be generated. The National Cup and the DivisionalCups are considerably more attractive to the fans than their corresponding Challenger and Consolationcups. While a National Cup and Divisional Cup game (at least in later rounds) can attract similarattendance to a league match, the other cups are more comparable to friendlies when it comes toattendance. The National Challenger Cups will attract three times as many spectators that aninternational friendly between the two teams would. The National Consolation Cup will attract twice thenumber of spectators that an international friendly between the two teams would. The DivisionalChallenger Cup will attract twice the number of spectators that an international friendly between the twoteams would. The Divisional Consolation Cup will attract 50 % more spectators that an internationalfriendly between the two teams would.
+The home side gets 67% of the crowd revenue and the away side gets 33%. In the last six rounds theteams split the revenue 50%. In general, fans aren't very interested in the first couple of rounds of thecup, but their interest will increase as it goes on. It's also true that the fans of a lower division team willwant to see a game against a higher division side, but that is not true the other way around. The bestteams in the cup also get some prize money as shown in the table below. There is no top scorer awardfor the cup.
+Please note that league, cup and promotion bonuses are are reduced by 25 % in the league HattrickFemme International. Please read the HFI info page for more information.
+Position National cup Challenger cup Consolation cup
+Winner 1 500 000 US$ 300 000 US$ -
+Runner Up 1 000 000 US$ 150 000 US$ -
+Semi final exit 750 000 US$ 100 000 US$ -
+Quarter final exit 500 000 US$ 50 000 US$ -
+Round of 16 exit 250 000 US$ 25 000 US$ -
+Round of 32 exit 200 000 US$ - -
+Round of 64 exit 180 000 US$ - -
+Round of 128 exit 160 000 US$ - -
+Round of 256 exit 140 000 US$ - -
+Round of 512 exit 120 000 US$ - -
+Position Divisional cup Challenger cup Consolation cup
+Winner 300 000 US$ 150 000 US$ -
+Runner Up 150 000 US$ 100 000 US$ -
+Semi final exit 100 000 US$ 50 000 US$ -
+Quarter final exit 50 000 US$ 25 000 US$ -
+Round of 16 exit 25 000 US$ - -
+Friendlies
+To give all your players training in their right positions, practice games are always an option if you're notplaying in the cup. Often it is used to let the reserves play and train, but it can also be a good way to testand train new formations and orders. Or why not challenge your best friend for a matter of honour.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 32/43
+
+Getting a friendly
+The easiest way to get a friendly is to add your team to the friendly pool on the challenge page. Choosewhat kind of match and opponent you would like, and then the pool will automatically match your teamagainst another team and book a friendly (as soon as you meet the criteria set by a team that matchesyour criteria).
+As long as you are out of the cup, and have not already booked a friendly, you can challenge anyopponents that are also without a game. Some teams may be unavailable for challenges due to theirpreferences or Manager Licence status.
+All of your challenges (including teams who have challenged you) are shown on the "Challenges" page.Once a friendly has been arranged, it will appear on the fixtures page, and you can select your team in thenormal fashion.
+Season break friendlies
+During weeks 15 and 16 of the season you will also be able to play friendlies during the weekend as longas you do not have a qualification match.
+During this period, challenging someone for a friendly will work a little differently. When making thechallenge, a drop down will appear where you can select whether the challenge is for a mid-week orweekend friendly.
+The challenge window for weekend matches, regardless of whether they are international or national, willbe from Monday 06:00 to Friday 23:59.
+Friendly match types
+There are two types of friendly games: friendly game (normal) and friendly game (cup rules). With cuprules the match is decided after extra time (and perhaps penalties) if there's a draw after full time.
+International friendlies
+You can choose to play abroad, or invite a team from another country to your stadium. If you are playingabroad, the game will be played at the stadium's local match time. For example, if you are playing inPortugal, the game will be played at the regular Portuguese Wednesday match time (i.e. 9.45pm CentralEuropean Time CET).
+Regardless of where you'll be travelling your team will be leaving at 6:00 p.m. (CET) on Tuesday andreturn by 8:00 a.m. on Thursday. International friendlies must be booked by Tuesday 6:00 p.m. (CET), andyou can't book a new friendly at all until your team has returned home on Thursday. If your team didn'tplay an international friendly, you can start booking an international friendly for the next week at 6:00a.m. on Thursday.
+Each travel abroad will cost you 6 000 US$, but on the other hand international friendlies tend to attractmore spectators.
+Miscellaneous
+The crowd turnout for a friendly is considerably less than for a competitive game. Friendlies with cuprules attract more than normal friendlies, and international friendlies attract even more.
+Confidence and team spirit are not affected, nor are fans or their mood. Moreover, the injury risk isn'treduced just because it's a friendly.
+Playing on neutral ground
+If you want to play a friendly without either of the teams getting the home team advantage, you canchoose to play on neutral ground. But if you play in a stadium in your own region, you will still get thehome team advantage (even if you are listed as the away team). The stadium's owner will not earn anymoney from these friendlies.
+No matter where you choose to play, any match played against a foreign team is considered to be aninternational friendly.
+Hattrick Arena competitions
+Hattrick Arena is the alternative competition system for Hattrick teams. There are many types of HattrickArena competitions, from single-match Duels against another manager to official ladder contests whereyou can try to become the 'King of the Hill'. There are even private tournaments you can create and runyourself, setting the rules you want.
+Note that you can still play regular friendly matches every week even if you play in a tournament.
+Creating or joining a tournament
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 33/43
+
+Hattrick Arena has a flexible tournament creation system. It is possible to join tournaments created byothers or create one for yourself and your friends, using customised rules to make the competition moreinteresting.
+As the creator of a tournament, you can decide on all aspects of the tournament. Name, format, size,match times, and special rules such as allowing only a certain category of players (homegrown,minimum, or maximum age) or setting a salary or power rating limit for participating teams.
+Everyone can set up a tournament using Hattrick Credits. Creating or entering tournaments for free isalso possible if you are a Gold, Platinum, or Diamond Supporter.
+Match days in the Arena
+Matches in Hattrick Arena competitions are played on neutral grounds, and they don't give you anyincome from spectators (and no new members to your fan club).
+All Hattrick Arena matches use the same match data as regular matches. So your players’ current form,skills, experience, injury status etc on the match day will be used. There are two exceptions though: teamspirit (and confidence) is set to a fixed value and cards work differently. See below for details.
+Matches also have no effect on your team or your players after the match. Players don't get any trainingor experience from these matches, nor do matches affect formation experience, team spirit, and so on.
+Divisional Battles and Trophies
+You will also find several official contests in Hattrick Arena. These are created by Hattrick, and you canparticipate for free of charge if invited.
+In Division Battles, you and the other managers in your series compete together against the other seriesin your division. Every round, your series is drawn against a different series, where each of theparticipating teams will face one of the teams from the other. The goal is to be celebrated as the bestseries of your division at the end of the season!
+Hattrick also organises two Trophy tournaments, both played during the pre-season. The GenerationTrophy is a tournament where managers who started playing Hattrick around the same time are matchedagainst each other.
+The Supporter Trophy is an invitational tournament for all current Hattrick Supporters.
+Hattrick Arena effects in detail
+All the details you need to know about Arena matches are listed here:
+Team spirit: Team spirit is set to a fixed level (content) in Hattrick Arena matches.
+Team confidence: Confidence is always set to a fixed level (wonderful) in Arena matches.
+Injuries: No injuries will occur in Arena matches, but if your player already has an injury from a regularHattrick match, they will not be able to play.
+Cards (own tournaments): Tournaments have their own card status, and have a completely separatesystem of red / yellow cards from 'normal' Hattrick. As such, any card received in a tournament matchwill only count for the matches that are part of that tournament. Equally, should a player be red carded innormal Hattrick, he will still be able to play in a tournament match.
+Cards (Ladders): Cards don't count at all in ladder tournaments.
+Training: Players don't get any training from tournament matches.
+Experience: Player don't gain any experience from playing tournament matches.
+Formations: Your current formation experience in "normal" Hattrick is also used for tournament matches.However, you do not gain any formation experience from tournament matches.
+Ladder contests
+In a ladder your goal is to reach the highest rung and become the 'King of the Hill'. And then stay therefor as long as you can. To reach the top you challenge other teams listed above you in the ladder, and ifyou win you take their place in the ladder.
+Challenge rules
+Your current position in the ladder affects which teams you are able to challenge.
+Pos 2-5: Can only challenge the team immediately above them in the ladder.
+Pos 6-11: Can challenge teams 1-2 places above them, but no higher than position 5.
+Pos 12-18: Can challenge teams 1-3 places above them, but no higher than position 10.
+Pos 19-39: Can challenge teams 1-5 places above them, but no higher than position 16.
+Pos 40-63: Can challenge teams 1-7 places above them, but no higher than position 35.
+Pos 64-99: Can challenge teams 1-10 places above them, but no higher than position 57.
+Pos 100-129: Can challenge teams 1-15 places above them, but no higher than position 90.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 34/43
+
+Pos 130-169: Can challenge teams 1-25 places above them, but no higher than position 115.
+Pos 170-199: Can challenge teams 1-35 places above them, but no higher than position 145.
+Pos 200-249: Can challenge teams 1-50 places above them, but no higher than position 165.
+Pos 250-599: Can challenge teams 1-75 places above them, but no higher than position 200.
+Pos 600-1099: Can challenge teams 1-100 places above them, but no higher than position 525.
+Pos 1100-2499: Can challenge teams 1-250 places above them, but no higher than position 1000.
+Pos 2500-5499: Can challenge teams 1-500 places above them, but no higher than position 2250.
+Pos 5500+: Can challenge teams 1-1000 places above them, but no higher than position 5000.
+The challenger pays for the match and challenged teams automatically accept the challenge. The matchis played 24 hours after the challenge has been made. You can play the match earlier if both teamsactivate the Quickstart option in the Review tab on the Match orders page, under "Change match time"(not applicable for matches for places 1-100). If the challenger wins, the Credit will be refunded.
+Position changes after match
+If you challenge a team and win, you take the position of the team you challenged. The challenged teamis moved down 1 position (this also goes for any other teams in between the two teams in the ladder).
+Example: Team A is on position 54 and challenges B, currently 47. If A wins, A takes position 47 from B.B is moved down to position 48, and the team that held position 48 is moved down to 49, the team thatheld position 49 is moved down to 50, and so on.
+If you challenge a team and lose, both teams stay in their respective places.
+Challenge grace periods
+After a match in which you were challenged, other teams can't challenge you for 12 hours (from the startof the match). This gives you a chance to challenge a team yourself and climb the ladder.
+After a match in which you were the challenger, you can't challenge another team for 12 hours (from thestart of the match). This is to give other teams a chance to challenge you. It is also to prevent scenarioswhere for example #2 always immediately challenges #1, making it impossible for #3 to challenge #2and take that position.
+National teams
+In Hattrick, just like in the real world, there are national teams competing against each other. But inHattrick the coach of your country's national squad is elected by you! Each Hattrick country has a mainnational squad, as well as a u21 team featuring players 21 years old or younger. This means eachcountry has two national coaches, both elected by the community.
+National team competitions
+The National teams compete against each other in four interconnected tournaments. The competitioncycle spans two phases, which are each one Hattrick season long. It starts with the Continental Cups,which are the regional championships for European, American, African and Asia/Oceania respectively.The national teams that are not ranked high enough to be seeded for the Continental Cups will insteadparticipate in the global Contender League, which is played at the same time as the Continental Cups.
+In the second part of the cycle, the best national teams will play the World Cup. The teams that do notmake it to this tournament will instead play the Nations Cup.
+The Contender League is a new addition to the competition schedule and is where new national teams inHattrick get started. The first edition took place in January 2025.
+National teams follow their own card status, and have a completely separate system of red / yellowcards from 'normal' Hattrick. As such, any card received in a NT/U21 match will only count for thematches that are part of that NT/U21 competition. Equally, should a player be red carded in normalHattrick, he will still be able to play in a NT/U21 match. They get reset at the end of each competition (orwhen the team is eliminated from that competition).
+Continental Cups
+The best national teams of each Hattrick region will compete in the respective Continental Cup. Theseregional championships are played in groups of 6 teams. Groups are seeded based on the National Teamranking (see below).
+The Continental Cups have a Round-Robin format (double matches - home away) and lasts for 10 weekswith quarter finals, semi finals and finals in the last week.
+The best 8 teams in every region, based on their position, points, goals difference and goals scored willplay quarter, semi-finals and finals while the rest of the National Coaches can schedule friendlies onFridays. In the quarter finals, the top 4 teams (based on position, points, goal difference, scored goals,random if all else is equal) randomly face the bottom 4 teams that qualified to the quarter finals, and twoteams from the same group will not face each other in the quarter finals. The winner will be namedcontinental champion, and is awarded a Gold trophy. Silver and Bronze trophies are awarded to theteams placed 2nd and 3rd-4th respectively.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 35/43
+
+Contender League
+Teams that did not manage to qualify for the Continental Cups will play in the Contender League, whichtakes place alongside the Continental Cups.
+This competition is played in the Swiss tournament format, which will try to avoid the same nationsfacing each other more than once, but this is still something that may happen due to the small size of thecompetition.
+This is not merely a consolation tournament, as the top 2 teams will go to the Wildcards round for achance to qualify for the World Cup. The rest of the teams just go to Nations Cup directly.
+It's also important as good results during the Contender League will earn the team ranking points thatare used for the seeding of the next Continental Cup.
+World Cup
+The World Cup starts at week 13 of the first season and lasts for the rest of season 1 and the entireseason 2. It is divided into 5 rounds, followed by semi finals and finals.
+96 teams participate in Round 1 in 16 groups of 6 teams in a Round-Robin format. The first 4 of eachgroup will proceed to Round 2, while the rest are eliminated.
+Round 2 will have 16 groups of 4 teams in a Round-Robin format and the first 2 of each group willproceed to Round 3.
+In Round 3 we have 8 groups with 4 teams where they play one match with every opponent in a neutralvenue and the top 2 of each group promotes to Round 4.
+Round 4 and round 5 will have 4 and 2 groups respectively with 4 teams. Every team will play againsteach other once at a neutral arena and the top 2 of each group promotes to the next stage.
+Both the semi finals and the final are at neutral venues. The winner of the final is named Worldchampion, and is awarded a gold trophy. Silver and bronze trophies are awarded to the runner-ups.
+Before each round the team spirit and team confidence will fully or partially reset to the reset values. Forexample, if the current team spirit is at level 9 and the reset value is 5 with the 80% reset, your team spiritwill be decreased by (9 - 5) * 0.8 = 3.2 levels. Reset and midpoint values for the daily updates, for bothTeam Spirit and Team Confidences are 5.0.
+Nations Cup
+Teams that did not manage to qualify for the World Cup will play in the Nations Cup, which takes placealongside the World Cup. This tournament is played in the Swiss format tournament (similar to theSupporter Week Trophy). The Swiss tournament format will try to avoid the same nations facing eachother more than once, but this is still something that may happen due to the small size of thetournament.
+This is not merely a consolation tournament, but can be important for smaller teams as good resultsduring the Nations Cup will earn the team ranking points that are used for the seeding of the nextContinental Cup. At the end of the Nations Cup, during the semi-finals and finals of the World Cup, thetop 8 teams will have a knockout tournament and the winner will get a trophy - the top 4 teams (based onposition, points, goal difference, scored goals, random if all else is equal) randomly face the bottom 4teams that qualified to the quarter finals.
+During the Nations Cup, players cannot be injured, but cards work as in any other tournament. Formationexperience will carry over from Continental Cups, with a possibility to reset formation experience just likebefore the World Cup, and then be updated as normal after every Nations Cup match.
+The winner is awarded the Nations Cup trophy.
+World Cup qualification
+96 teams progress from the Continental Cups to the World Cup.
+Each continent has their own World Cup slots, which are awarded to the best placed teams in each groupof the Continental Cups group stage. As we can see in the table below, Europe has 32 slots, Asia-Oceania21 slots and Africa and America 12 and 20 each.
+Continent Total teams World Cup Slots
+Europe 48 32 (4 promotions / group)
+Asia-Oceania 42 21 (3 promotions / group)
+Africa 24 12 (3 promotions / group)
+America 30 20 (4 promotions / group)
+A number of Wildcards will be awarded for teams that did not qualify directly through the group stage ofthe Continental Cups. With 11 available Wildcards, the best 20 teams that did not qualify for the WorldCup, based on their points, goal difference and goals scored in the group stages in Continental Cups andthe best 2 teams from the Contenders League, will be selected for a Wildcard Playoff.
+In the Wildcard Playoff, the team with the highest ranking (a ranking based also on previous World Cupresults) will be matched against the team with the lowest ranking, and the team with second highestranking with the team of the second lowest ranking, and so forth. The playoff is played home and away,
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 36/43
+
+with a total reset of Team Spirit and Team Confidence before the first match. In case of a tie, the secondmatch will have extra time and penalties.
+National team ranking
+Each national team has its own ranking which is used as seeding for the Continental Cups groups draw.The last 5 seasons have an impact for this ranking, but the effect is decaying over time which means theoldest performances have less effect on the ranking.
+There are 3 factors that affect rankings: the result of each match (M), the importance of the match (I)and how strong the opposing team was (T). Specifically, the formula used to calculate the ranking is asfollows: P = M x I x T
+Match result (M) Points Match Importance (I) Points
+Win 3 World Cup Semi/Finals 4
+Draw 1 WC rest of rounds 2.5
+Lose 0 Continental Finals 3
+Win Penalties 2 Continental rest of matches 2
+Lose Penalties 1 Nations Cup 1
+Contender League 2
+Friendlies 0
+For the variable T, we subtract the ranking of the opponent team from the number 250.
+Then, the final ranking is the average number of points (P) of the last 5 seasons weighted by 100%, 70%,50%, 30%, 20% with 100% the current season and 20% 4 seasons ago. Rankings are updated after everymatch.
+Continental cup draw
+For the Continental Cup seeding we use the National Team Ranking to create the draw pots. The firstposition of each group is always reserved by the top teams, where group 1 will get the top 1 team, group2 the second team etc. Then we have 5 draw pots, one for each position in the group filled with the restof the teams sorted by their Ranking. For example, in America Cup, we have 5 groups of 6 teams. Thefirst positions of each group are filled by the top 5 teams based on their Ranking. Then the secondposition can be filled by teams 6 to 10, third position by teams 11 to 15 etc. During our live draw, we workthrough all groups, until all pots have been emptied and all groups populated.
+World Cup draw
+The team ranking from the current season will determine the seed of that team in the World Cup draw.There are 16 groups in the World Cup first round, and the first team for each group is pickedautomatically. The top ranked European team from the Continental Cups (EU#1 in the table below) willalways be the first team picked for Group 1, and the team ranked 8 from the Americas will always be thefirst team picked in Group 16.
+Once one team have been assigned to each group, all other teams are picked using a live draw. Theranking from the Continental Cup is still very important, but instead of being assigned directly to a group,teams are put into draw pots. If we keep looking at the table below, in the column for “Team 2”, fourteams will be put in the first draw pot. These are the teams ranked 8 in Africa, 7 in Africa, 6 in Africa and5 in Africa. Out of this pot they are assigned as the second team to Groups 1, 2, 3 and 4, as decided bythe draw. 4 new teams are entered into the second draw pot and drawn for Groups 5, 6, 7 and 8. Thisprocess continues until all 6 teams have been chosen for all 16 groups.
+The system is broadly deterministic, making sure we can not get all the best teams from the strongestcontinents in the same group. But at the same time we wanted a random element, so that managers cannot already during the Continental Cup determine how the various groups will look in the World Cup, asthis could cause some team to lose games on purpose to get a better draw in the World Cup. It alsomakes the live draw much more fun.
+Group Team 1 Team 2 Team 3 Team 4 Team 5 Team 6
+1 EU#1 AFR#8
+POT#1
+AME#9
+POT#5
+ASO#16
+POT#9
+EU#17
+POT#13
+W#11
+POT#17
+2 EU#2 AFR#7
+POT#1
+AME#10
+POT#5
+ASO#15
+POT#9
+EU#18
+POT#13
+W#10
+POT#17
+3 EU#3 AFR#6
+POT#1
+AME#11
+POT#5
+ASO#14
+POT#9
+EU#19
+POT#13
+W#9
+POT#17
+4 EU#4 AFR#5
+POT#1
+AME#12
+POT#5
+ASO#13
+POT#9
+EU#20
+POT#13
+W#8
+POT#17
+5 EU#5 AFR#4
+POT#2
+AME#13
+POT#6
+ASO#12
+POT#10
+EU#21
+POT#14
+W#7
+POT#18
+6 EU#6 AFR#3
+POT#2
+AME#14
+POT#6
+ASO#11
+POT#10
+EU#22
+POT#14
+W#6
+POT#18
+7 EU#7 AFR#2
+POT#2
+AME#15
+POT#6
+ASO#10
+POT#10
+EU#23
+POT#14
+W#5
+POT#18
+8 EU#8 AFR#1 AME#16 ASO#9 EU#24 W#4
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 37/43
+
+POT#2 POT#6 POT#10 POT#14 POT#18
+9 AME#1 ASO#8
+POT#3
+AME#17
+POT#7
+EU#16
+POT#11
+EU#25
+POT#15
+W#3
+POT#19
+10 AME#2 ASO#7
+POT#3
+AME#18
+POT#7
+EU#15
+POT#11
+EU#26
+POT#15
+W#2
+POT#19
+11 AME#3 ASO#6
+POT#3
+AME#19
+POT#7
+EU#14
+POT#11
+EU#27
+POT#15
+W#1
+POT#19
+12 AME#4 ASO#5
+POT#3
+AME#20
+POT#7
+EU#13
+POT#11
+EU#28
+POT#15
+ASO#21
+POT#19
+13 AME#5 ASO#4
+POT#4
+AFR#9
+POT#8
+EU#12
+POT#12
+EU#29
+POT#16
+ASO#20
+POT#20
+14 AME#6 ASO#3
+POT#4
+AFR#10
+POT#8
+EU#11
+POT#12
+EU#30
+POT#16
+ASO#19
+POT#20
+15 AME#7 ASO#2
+POT#4
+AFR#11
+POT#8
+EU#10
+POT#12
+EU#31
+POT#16
+ASO#18
+POT#20
+16 AME#8 ASO#1
+POT#4
+AFR#12
+POT#8
+EU#9
+POT#12
+EU#32
+POT#16
+ASO#17
+POT#20
+EU: EuropeAME: AmericaAFR: AfricaASO: Asia / OceaniaW: Wildcard slot
+Elections
+Elections are held at the beginning of the season, starting the two days after the World Cup final. Everysecond season you elect the national coach and every second season you elect the U21 coach. Eachcoach is elected for 2 seasons, ending his term about a week after the World Cup Final. Note that youwill need to have played Hattrick for at least 1 season in order to be able to vote in the National Teamelections.
+Voting power
+You can only vote once in an election. However, this vote may gain extra weight in the final tally. Thissystem of voting power rewards commitment to the game, but the main reason for it is to make it harderto manipulate elections.
+If you are a local team, you get your first vote after 1 season in the game. You then gain a second oneafter 5 seasons in the game, a third one after 10 seasons, and a fourth one after 15 seasons. Localteams can get a total of 4 votes this way.
+If you have an additional team in another league (except for international leagues, such as theHomegrown league or Hattrick International), you get your first vote after two seasons and a second andfinal seniority vote after 10 seasons.
+All users also get up to two engagement votes, depending on how active their team management havebeen. We will not explain exactly how these work, to make it harder to manipulate them, but they havebeen designed to be very easy to achieve for any normally managed team, but very tedious to achieve ifyou are maintaining a set of fake teams. Please note that as a user, you will not see the exact weightyour vote has, we will just explain the principles behind the system.
+Running for Office
+If you consider running for office, or if you just want more information, we recommend you to read therules for national teams.
+The national team squad
+The national coach picks up to 26 players (from teams with real owners), freely from those players withthe right nationality. However, u21 players need to be at least 19 years old and National Team players atleast 22 years old. Once picked, the coach can see the same data for the national team players as you dofor your own team.
+Each national team has their own formation experience and on the start of every Continental Cup andWorld Cup/Nations Cup, national coaches will have about a week to decide which 6 formations will haveformidable experience, while the rest will start from poor. There are two selection periods: the first one isfrom the day the election ends up to the Team Spirit and Team Confidence reset day before the firstmatch for continental cups. The second one starts in Week 12 up to the Team Spirit and TeamConfidence reset day at Week 13.Please note that NT/U21 teams' daily updates take place every day at 03:00 AM.
+Having a national team player
+If one of your players is on the national team, his ability to play for your team will be unaffected. Nationalgames and club games are played on separate days, so you can always use him. Matches for thenational team will not give your player any training, however, he does run the risk of being injured whileplaying for the national team.
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 38/43
+
+If your player gets to play a match with the national team there are several benefits for your club:
+- You will get a salary reduction of 33% or 40% of the player's salary, depending on whether he is playingin a foreign team or his home country respectively.
+- The player gains a lot of experience. The amount of experience they get varies in the match type and indescending order we have the Semi Final and Final of the World cup, the World Cup matches, thecontinental Quarter, Semi and Finals. The continental cup matches, the Nations Cup and the ContendersLeague and finally the national team friendlies.
+- If a player gets injured and has to leave the field in a match for his national team, the club will get acompensation amounting to 100% of his base salary times the estimated number of weeks the injury isexpected to last. This is in addition to the regular salary reduction.
+There are no injuries in national team friendly matches.
+Note that you are expected not to undermine national teams through sabotaging your national teamplayer(s). The National Team Administrators, as a last resort, have the discretion to release players to thetransfer market in the event of sabotage.
+World Cup Schedule - Season 1
+Wk Mon Tue Wed Thu Fri Sat Sun
+1 Elections
+Voting
+Elections
+Voting
+Elections
+Voting
+Elections
+Voting
+Elections
+Voting
+/Live Draw/Friendlies
+Elections
+Voting
+Elections
+Voting
+2 ElectionsResults - - - Friendlies - -
+3 - - T.S./T.C. Reset
+100% reset
+- C.C.
+Match 1
+C.L.
+Match 1
+- -
+4 C.C.
+Match 2
+C.L.
+Match 2
+- - - C.C.
+Match 3
+C.L.
+Match 3
+- -
+5 C.C.
+Match 4
+C.L.
+Match 4
+- - - C.C.
+Match 5
+C.L.
+Match 5
+- -
+6 - - - - C.C.
+Match 6
+C.L.
+Match 6
+- -
+7 - - - - C.C.
+Match 7
+C.L.
+Match 7
+- -
+8 - - - - C.C.
+Match 8
+C.L.
+Match 8
+- -
+9 - - - - C.C.
+Match 9
+C.L.
+Match 9
+- -
+10 - - - - C.C.
+Match 10
+C.L.
+Match 10
+- -
+11 - - - - C.C.
+Quarter Finals
+- T.S./T.C. Reset
+100% reset
+(Wildcards only)
+12 C.C.
+Semi Finals
+W
+Match 1
+- - - C.C.
+Finals
+W
+Match 2
+- Live Draw
+13 - - T.S./T.C. Reset
+100% reset
+- W.C. R1
+Match 1
+N.C.
+Match 1
+- -
+14 W.C. R1
+Match 2
+- - - W.C. R1
+Match 3
+N.C.
+Match 2
+- -
+15 - - - - W.C. R1
+Match 4
+N.C.
+- -
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 39/43
+
+Match 3
+16 - - - - W.C. R1
+Match 5
+N.C.
+Match 4
+- -
+World Cup Schedule - Season 2
+Wk Mon Tue Wed Thu Fri Sat Sun
+1 - - - - W.C. R1
+Match 6
+N.C.
+Match 5
+- -
+2 - - - - W.C. R1
+Match 7
+N.C.
+Match 6
+- -
+3 - - - - W.C. R1
+Match 8
+N.C.
+Match 7
+- -
+4 - - - - W.C. R1
+Match 9
+N.C.
+Match 8
+- -
+5 - - - - W.C. R1
+Match 10
+N.C.
+Match 9
+- -
+6 - - T.S./T.C. Reset
+80% reset
+(WC only)
+- W.C. R2
+Match 1
+N.C.
+Match 10
+- -
+7 W.C. R2
+Match 2
+- - - W.C. R2
+Match 3
+N.C.
+Match 11
+- -
+8 W.C. R2
+Match 4
+- - - W.C. R2
+Match 5
+N.C.
+Match 12
+- -
+9 - - - - W.C. R2
+Match 6
+N.C.
+Match 13
+- -
+10 - - T.S./T.C. Reset
+60% reset
+(WC only)
+- W.C. R3
+Match 1
+N.C.
+Match 14
+- -
+11 W.C. R3
+Match 2
+- - - W.C. R3
+Match 3
+N.C.
+Match 15
+- -
+12 - - T.S./T.C. Reset
+40% reset
+(WC only)
+- W.C. R4
+Match 1
+N.C.
+Match 16
+- -
+13 W.C. R4
+Match 2
+- - W.C. R4
+Match 3
+N.C.
+Match 17
+- -
+14 - - - - W.C. R5
+Match 1
+N.C.
+Quarter Finals
+- -
+15 W.C. R5
+Match 2
+- - - W.C. R5
+Match 3
+N.C.
+Semi Finals
+- -
+16 W.C.
+Semi Finals
+- - W.C.
+Finals
+N.C.
+Finals
+- -
+C.C.: Continental CupW.C.: World Cup
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 40/43
+
+W.: WildcardT.S.: Team SpiritT.C.: Team ConfidenceN.C.: Nations CupC.L.: Contender League
+Hattrick Masters
+The Hattrick Masters is the international tournament for all cup and league winners. It is played for fourweeks, starting after round 4 each season. Matches are played on Mondays (at 16.00) and Thursdays (at20.00).
+Fixtures
+256 teams can participate in the Masters and it is played as a straight cup with 8 rounds. The draw foreach round is completely randomised, and the matches are played on neutral grounds.
+If there are not enough teams to fill up the first round completely, some lucky teams (selected randomly)will skip the first round and join the action in the second round. If any of the cup or league winners havebecome ownerless (or changed owner), they may not participate in the Masters. If a team wins bothleague and cup in the same season, they will be the only team from that nation participating in theMasters.
+Special tournament rules
+There are some special rules that apply to the Masters:
+Card and Injuries: Cards do not matter (except red cards in the game, of course), but injuries arerecorded as normal.
+Team Attitude: Playing "Match of the Season" (MOTS) or "Play it Cool" (PIC) will not lower/raise yourteam spirit after the match by as much as it would after a regular match. The effect during the match isthe same as during a regular match though.
+Training: Masters games do not count towards a player's training.
+Masters income
+The home and the away team split the crowd revenue 50/50. The best teams also get some prize money.
+The Hattrick Masters winner gets 800 000 US$, the runner-up gets 400 000 US$ and the two losing semi-finalists each get 200 000 US$. The losing quarter-finalists each get 100 000 US$ and the losing last-sixteen teams each get 50 000 US$.
+Additional club
+Supporter Diamond allows you to manage up to three additional clubs, whereas Supporter Platinum letsyou have one additional club, and up to three if you purchase the necessary Extra Club Licenses. Youmanage these clubs individually, just as you manage your primary club, which means the additional clubshave their own separate player squads, stadiums, finances, youth teams and so on.
+Start an additional club
+You can start an additional club at any time. Your additional club can play in the same country as yourprimary club or in another country, as long as there is space available in that country.
+Additional club will start with some initial funds (just as any other new club), but owners will not need todo the manager license.
+General rules
+You can have up to three additional clubs.
+You will not be able to make any transfers between your clubs and you also can't buy players where theother team would either receive mother club or previous club money.
+Additional club in the same country
+Your primary and additional clubs will not be able to play in the same series or meet each other in aqualifier, nor meet each other in the cup (with the exception of the final). Both clubs can play at the sameseries level, but in different series.
+In the unlikely, but not impossible situation where three teams of the same user end up in the semi-finals,obviously one of the teams will face a sister team then.
+If one club is already playing in the top series, and another earned promotion to this series, the clubpromoting will not be allowed to advance. That spot will instead go to the team, among those that should
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 41/43
+
+About Hattrick  Fantasy football games  Hattrick Supporter  Help Contact Us  Privacy  Hattrick Wiki
+ Se
+  
+have demoted from the top division, that finished with the highest rank. This will be processed after thequalifiers have been played.
+If both clubs promote to the top series in the same season, only the primary club will get to promote.
+Additional club in another country
+The number of additional club spots available for "foreign" managers is limited.
+If you want to make sure there is space in your preferred league, you can easily check this by clicking“Apply for an additional club” in your Manager page and check the League selection dropdown menu.Available slots for additional teams are showed after the name of every league.
+The amount of “foreign” managers allowed in any given league depends on the size of the league andhow many active local users it has. The basic rule is that a minimum of 50 % of the clubs in a league arereserved for local users.
+However, many smaller leagues have very few local managers and for these leagues more slots aremade available for “foreign owned” additional clubs. This happens in leagues where there are only 3 or 4divisions, where there are no more than 50 local managers, and where these manage no more than 20 %of the clubs.
+Switch series in switching window
+In the same way that primary clubs can, it's possible for additional clubs to switch series (wherepossible) in the series switching window in-between seasons, but it's not possible to switch to the serieswhere another of your clubs is playing.
+Flags
+Flags are collected by clubs separately, additional clubs have their own flag collections.
+Playing against a additional club rewards flags just as playing any other club would, and the additionalclub is rewarded flags for its own collection.
+Achievements
+Achievements are achieved by the manager, and achievements are thus saved for each user (and not foreach club).
+Voting in elections
+If you have an additional team in another league (except in the international leagues like HattrickInternational and the Homegrown League), you get your first vote after two seasons and a second andfinal seniority vote after 10 seasons.
+Bankruptcy
+If your primary club goes bankrupt you will also lose access to your additional club.
+If your additional club goes bankrupt you can start a new one 16 weeks after the date you started yourprevious additional club (so if you've had your additional club for more than 16 weeks you can start anew club immediately).
+Close additional club
+You can close your additional club at any time. But if you close your additional club, you'll have to wait atleast 16 weeks from when you started your previous additional club until you can start a new one. Notethat you cannot close your additional team as long as you have players on the transfer list.
+Platinum / Diamond subscription expiry
+If your Supporter Platinum or Diamond subscription expires you will still be the manager of youradditional club for one more week, but after this week you will no longer be able to manage it. 7 weeksafter the expiration, the system will disconnect your additional club. If you purchase Supporter Platinumor Diamond again during these 7 weeks you will get access to your additional club again. But if you don't,the club will become ownerless and you will not be able to return to it.
+Rate this page
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 42/43
+
+ 
+  
+  
+  
+  
+  
+3/29/26, 12:09 AM Introduction » Manual » Help » Hattrick
+https://www84.hattrick.org/Help/Rules/Complete.aspx 43/43

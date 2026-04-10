@@ -55,10 +55,20 @@ public class PlayerRepositoryTests
         _sut.Add(player3);
 
         // Assert
-        _sut.GetById(player1.Id).Should().NotBeNull();
-        _sut.GetById(player2.Id).Should().NotBeNull();
-        _sut.GetById(player3.Id).Should().NotBeNull();
+        _sut.GetById(player1.Id)!.Name.Should().Be("Player One");
+        _sut.GetById(player2.Id)!.Name.Should().Be("Player Two");
+        _sut.GetById(player3.Id)!.Name.Should().Be("Player Three");
         _sut.GetByTeamId(teamId).Should().HaveCount(3);
+    }
+
+    [Fact]
+    public void Add_NullPlayer_ThrowsArgumentNullException()
+    {
+        // Act
+        var act = () => _sut.Add(null!);
+
+        // Assert
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -187,7 +197,7 @@ public class PlayerRepositoryTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var player = CreatePlayer(teamId);
+        var player = CreatePlayer(teamId, "Type Check Player");
         _sut.Add(player);
 
         // Act
@@ -195,6 +205,8 @@ public class PlayerRepositoryTests
 
         // Assert
         result.Should().BeAssignableTo<IReadOnlyList<Player>>();
+        result.Should().ContainSingle()
+            .Which.Name.Should().Be("Type Check Player");
     }
 
     [Fact]
@@ -219,12 +231,17 @@ public class PlayerRepositoryTests
         var player = CreatePlayer(name: "Original Name");
         _sut.Add(player);
 
-        player.Name = "Updated Name";
-        player.Age = 30;
-        player.Form = 8;
+        var updatedPlayer = new Player
+        {
+            Id = player.Id,
+            TeamId = player.TeamId,
+            Name = "Updated Name",
+            Age = 30,
+            Form = 8,
+        };
 
         // Act
-        _sut.Update(player);
+        _sut.Update(updatedPlayer);
         var result = _sut.GetById(player.Id);
 
         // Assert
@@ -238,19 +255,35 @@ public class PlayerRepositoryTests
     public void Update_PreservesPlayerId()
     {
         // Arrange
-        var player = CreatePlayer();
+        var player = CreatePlayer(name: "Original");
         var originalId = player.Id;
         _sut.Add(player);
 
-        player.Name = "Changed";
+        var updatedPlayer = new Player
+        {
+            Id = originalId,
+            TeamId = player.TeamId,
+            Name = "Changed",
+        };
 
         // Act
-        _sut.Update(player);
+        _sut.Update(updatedPlayer);
         var result = _sut.GetById(originalId);
 
         // Assert
         result.Should().NotBeNull();
         result!.Id.Should().Be(originalId);
+        result.Name.Should().Be("Changed");
+    }
+
+    [Fact]
+    public void Update_NullPlayer_ThrowsArgumentNullException()
+    {
+        // Act
+        var act = () => _sut.Update(null!);
+
+        // Assert
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -276,10 +309,15 @@ public class PlayerRepositoryTests
         _sut.Add(player1);
         _sut.Add(player2);
 
-        player1.Name = "Updated Player One";
+        var updatedPlayer1 = new Player
+        {
+            Id = player1.Id,
+            TeamId = teamId,
+            Name = "Updated Player One",
+        };
 
         // Act
-        _sut.Update(player1);
+        _sut.Update(updatedPlayer1);
 
         // Assert
         var unchanged = _sut.GetById(player2.Id);
@@ -296,10 +334,15 @@ public class PlayerRepositoryTests
         var player = CreatePlayer(originalTeamId, "Transferring Player");
         _sut.Add(player);
 
-        player.TeamId = newTeamId;
+        var transferredPlayer = new Player
+        {
+            Id = player.Id,
+            TeamId = newTeamId,
+            Name = "Transferring Player",
+        };
 
         // Act
-        _sut.Update(player);
+        _sut.Update(transferredPlayer);
 
         // Assert
         var result = _sut.GetById(player.Id);
@@ -456,8 +499,8 @@ public class PlayerRepositoryTests
         _sut.Remove(playerA.Id);
 
         // Assert
-        _sut.GetByTeamId(teamBId).Should().HaveCount(1);
-        _sut.GetByTeamId(teamBId).First().Name.Should().Be("Team B Player");
+        _sut.GetByTeamId(teamBId).Should().ContainSingle()
+            .Which.Name.Should().Be("Team B Player");
         _sut.GetByTeamId(teamAId).Should().BeEmpty();
     }
 
@@ -666,19 +709,24 @@ public class PlayerRepositoryTests
         var player = CreatePlayer(teamId, "Full Update Test");
         _sut.Add(player);
 
-        // Act - update multiple fields
-        player.Name = "Updated Full";
-        player.Age = 28;
-        player.AgeDays = 100;
-        player.Form = 8;
-        player.Stamina = 9;
-        player.Experience = 15;
-        player.Specialty = Specialty.Technical;
-        player.InjuryWeeks = 2;
-        player.YellowCards = 1;
-        player.Wage = 5000m;
-        _sut.Update(player);
+        var updatedPlayer = new Player
+        {
+            Id = player.Id,
+            TeamId = teamId,
+            Name = "Updated Full",
+            Age = 28,
+            AgeDays = 100,
+            Form = 8,
+            Stamina = 9,
+            Experience = 15,
+            Specialty = Specialty.Technical,
+            InjuryWeeks = 2,
+            YellowCards = 1,
+            Wage = 5000m,
+        };
 
+        // Act
+        _sut.Update(updatedPlayer);
         var result = _sut.GetById(player.Id);
 
         // Assert

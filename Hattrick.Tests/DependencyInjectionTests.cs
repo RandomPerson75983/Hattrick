@@ -1,3 +1,4 @@
+using Hattrick.Core;
 using Hattrick.Core.Repositories;
 using Hattrick.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,25 +12,16 @@ public class DependencyInjectionTests
     {
         // Arrange
         var services = new ServiceCollection();
-        RegisterServices(services);
+        services.AddHattrickCoreServices();
         var container = services.BuildServiceProvider();
 
-        // Act & Assert
-        // If any of these throw, the test fails
-        var randomProvider = container.GetRequiredService<IRandomProvider>();
-        var dateTimeProvider = container.GetRequiredService<IDateTimeProvider>();
-        var saveGameService = container.GetRequiredService<ISaveGameService>();
-        var saveSlotService = container.GetRequiredService<ISaveSlotService>();
-        var gameStateService = container.GetRequiredService<IGameStateService>();
-
-        var playerRepository = container.GetRequiredService<IPlayerRepository>();
-
-        randomProvider.Should().NotBeNull();
-        dateTimeProvider.Should().NotBeNull();
-        saveGameService.Should().NotBeNull();
-        saveSlotService.Should().NotBeNull();
-        gameStateService.Should().NotBeNull();
-        playerRepository.Should().NotBeNull();
+        // Act & Assert — GetRequiredService throws if not registered
+        container.GetRequiredService<IRandomProvider>();
+        container.GetRequiredService<IDateTimeProvider>();
+        container.GetRequiredService<ISaveGameService>();
+        container.GetRequiredService<ISaveSlotService>();
+        container.GetRequiredService<IGameStateService>();
+        container.GetRequiredService<IPlayerRepository>();
     }
 
     [Fact]
@@ -37,7 +29,7 @@ public class DependencyInjectionTests
     {
         // Arrange
         var services = new ServiceCollection();
-        RegisterServices(services);
+        services.AddHattrickCoreServices();
         var container = services.BuildServiceProvider();
 
         // Act
@@ -46,43 +38,25 @@ public class DependencyInjectionTests
         var repo1 = container.GetRequiredService<IPlayerRepository>();
         var repo2 = container.GetRequiredService<IPlayerRepository>();
 
-        // Assert (same instance)
+        // Assert (same instance = singleton)
         service1.Should().BeSameAs(service2);
         repo1.Should().BeSameAs(repo2);
     }
 
     [Fact]
-    public void DI_InterfacesAreProperlyImplemented()
+    public void DI_InterfacesResolveToCorrectConcreteTypes()
     {
         // Arrange
         var services = new ServiceCollection();
-        RegisterServices(services);
+        services.AddHattrickCoreServices();
         var container = services.BuildServiceProvider();
 
-        // Act
-        var randomProvider = container.GetRequiredService<IRandomProvider>();
-        var dateTimeProvider = container.GetRequiredService<IDateTimeProvider>();
-        var saveGameService = container.GetRequiredService<ISaveGameService>();
-        var saveSlotService = container.GetRequiredService<ISaveSlotService>();
-        var gameStateService = container.GetRequiredService<IGameStateService>();
-        var playerRepository = container.GetRequiredService<IPlayerRepository>();
-
-        // Assert
-        randomProvider.Should().BeAssignableTo<IRandomProvider>();
-        dateTimeProvider.Should().BeAssignableTo<IDateTimeProvider>();
-        saveGameService.Should().BeAssignableTo<ISaveGameService>();
-        saveSlotService.Should().BeAssignableTo<ISaveSlotService>();
-        gameStateService.Should().BeAssignableTo<IGameStateService>();
-        playerRepository.Should().BeAssignableTo<IPlayerRepository>();
-    }
-
-    private static void RegisterServices(IServiceCollection services)
-    {
-        services.AddSingleton<IRandomProvider, RandomProvider>();
-        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-        services.AddSingleton<ISaveGameService, SaveGameService>();
-        services.AddSingleton<ISaveSlotService, SaveSlotService>();
-        services.AddSingleton<IGameStateService, GameStateService>();
-        services.AddSingleton<IPlayerRepository, PlayerRepository>();
+        // Act & Assert — verify concrete types, not just interface assignability
+        container.GetRequiredService<IRandomProvider>().Should().BeOfType<RandomProvider>();
+        container.GetRequiredService<IDateTimeProvider>().Should().BeOfType<DateTimeProvider>();
+        container.GetRequiredService<ISaveGameService>().Should().BeOfType<SaveGameService>();
+        container.GetRequiredService<ISaveSlotService>().Should().BeOfType<SaveSlotService>();
+        container.GetRequiredService<IGameStateService>().Should().BeOfType<GameStateService>();
+        container.GetRequiredService<IPlayerRepository>().Should().BeOfType<PlayerRepository>();
     }
 }

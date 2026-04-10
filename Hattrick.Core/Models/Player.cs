@@ -46,17 +46,17 @@ public class Player
     /// <summary>
     /// Current form level (1-8).
     /// </summary>
-    public int Form { get; set; }
+    public int Form { get; set; } = 1;
 
     /// <summary>
     /// Current stamina level (1-9).
     /// </summary>
-    public int Stamina { get; set; }
+    public int Stamina { get; set; } = 1;
 
     /// <summary>
     /// Experience level (1-20).
     /// </summary>
-    public int Experience { get; set; }
+    public int Experience { get; set; } = 1;
 
     /// <summary>
     /// Loyalty to current club (0.0-1.0).
@@ -84,7 +84,8 @@ public class Player
     public bool RedCard { get; set; }
 
     /// <summary>
-    /// Number of yellow cards (0-2). At 2, player is suspended next match.
+    /// Number of accumulated yellow cards (0-3). At 3, player is suspended next match.
+    /// Note: 2 yellows in a single match = red card (different rule).
     /// </summary>
     public int YellowCards { get; set; }
 
@@ -106,7 +107,7 @@ public class Player
     /// <summary>
     /// Leadership ability (1-8). Affects team spirit when player is captain.
     /// </summary>
-    public int Leadership { get; set; }
+    public int Leadership { get; set; } = 1;
 
     /// <summary>
     /// Hattrick Manager Score - an estimated total skill value.

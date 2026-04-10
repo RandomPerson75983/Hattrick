@@ -83,6 +83,17 @@ public class PlayerModelTests
     }
 
     [Fact]
+    public void Constructor_Default_BoundedPropertiesDefaultToMinimum()
+    {
+        var player = new Player();
+
+        player.Form.Should().Be(1, "Form minimum is 1");
+        player.Stamina.Should().Be(1, "Stamina minimum is 1");
+        player.Experience.Should().Be(1, "Experience minimum is 1");
+        player.Leadership.Should().Be(1, "Leadership minimum is 1");
+    }
+
+    [Fact]
     public void Constructor_Default_WageIsZero()
     {
         var player = new Player();
@@ -256,8 +267,10 @@ public class PlayerModelTests
             player.Skills[skillType] = 5.0 + (int)skillType * 0.5;
         }
 
-        player.Skills.Should().HaveCount(8,
-            "a player should be able to have all 8 skill types");
+        var expectedCount = Enum.GetValues<SkillType>().Length;
+        player.Skills.Should().HaveCount(expectedCount,
+            "a player should be able to have all skill types");
+        player.Skills.Keys.Should().BeEquivalentTo(Enum.GetValues<SkillType>());
     }
 
     [Fact]
@@ -509,12 +522,13 @@ public class PlayerModelTests
 
     #endregion
 
-    #region YellowCards (0-2)
+    #region YellowCards (0-3)
 
     [Theory]
     [InlineData(0)]
     [InlineData(1)]
     [InlineData(2)]
+    [InlineData(3)]
     public void YellowCards_AcceptsValidValues(int yellowCards)
     {
         var player = new Player { YellowCards = yellowCards };
@@ -531,11 +545,11 @@ public class PlayerModelTests
     }
 
     [Fact]
-    public void YellowCards_BoundaryMaximum_IsTwo()
+    public void YellowCards_BoundaryMaximum_IsThree()
     {
-        var player = new Player { YellowCards = 2 };
+        var player = new Player { YellowCards = 3 };
 
-        player.YellowCards.Should().Be(2, "maximum YellowCards is 2 before suspension");
+        player.YellowCards.Should().Be(3, "cumulative suspension at 3 yellow cards in Hattrick");
     }
 
     #endregion

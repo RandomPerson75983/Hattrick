@@ -35,21 +35,23 @@ public class PlayerRepository : IPlayerRepository
     /// <inheritdoc />
     public void Add(Player player)
     {
+        ArgumentNullException.ThrowIfNull(player);
+
         lock (_lock)
         {
-            if (_players.ContainsKey(player.Id))
+            if (!_players.TryAdd(player.Id, player))
             {
                 throw new ArgumentException(
                     $"A player with ID '{player.Id}' already exists in the repository.");
             }
-
-            _players[player.Id] = player;
         }
     }
 
     /// <inheritdoc />
     public void Update(Player player)
     {
+        ArgumentNullException.ThrowIfNull(player);
+
         lock (_lock)
         {
             if (!_players.ContainsKey(player.Id))

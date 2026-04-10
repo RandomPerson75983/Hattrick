@@ -5,6 +5,7 @@
 @using System.Globalization
 @inject IPlayerRepository PlayerRepository
 @inject IPlayerDisplayService DisplayService
+@inject IPlayerStatsService StatsService
 
 <div class="players-page">
     <h1 class="players-title">Your @_players.Count players</h1>
@@ -57,7 +58,28 @@
         </div>
 
         <div class="players-sidebar">
-            <!-- Player detail panel (Quartet 2) -->
+            <div class="team-stats-sidebar">
+                <div class="team-total-section">
+                    <h3>Team Total</h3>
+                    <div class="stats-row"><span class="stats-label">TSI</span><span class="stats-value">@_totals.TotalTSI.ToString("N0", CultureInfo.InvariantCulture)</span></div>
+                    <div class="stats-row"><span class="stats-label">Wage</span><span class="stats-value">@_totals.TotalWage.ToString("N0", CultureInfo.InvariantCulture)</span></div>
+                    <div class="stats-row"><span class="stats-label">Estimated Value</span><span class="stats-value">@_totals.TotalEstimatedValue.ToString("N0", CultureInfo.InvariantCulture)</span></div>
+                    <div class="stats-row"><span class="stats-label">Nationalities</span><span class="stats-value">@_totals.NationalityCount</span></div>
+                    <div class="stats-row"><span class="stats-label">Injured</span><span class="stats-value">@_totals.InjuredCount</span></div>
+                    <div class="stats-row"><span class="stats-label">Red cards</span><span class="stats-value">@_totals.RedCardCount</span></div>
+                    <div class="stats-row"><span class="stats-label">Yellow Cards</span><span class="stats-value">@_totals.YellowCardCount</span></div>
+                </div>
+                <div class="team-average-section">
+                    <h3>Team Average</h3>
+                    <div class="stats-row"><span class="stats-label">TSI</span><span class="stats-value">@_averages.AvgTSI.ToString("N0", CultureInfo.InvariantCulture)</span></div>
+                    <div class="stats-row"><span class="stats-label">Wage</span><span class="stats-value">@_averages.AvgWage.ToString("N0", CultureInfo.InvariantCulture)</span></div>
+                    <div class="stats-row"><span class="stats-label">Estimated Value</span><span class="stats-value">@_averages.AvgEstimatedValue.ToString("N0", CultureInfo.InvariantCulture)</span></div>
+                    <div class="stats-row"><span class="stats-label">Age</span><span class="stats-value">@_averages.AvgAge.ToString("N1", CultureInfo.InvariantCulture)</span></div>
+                    <div class="stats-row"><span class="stats-label">Form</span><span class="stats-value">@_averages.AvgForm.ToString("N1", CultureInfo.InvariantCulture)</span></div>
+                    <div class="stats-row"><span class="stats-label">Stamina</span><span class="stats-value">@_averages.AvgStamina.ToString("N1", CultureInfo.InvariantCulture)</span></div>
+                    <div class="stats-row"><span class="stats-label">Exp</span><span class="stats-value">@_averages.AvgExperience.ToString("N1", CultureInfo.InvariantCulture)</span></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -75,9 +97,13 @@
     ];
 
     private IReadOnlyList<Player> _players = [];
+    private TeamTotals _totals = new();
+    private TeamAverages _averages = new();
 
     protected override void OnInitialized()
     {
         _players = PlayerRepository.GetByTeamId(Guid.Empty);
+        _totals = StatsService.GetTeamTotals(_players);
+        _averages = StatsService.GetTeamAverages(_players);
     }
 }

@@ -24,6 +24,7 @@ public class DependencyInjectionTests
         container.GetRequiredService<IPlayerRepository>().Should().NotBeNull();
         container.GetRequiredService<ITeamRepository>().Should().NotBeNull();
         container.GetRequiredService<IPlayerDisplayService>().Should().NotBeNull();
+        container.GetRequiredService<IPlayerStatsService>().Should().NotBeNull();
     }
 
     [Fact]
@@ -43,12 +44,15 @@ public class DependencyInjectionTests
         var teamRepo2 = container.GetRequiredService<ITeamRepository>();
         var displayService1 = container.GetRequiredService<IPlayerDisplayService>();
         var displayService2 = container.GetRequiredService<IPlayerDisplayService>();
+        var statsService1 = container.GetRequiredService<IPlayerStatsService>();
+        var statsService2 = container.GetRequiredService<IPlayerStatsService>();
 
         // Assert (same instance = singleton)
         service1.Should().BeSameAs(service2);
         repo1.Should().BeSameAs(repo2);
         teamRepo1.Should().BeSameAs(teamRepo2);
         displayService1.Should().BeSameAs(displayService2);
+        statsService1.Should().BeSameAs(statsService2);
     }
 
     [Fact]
@@ -68,5 +72,6 @@ public class DependencyInjectionTests
         container.GetRequiredService<IPlayerRepository>().Should().BeOfType<PlayerRepository>();
         container.GetRequiredService<ITeamRepository>().Should().BeOfType<TeamRepository>();
         container.GetRequiredService<IPlayerDisplayService>().Should().BeOfType<PlayerDisplayService>();
+        container.GetRequiredService<IPlayerStatsService>().Should().BeOfType<PlayerStatsService>();
     }
 }

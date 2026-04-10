@@ -105,7 +105,7 @@ public class TeamRepositoryTests
     #region GetById
 
     [Fact]
-    public void GetById_ReturnsTeamWhenExists()
+    public void GetById_WhenTeamExists_ReturnsTeam()
     {
         // Arrange
         var team = CreateTeam("Findable FC");
@@ -122,7 +122,7 @@ public class TeamRepositoryTests
     }
 
     [Fact]
-    public void GetById_ReturnsNullWhenNotFound()
+    public void GetById_WhenNotFound_ReturnsNull()
     {
         // Arrange
         var nonExistentId = Guid.NewGuid();
@@ -145,7 +145,7 @@ public class TeamRepositoryTests
     }
 
     [Fact]
-    public void GetById_DoesNotReturnTeamWithDifferentId()
+    public void GetById_WhenDifferentIdQueried_ReturnsNull()
     {
         // Arrange
         var team = CreateTeam("Wrong Id FC");
@@ -174,7 +174,7 @@ public class TeamRepositoryTests
     }
 
     [Fact]
-    public void GetAll_ReturnsAllAddedTeams()
+    public void GetAll_WhenTeamsAdded_ReturnsAll()
     {
         // Arrange
         var team1 = CreateTeam("Northford Athletic");
@@ -194,7 +194,7 @@ public class TeamRepositoryTests
     }
 
     [Fact]
-    public void GetAll_ReturnsIReadOnlyList()
+    public void GetAll_WhenCalled_ReturnsIReadOnlyList()
     {
         // Arrange
         var team = CreateTeam("Type Check FC");
@@ -227,7 +227,7 @@ public class TeamRepositoryTests
     }
 
     [Fact]
-    public void GetAll_ReturnsTeamsWithCorrectFieldValues()
+    public void GetAll_WhenTeamAdded_ReturnsCorrectFieldValues()
     {
         // Arrange
         var team = new Team
@@ -269,7 +269,7 @@ public class TeamRepositoryTests
     #region Update
 
     [Fact]
-    public void Update_ReplacesTeamData()
+    public void Update_WhenCalled_ReplacesAllTeamFields()
     {
         // Arrange
         var team = CreateTeam("Original Town");
@@ -309,7 +309,7 @@ public class TeamRepositoryTests
     }
 
     [Fact]
-    public void Update_PreservesTeamId()
+    public void Update_WhenCalled_PreservesTeamId()
     {
         // Arrange
         var team = CreateTeam("Original");
@@ -356,7 +356,7 @@ public class TeamRepositoryTests
     }
 
     [Fact]
-    public void Update_DoesNotAffectOtherTeams()
+    public void Update_WhenOneTeamUpdated_OtherTeamsUnchanged()
     {
         // Arrange
         var team1 = CreateTeam("Team One");
@@ -382,7 +382,7 @@ public class TeamRepositoryTests
     }
 
     [Fact]
-    public void Update_AllTeamFields_ArePersisted()
+    public void Update_WhenAllFieldsChanged_AllArePersisted()
     {
         // Arrange
         var team = CreateTeam("Partial FC");
@@ -459,7 +459,7 @@ public class TeamRepositoryTests
     #region Thread Safety
 
     [Fact]
-    public void ConcurrentAdds_DoNotCorruptState()
+    public void ConcurrentAdds_WhenRunInParallel_DoNotCorruptState()
     {
         // Arrange
         const int teamCount = 200;
@@ -478,7 +478,7 @@ public class TeamRepositoryTests
     }
 
     [Fact]
-    public void ConcurrentReadsAndWrites_DoNotThrow()
+    public void ConcurrentReadsAndWrites_WhenRunInParallel_DoNotThrow()
     {
         // Arrange
         const int iterationCount = 100;
@@ -520,7 +520,7 @@ public class TeamRepositoryTests
     }
 
     [Fact]
-    public void ConcurrentUpdates_DoNotCorruptState()
+    public void ConcurrentUpdates_WhenRunInParallel_DoNotCorruptState()
     {
         // Arrange
         var team = CreateTeam("Shared Team");
@@ -553,7 +553,7 @@ public class TeamRepositoryTests
     #region Edge Cases
 
     [Fact]
-    public void GetAll_AfterUpdate_ReflectsNewData()
+    public void GetAll_AfterUpdate_ReturnsUpdatedData()
     {
         // Arrange
         var team = CreateTeam("Before Update FC");
@@ -576,7 +576,7 @@ public class TeamRepositoryTests
     }
 
     [Fact]
-    public void GetAll_HumanAndAiTeams_AreAllReturned()
+    public void GetAll_WithMixedControlledTypes_ReturnsAllTeams()
     {
         // Arrange
         var humanTeam = CreateTeam("Human FC", isHumanControlled: true);

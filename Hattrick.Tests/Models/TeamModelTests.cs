@@ -115,7 +115,7 @@ public class TeamModelTests
     #region Id Property
 
     [Fact]
-    public void Id_CanBeSetToSpecificGuid()
+    public void Id_WhenSetToSpecificGuid_IsStored()
     {
         var specificId = Guid.Parse("aaaabbbb-cccc-dddd-eeee-ffffffffffff");
         var team = new Team { Id = specificId };
@@ -138,7 +138,7 @@ public class TeamModelTests
     #region Name Property
 
     [Fact]
-    public void Name_CanBeSetAndRetrieved()
+    public void Name_WhenSet_IsRetrievable()
     {
         var team = new Team { Name = "Ironvale United" };
 
@@ -146,7 +146,7 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void Name_CanBeUpdatedAfterConstruction()
+    public void Name_WhenUpdatedAfterConstruction_ReflectsNewValue()
     {
         var team = new Team { Name = "Old Name" };
         team.Name = "New Name";
@@ -159,7 +159,7 @@ public class TeamModelTests
     #region IsHumanControlled
 
     [Fact]
-    public void IsHumanControlled_CanBeSetToTrue()
+    public void IsHumanControlled_WhenSetToTrue_IsTrue()
     {
         var team = new Team { IsHumanControlled = true };
 
@@ -167,7 +167,7 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void IsHumanControlled_CanBeSetToFalse()
+    public void IsHumanControlled_WhenSetToFalse_IsFalse()
     {
         var team = new Team { IsHumanControlled = false };
 
@@ -179,7 +179,7 @@ public class TeamModelTests
     #region Budget (decimal)
 
     [Fact]
-    public void Budget_CanBeSetAndRetrieved()
+    public void Budget_WhenSet_IsRetrievable()
     {
         var team = new Team { Budget = 500_000.00m };
 
@@ -187,7 +187,7 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void Budget_SupportsDecimalPrecision()
+    public void Budget_WhenSetWithFractionalValue_RetainsPrecision()
     {
         var team = new Team { Budget = 123456.78m };
 
@@ -196,7 +196,7 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void Budget_CanBeSetToLargeValue()
+    public void Budget_WhenSetToLargeValue_IsStored()
     {
         var team = new Team { Budget = 10_000_000.00m };
 
@@ -205,7 +205,7 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void Budget_CanBeSetToZero()
+    public void Budget_WhenSetToZero_IsZero()
     {
         var team = new Team { Budget = 0m };
 
@@ -217,7 +217,7 @@ public class TeamModelTests
     #region Fans & FanClubSize
 
     [Fact]
-    public void Fans_CanBeSetAndRetrieved()
+    public void Fans_WhenSet_IsRetrievable()
     {
         var team = new Team { Fans = 25_000 };
 
@@ -225,7 +225,7 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void Fans_CanBeSetToLargeValue()
+    public void Fans_WhenSetToLargeValue_IsStored()
     {
         var team = new Team { Fans = 500_000 };
 
@@ -234,7 +234,7 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void FanClubSize_CanBeSetAndRetrieved()
+    public void FanClubSize_WhenSet_IsRetrievable()
     {
         var team = new Team { FanClubSize = 1_200 };
 
@@ -242,7 +242,7 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void FanClubSize_CanBeSetToLargeValue()
+    public void FanClubSize_WhenSetToLargeValue_IsStored()
     {
         var team = new Team { FanClubSize = 100_000 };
 
@@ -250,7 +250,7 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void Fans_CanBeSetToZero()
+    public void Fans_WhenSetToZero_IsZero()
     {
         var team = new Team { Fans = 25_000 };
         team.Fans = 0;
@@ -259,7 +259,7 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void FanClubSize_CanBeSetToZero()
+    public void FanClubSize_WhenSetToZero_IsZero()
     {
         var team = new Team { FanClubSize = 1_200 };
         team.FanClubSize = 0;
@@ -299,7 +299,7 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void TeamSpirit_SupportsFractionalValues()
+    public void TeamSpirit_WhenSetWithFractionalValue_RetainsPrecision()
     {
         var team = new Team { TeamSpirit = 7.35 };
 
@@ -339,7 +339,7 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void Confidence_SupportsFractionalValues()
+    public void Confidence_WhenSetWithFractionalValue_RetainsPrecision()
     {
         var team = new Team { Confidence = 4.82 };
 

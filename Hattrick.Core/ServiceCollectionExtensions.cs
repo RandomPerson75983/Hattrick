@@ -26,6 +26,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IPlayerRepository, PlayerRepository>();
         services.AddSingleton<ITeamRepository, TeamRepository>();
 
+        // Display services
+        services.AddSingleton<IPlayerDisplayService, PlayerDisplayService>();
+
         return services;
     }
 }

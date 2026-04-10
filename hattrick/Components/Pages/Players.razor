@@ -1,12 +1,83 @@
 @page "/players"
+@using Hattrick.Core.Models
+@using Hattrick.Core.Repositories
+@using Hattrick.Core.Services
+@using System.Globalization
+@inject IPlayerRepository PlayerRepository
+@inject IPlayerDisplayService DisplayService
 
-<h1>Players</h1>
+<div class="players-page">
+    <h1 class="players-title">Your @_players.Count players</h1>
 
-<p>Senior squad management page. Coming soon.</p>
+    <div class="players-layout">
+        <div class="players-main-content">
+            <div class="skill-table">
+                <div class="skill-table-header">
+                    <span class="col-player">player</span>
+                    <span class="col-age">age</span>
+                    <span class="col-tsi">tsi</span>
+                    <span class="col-wage">wage</span>
+                    <span class="col-specialty">specialty</span>
+                    <span class="col-form">form</span>
+                    <span class="col-skill">Kp</span>
+                    <span class="col-skill">Def</span>
+                    <span class="col-skill">Pm</span>
+                    <span class="col-skill">Wi</span>
+                    <span class="col-skill">Sc</span>
+                    <span class="col-skill">Ps</span>
+                    <span class="col-skill">Sp</span>
+                    <span class="col-position">position</span>
+                </div>
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Squad List</h5>
-        <p class="card-text">Player roster, skills, and details will be displayed here.</p>
+                @foreach (var player in _players)
+                {
+                    <div class="player-row">
+                        <div class="player-name-cell">
+                            <a class="player-name" href="/players/@player.Id">@player.Name</a>
+                        </div>
+                        <div class="age-cell">@DisplayService.FormatAge(player.Age, player.AgeDays)</div>
+                        <div class="tsi-cell">@player.TSI.ToString("N0", CultureInfo.InvariantCulture)</div>
+                        <div class="wage-cell">@player.Wage.ToString("N0", CultureInfo.InvariantCulture)</div>
+                        <div class="specialty-cell">@DisplayService.GetSpecialtyDisplay(player.Specialty)</div>
+                        <div class="form-cell">@player.Form</div>
+
+                        @foreach (var skillType in DisplayedSkills)
+                        {
+                            var skillValue = player.Skills.TryGetValue(skillType, out var sv) ? sv : 0.0;
+                            <div class="skill-cell">
+                                <div class="skill-bar @DisplayService.GetSkillColorClass(skillValue)"
+                                     style="width: @DisplayService.GetSkillBarPercent(skillValue)%"></div>
+                            </div>
+                        }
+
+                        <div class="best-position-cell">@DisplayService.GetPositionDisplay(player.BestPosition)</div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="players-sidebar">
+            <!-- Player detail panel (Quartet 2) -->
+        </div>
     </div>
 </div>
+
+@code {
+    private static readonly SkillType[] DisplayedSkills =
+    [
+        SkillType.Keeper,
+        SkillType.Defending,
+        SkillType.Playmaking,
+        SkillType.Winger,
+        SkillType.Scoring,
+        SkillType.Passing,
+        SkillType.SetPieces
+    ];
+
+    private IReadOnlyList<Player> _players = [];
+
+    protected override void OnInitialized()
+    {
+        _players = PlayerRepository.GetByTeamId(Guid.Empty);
+    }
+}

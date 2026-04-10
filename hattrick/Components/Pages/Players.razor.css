@@ -1,0 +1,158 @@
+.players-page {
+    padding: 1rem;
+    max-width: 100%;
+}
+
+.players-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary, #1a1a1a);
+}
+
+.players-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 1rem;
+    align-items: start;
+}
+
+.players-main-content {
+    overflow-x: auto;
+}
+
+.players-sidebar {
+    background: var(--color-surface, #f5f5f5);
+    border: 1px solid var(--color-border, #ddd);
+    border-radius: 4px;
+    padding: 1rem;
+    min-height: 200px;
+}
+
+/* Skill table */
+
+.skill-table {
+    display: grid;
+    width: 100%;
+    min-width: 800px;
+}
+
+.skill-table-header,
+.player-row {
+    display: grid;
+    grid-template-columns:
+        /* player */ 2fr
+        /* age     */ 1.4fr
+        /* tsi     */ 0.8fr
+        /* wage    */ 0.8fr
+        /* specialty */ 1fr
+        /* form    */ 0.5fr
+        /* 7 skills */ repeat(7, 0.6fr)
+        /* position */ 1.2fr;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border, #e0e0e0);
+    gap: 0;
+}
+
+.skill-table-header {
+    background: var(--color-surface-raised, #f0f0f0);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-secondary, #555);
+}
+
+.skill-table-header span {
+    padding: 0.4rem 0.3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-row {
+    font-size: 0.85rem;
+}
+
+.player-row:hover {
+    background: var(--color-surface, #f9f9f9);
+}
+
+.player-row > div {
+    padding: 0.35rem 0.3rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Player name cell */
+
+.player-name-cell {
+    font-weight: 500;
+}
+
+.player-name {
+    color: var(--color-accent-green, #2a7a2a);
+    text-decoration: none;
+}
+
+.player-name:hover {
+    text-decoration: underline;
+}
+
+/* Skill bar */
+
+.skill-cell {
+    padding: 0.35rem 0.2rem;
+}
+
+.skill-bar {
+    height: 12px;
+    border-radius: 2px;
+    background: var(--color-surface-raised, #e0e0e0);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Skill color classes applied to the skill-bar container */
+
+.skill-poor {
+    background: #c0392b;
+}
+
+.skill-inadequate {
+    background: #e67e22;
+}
+
+.skill-passable {
+    background: #f1c40f;
+}
+
+.skill-good {
+    background: #2ecc71;
+}
+
+.skill-excellent {
+    background: #27ae60;
+}
+
+.skill-outstanding {
+    background: #1a7a3c;
+}
+
+/* Best position cell */
+
+.best-position-cell {
+    color: var(--color-text-secondary, #555);
+    font-size: 0.8rem;
+}
+
+@media (max-width: 1024px) {
+    .players-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .players-sidebar {
+        display: none;
+    }
+}

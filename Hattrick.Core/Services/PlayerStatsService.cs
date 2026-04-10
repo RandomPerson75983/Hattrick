@@ -19,14 +19,9 @@ public sealed class PlayerStatsService : IPlayerStatsService
     public TeamTotals GetTeamTotals(IReadOnlyList<Player> players)
     {
         ArgumentNullException.ThrowIfNull(players);
-
-        int totalTSI = 0;
-        decimal totalWage = 0m;
-        decimal totalEstimatedValue = 0m;
+        int totalTSI = 0, injured = 0, redCards = 0, yellowCards = 0;
+        decimal totalWage = 0m, totalEstimatedValue = 0m;
         var nationalities = new HashSet<int>();
-        int injured = 0;
-        int redCards = 0;
-        int yellowCards = 0;
 
         foreach (var p in players)
         {
@@ -55,14 +50,9 @@ public sealed class PlayerStatsService : IPlayerStatsService
     public TeamAverages GetTeamAverages(IReadOnlyList<Player> players)
     {
         ArgumentNullException.ThrowIfNull(players);
+        if (players.Count == 0) return new TeamAverages();
 
-        if (players.Count == 0)
-        {
-            return new TeamAverages();
-        }
-
-        double totalTSI = 0, totalWage = 0, totalEstValue = 0;
-        double totalAge = 0, totalForm = 0, totalStamina = 0, totalExp = 0;
+        double totalTSI = 0, totalWage = 0, totalEstValue = 0, totalAge = 0, totalForm = 0, totalStamina = 0, totalExp = 0;
 
         foreach (var p in players)
         {

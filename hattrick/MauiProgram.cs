@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Hattrick.Core.Services;
+using Hattrick.Core;
 
 namespace Hattrick;
 
@@ -16,13 +16,7 @@ public static class MauiProgram
 			});
 
 		builder.Services.AddMauiBlazorWebView();
-
-		// Register infrastructure services
-		builder.Services.AddSingleton<IRandomProvider, RandomProvider>();
-		builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-		builder.Services.AddSingleton<ISaveGameService, SaveGameService>();
-		builder.Services.AddSingleton<ISaveSlotService, SaveSlotService>();
-		builder.Services.AddSingleton<IGameStateService, GameStateService>();
+		builder.Services.AddHattrickCoreServices();
 
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();

@@ -1,62 +1,24 @@
 {
-  "sprintName": "Main Layout Design Plan Implementation",
-  "description": "Build MainLayout, HeaderBar, NavMenu (redesigned), Home page, and responsive CSS per MAIN_LAYOUT_DESIGN_PLAN.md",
+  "sprintName": "Phase 1 Sprint 2: Player Model & Repository",
+  "description": "Create Player model with all properties and PlayerRepository with thread-safe in-memory storage.",
   "quartets": [
     {
-      "name": "CSS Foundation",
-      "description": "Global styles: colors, typography, flexbox utilities, responsive mixins (no tests)"
+      "name": "Player Model",
+      "description": "Player class with 24 properties"
     },
     {
-      "name": "NavItem Component",
-      "description": "Individual nav link with icon, label, active state (bUnit tests)"
-    },
-    {
-      "name": "NavSection Component",
-      "description": "Collapsible section header for grouped nav items (bUnit tests)"
-    },
-    {
-      "name": "HeaderBar Component",
-      "description": "Top navigation bar: logo, team info, stats bar, user menu (bUnit tests)"
-    },
-    {
-      "name": "NavMenu Redesign",
-      "description": "Complete sidebar navigation using NavSection/NavItem, all sections populated (bUnit tests)"
-    },
-    {
-      "name": "MainLayout Redesign",
-      "description": "3-column layout: header + (sidebar | main | right-panel), responsive containers (bUnit tests)"
-    },
-    {
-      "name": "Home Page Subcomponents",
-      "description": "ClubInfoCard, UpcomingMatchesPanel, ActivityFeed, QuickLinksSection (bUnit tests)"
-    },
-    {
-      "name": "Home.razor Redesign",
-      "description": "Main dashboard page assembly with all subcomponents, placeholder data (bUnit tests)"
-    },
-    {
-      "name": "Responsive CSS Polish",
-      "description": "Media queries for tablet/mobile, animations, hover states, final visual polish"
+      "name": "IPlayerRepository + PlayerRepository",
+      "description": "In-memory thread-safe repository with Lock, 5 CRUD methods, singleton DI"
     }
   ],
-  "currentQuartet": 9,
+  "currentQuartet": 2,
   "currentStep": "complete",
-  "completedQuartets": [
-    "CSS Foundation",
-    "NavItem Component",
-    "NavSection Component",
-    "HeaderBar Component",
-    "NavMenu Redesign",
-    "MainLayout Redesign",
-    "Home Page Subcomponents",
-    "Home.razor Redesign",
-    "Responsive CSS Polish"
-  ],
+  "completedQuartets": ["Player Model", "IPlayerRepository + PlayerRepository"],
   "notes": [
-    "bUnit v2 component tests required for all Razor components",
-    "CSS only quartets (CSS Foundation, Responsive Polish) have no test files",
-    "Use CultureInfo.InvariantCulture where needed",
-    "All colors per MAIN_LAYOUT_DESIGN_PLAN color scheme",
-    "Component props follow MAIN_LAYOUT_DESIGN_PLAN specifications"
+    "SPRINT COMPLETE: All 2 quartets finished and committed",
+    "Total tests: 312 (93 player model + 33 repository + 186 existing)",
+    "Player model in Hattrick.Core/Models/Player.cs",
+    "Repository in Hattrick.Core/Repositories/",
+    "Ready for Phase 1 Sprint 3: Team Model & Repository"
   ]
 }

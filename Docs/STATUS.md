@@ -1,13 +1,13 @@
 # Hattrick Clone - Project Status
 
 **Date:** April 9, 2026
-**Current Phase:** 1 (Core Data Models + Lineup Management) — SPRINT 3 COMPLETE ✅
-**Overall Progress:** 20% (Phase 1 Sprint 3 done)
+**Current Phase:** 1 (Core Data Models + Lineup Management) — SPRINT 4 COMPLETE ✅
+**Overall Progress:** 25% (Phase 1 Sprint 4 done)
 
 ## Project Stats
 
 - **Solution:** Hattrick.slnx with 3 projects
-- **Tests:** 415 passing (Phase 0 infrastructure + Phase 1 enums + Phase 1 models/repos)
+- **Tests:** 570 passing (Phase 0 infrastructure + Phase 1 enums + Phase 1 models/repos + Phase 1 player list UI)
 - **Compilation:** OK
 - **App Runs:** Yes (navigable shell with 8 placeholder pages)
 
@@ -94,6 +94,25 @@ All foundation infrastructure complete:
 - Tests: 30 passing (including 3 concurrent thread-safety tests + reflection test for no Remove)
 
 **Sprint 3 Summary:** 2 quartets, 103 new tests, 415 total passing
+
+## Phase 1 - Sprint 4 COMPLETE ✅
+
+### Player List UI (2 Quartets)
+
+**Quartet 1: PlayerDisplayService + Player Table Layout** ✅
+- IPlayerDisplayService + PlayerDisplayService: FormatAge, GetSkillFloor, GetSkillBarPercent, GetSkillColorClass, GetPositionDisplay, GetSpecialtyDisplay
+- Players.razor: skill table with all 7 skills (excl. Stamina), player name links, age/TSI/wage/specialty/form/best-position columns
+- Registered as Singleton in DI
+- Tests: 89 passing (54 service + 32 component + 3 DI)
+
+**Quartet 2: PlayerStatsService + Sidebar Stats** ✅
+- TeamTotals record: TotalTSI, TotalWage, TotalEstimatedValue (TSI×25), NationalityCount, InjuredCount, RedCardCount, YellowCardCount
+- TeamAverages record: AvgTSI, AvgWage, AvgEstimatedValue, AvgAge, AvgForm, AvgStamina, AvgExperience
+- IPlayerStatsService + PlayerStatsService: guards empty list (no divide-by-zero), EstimatedValueMultiplier=25 constant
+- Players.razor sidebar with Team Total and Team Average sections
+- Tests: 66 new (42 service + 24 component)
+
+**Sprint 4 Summary:** 2 quartets, 155 new tests, 570 total passing
 
 ## Upcoming Work
 

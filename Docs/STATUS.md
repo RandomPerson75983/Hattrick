@@ -1,13 +1,13 @@
 # Hattrick Clone - Project Status
 
 **Date:** April 9, 2026
-**Current Phase:** 1 (Core Data Models + Lineup Management) — SPRINT 2 COMPLETE ✅
-**Overall Progress:** 18% (2 of 10 phases complete)
+**Current Phase:** 1 (Core Data Models + Lineup Management) — SPRINT 3 COMPLETE ✅
+**Overall Progress:** 20% (Phase 1 Sprint 3 done)
 
 ## Project Stats
 
 - **Solution:** Hattrick.slnx with 3 projects
-- **Tests:** 312 passing (Phase 0 infrastructure + Phase 1 enums + Phase 1 models/repos)
+- **Tests:** 415 passing (Phase 0 infrastructure + Phase 1 enums + Phase 1 models/repos)
 - **Compilation:** OK
 - **App Runs:** Yes (navigable shell with 8 placeholder pages)
 
@@ -76,6 +76,24 @@ All foundation infrastructure complete:
 - Tests: 33 passing (including 4 concurrent thread-safety tests)
 
 **Sprint 2 Summary:** 2 quartets, 126 new tests, 312 total passing
+
+## Phase 1 - Sprint 3 COMPLETE ✅
+
+### Team Model & Repository (2 Quartets)
+
+**Quartet 1: Team Model** ✅
+- Team class with 14 properties (Id, Name, IsHumanControlled, Budget, Fans, FanClubSize, TeamSpirit, Confidence, CoachType, CoachLevel, AssistantCoachLevel, DoctorLevel, SpokespersonLevel, FinancialDirectorLevel)
+- Mutable POCO following Player.cs pattern, CoachLevel defaults to 1
+- CoachTypeEnumTests.cs created for ordinal stability tests
+- Tests: 73 passing
+
+**Quartet 2: ITeamRepository + TeamRepository** ✅
+- ITeamRepository interface with 4 methods: GetById, GetAll, Add, Update (no Remove — teams permanent)
+- Thread-safe with System.Threading.Lock, returns IReadOnlyList snapshots
+- Registered as Singleton in DI
+- Tests: 30 passing (including 3 concurrent thread-safety tests + reflection test for no Remove)
+
+**Sprint 3 Summary:** 2 quartets, 103 new tests, 415 total passing
 
 ## Upcoming Work
 

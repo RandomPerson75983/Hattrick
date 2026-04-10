@@ -15,7 +15,7 @@ public class CoachTypeEnumTests
     [InlineData(CoachType.Offensive, 0)]
     [InlineData(CoachType.Defensive, 1)]
     [InlineData(CoachType.Balanced, 2)]
-    public void CoachType_MemberHasExpectedOrdinal(CoachType member, int expectedValue)
+    public void CoachType_EachMember_HasExpectedOrdinalValue(CoachType member, int expectedValue)
     {
         ((int)member).Should().Be(expectedValue,
             $"CoachType.{member} must have ordinal {expectedValue} for serialization stability and correct default behaviour");

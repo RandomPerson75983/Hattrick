@@ -4,7 +4,6 @@ namespace Hattrick.Tests.Models;
 
 /// <summary>
 /// Tests for the Team model class.
-/// TDD Red Phase: Team class does not exist yet — these tests define the expected API.
 /// </summary>
 public class TeamModelTests
 {
@@ -96,7 +95,7 @@ public class TeamModelTests
     {
         var team = new Team();
 
-        team.CoachLevel.Should().Be(1,
+        team.CoachLevel.Should().Be(Team.MinCoachLevel,
             "CoachLevel minimum is 1; every team starts with a coach");
     }
 
@@ -368,9 +367,9 @@ public class TeamModelTests
     #region CoachLevel (1-8)
 
     [Theory]
-    [InlineData(1)]
+    [InlineData(Team.MinCoachLevel)]
     [InlineData(4)]
-    [InlineData(8)]
+    [InlineData(Team.MaxCoachLevel)]
     public void CoachLevel_AcceptsValidValues(int level)
     {
         var team = new Team { CoachLevel = level };
@@ -381,17 +380,17 @@ public class TeamModelTests
     [Fact]
     public void CoachLevel_BoundaryMinimum_IsOne()
     {
-        var team = new Team { CoachLevel = 1 };
+        var team = new Team { CoachLevel = Team.MinCoachLevel };
 
-        team.CoachLevel.Should().Be(1, "minimum CoachLevel is 1");
+        team.CoachLevel.Should().Be(Team.MinCoachLevel, "minimum CoachLevel is 1");
     }
 
     [Fact]
     public void CoachLevel_BoundaryMaximum_IsEight()
     {
-        var team = new Team { CoachLevel = 8 };
+        var team = new Team { CoachLevel = Team.MaxCoachLevel };
 
-        team.CoachLevel.Should().Be(8, "maximum CoachLevel is 8");
+        team.CoachLevel.Should().Be(Team.MaxCoachLevel, "maximum CoachLevel is 8");
     }
 
     #endregion
@@ -401,7 +400,7 @@ public class TeamModelTests
     [Theory]
     [InlineData(0)]
     [InlineData(5)]
-    [InlineData(10)]
+    [InlineData(Team.MaxAssistantCoachLevel)]
     public void AssistantCoachLevel_AcceptsValidValues(int level)
     {
         var team = new Team { AssistantCoachLevel = level };
@@ -420,9 +419,9 @@ public class TeamModelTests
     [Fact]
     public void AssistantCoachLevel_BoundaryMaximum_IsTen()
     {
-        var team = new Team { AssistantCoachLevel = 10 };
+        var team = new Team { AssistantCoachLevel = Team.MaxAssistantCoachLevel };
 
-        team.AssistantCoachLevel.Should().Be(10, "maximum AssistantCoachLevel is 10");
+        team.AssistantCoachLevel.Should().Be(Team.MaxAssistantCoachLevel, "maximum AssistantCoachLevel is 10");
     }
 
     #endregion
@@ -432,7 +431,7 @@ public class TeamModelTests
     [Theory]
     [InlineData(0)]
     [InlineData(3)]
-    [InlineData(5)]
+    [InlineData(Team.MaxStaffLevel)]
     public void DoctorLevel_AcceptsValidValues(int level)
     {
         var team = new Team { DoctorLevel = level };
@@ -451,9 +450,9 @@ public class TeamModelTests
     [Fact]
     public void DoctorLevel_BoundaryMaximum_IsFive()
     {
-        var team = new Team { DoctorLevel = 5 };
+        var team = new Team { DoctorLevel = Team.MaxStaffLevel };
 
-        team.DoctorLevel.Should().Be(5, "maximum DoctorLevel is 5");
+        team.DoctorLevel.Should().Be(Team.MaxStaffLevel, "maximum DoctorLevel is 5");
     }
 
     #endregion
@@ -463,7 +462,7 @@ public class TeamModelTests
     [Theory]
     [InlineData(0)]
     [InlineData(3)]
-    [InlineData(5)]
+    [InlineData(Team.MaxStaffLevel)]
     public void SpokespersonLevel_AcceptsValidValues(int level)
     {
         var team = new Team { SpokespersonLevel = level };
@@ -482,9 +481,9 @@ public class TeamModelTests
     [Fact]
     public void SpokespersonLevel_BoundaryMaximum_IsFive()
     {
-        var team = new Team { SpokespersonLevel = 5 };
+        var team = new Team { SpokespersonLevel = Team.MaxStaffLevel };
 
-        team.SpokespersonLevel.Should().Be(5, "maximum SpokespersonLevel is 5");
+        team.SpokespersonLevel.Should().Be(Team.MaxStaffLevel, "maximum SpokespersonLevel is 5");
     }
 
     #endregion
@@ -494,7 +493,7 @@ public class TeamModelTests
     [Theory]
     [InlineData(0)]
     [InlineData(3)]
-    [InlineData(5)]
+    [InlineData(Team.MaxStaffLevel)]
     public void FinancialDirectorLevel_AcceptsValidValues(int level)
     {
         var team = new Team { FinancialDirectorLevel = level };
@@ -513,9 +512,9 @@ public class TeamModelTests
     [Fact]
     public void FinancialDirectorLevel_BoundaryMaximum_IsFive()
     {
-        var team = new Team { FinancialDirectorLevel = 5 };
+        var team = new Team { FinancialDirectorLevel = Team.MaxStaffLevel };
 
-        team.FinancialDirectorLevel.Should().Be(5, "maximum FinancialDirectorLevel is 5");
+        team.FinancialDirectorLevel.Should().Be(Team.MaxStaffLevel, "maximum FinancialDirectorLevel is 5");
     }
 
     #endregion
@@ -523,7 +522,7 @@ public class TeamModelTests
     #region Mutability
 
     [Fact]
-    public void Team_IsMutable_AllPropertiesCanBeChangedAfterConstruction()
+    public void Properties_WhenMutatedAfterConstruction_ReflectNewValues()
     {
         var team = new Team
         {
@@ -555,7 +554,7 @@ public class TeamModelTests
     #region Full Team Construction (Integration)
 
     [Fact]
-    public void FullTeam_AllPropertiesCanBeSetViaObjectInitializer()
+    public void ObjectInitializer_WhenAllPropertiesProvided_AllAreStored()
     {
         var teamId = Guid.NewGuid();
 
@@ -594,18 +593,18 @@ public class TeamModelTests
     }
 
     [Fact]
-    public void FullTeam_MinimalAiTeam_HasCorrectDefaults()
+    public void Constructor_WhenMinimalAiTeam_HasCorrectDefaults()
     {
         // An AI-controlled team with no staff hired other than mandatory coach
         var team = new Team
         {
             Name = "Coldwater FC",
             IsHumanControlled = false,
-            CoachLevel = 1
+            CoachLevel = Team.MinCoachLevel
         };
 
         team.IsHumanControlled.Should().BeFalse();
-        team.CoachLevel.Should().Be(1);
+        team.CoachLevel.Should().Be(Team.MinCoachLevel);
         team.AssistantCoachLevel.Should().Be(0, "AI team starts with no assistant coach");
         team.DoctorLevel.Should().Be(0, "AI team starts with no doctor");
         team.SpokespersonLevel.Should().Be(0, "AI team starts with no spokesperson");

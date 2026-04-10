@@ -7,6 +7,11 @@ namespace Hattrick.Core.Models;
 /// </summary>
 public class Team
 {
+    public const int MinCoachLevel = 1;
+    public const int MaxCoachLevel = 8;
+    public const int MaxAssistantCoachLevel = 10;
+    public const int MaxStaffLevel = 5;
+
     /// <summary>
     /// Unique identifier for the team. Auto-generated on construction.
     /// </summary>
@@ -56,7 +61,7 @@ public class Team
     /// <summary>
     /// Coach skill level (1-8). Every team must have a coach, minimum level 1.
     /// </summary>
-    public int CoachLevel { get; set; } = 1;
+    public int CoachLevel { get; set; } = MinCoachLevel;
 
     /// <summary>
     /// Assistant coach skill level (0-10). Zero means none hired.

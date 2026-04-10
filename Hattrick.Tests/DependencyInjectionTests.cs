@@ -8,7 +8,7 @@ namespace Hattrick.Tests;
 public class DependencyInjectionTests
 {
     [Fact]
-    public void DI_ContainerRegistersAllInfrastructureServices()
+    public void AddHattrickCoreServices_WhenCalled_RegistersAllServices()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -16,17 +16,17 @@ public class DependencyInjectionTests
         var container = services.BuildServiceProvider();
 
         // Act & Assert — GetRequiredService throws if not registered
-        container.GetRequiredService<IRandomProvider>();
-        container.GetRequiredService<IDateTimeProvider>();
-        container.GetRequiredService<ISaveGameService>();
-        container.GetRequiredService<ISaveSlotService>();
-        container.GetRequiredService<IGameStateService>();
-        container.GetRequiredService<IPlayerRepository>();
-        container.GetRequiredService<ITeamRepository>();
+        container.GetRequiredService<IRandomProvider>().Should().NotBeNull();
+        container.GetRequiredService<IDateTimeProvider>().Should().NotBeNull();
+        container.GetRequiredService<ISaveGameService>().Should().NotBeNull();
+        container.GetRequiredService<ISaveSlotService>().Should().NotBeNull();
+        container.GetRequiredService<IGameStateService>().Should().NotBeNull();
+        container.GetRequiredService<IPlayerRepository>().Should().NotBeNull();
+        container.GetRequiredService<ITeamRepository>().Should().NotBeNull();
     }
 
     [Fact]
-    public void DI_ContainerRegistersServicesAsSingletons()
+    public void AddHattrickCoreServices_SharedServices_AreSingletons()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -48,7 +48,7 @@ public class DependencyInjectionTests
     }
 
     [Fact]
-    public void DI_InterfacesResolveToCorrectConcreteTypes()
+    public void AddHattrickCoreServices_Interfaces_ResolveToCorrectConcreteTypes()
     {
         // Arrange
         var services = new ServiceCollection();

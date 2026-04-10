@@ -5,7 +5,7 @@ namespace Hattrick.Tests.Repositories;
 
 public class TeamRepositoryTests
 {
-    private readonly TeamRepository _sut = new();
+    private readonly ITeamRepository _sut = new TeamRepository();
 
     private static Team CreateTeam(string name = "Test United", bool isHumanControlled = false)
     {
@@ -24,7 +24,7 @@ public class TeamRepositoryTests
     #region Add
 
     [Fact]
-    public void Add_TeamIsRetrievableAfterAdd()
+    public void Add_SingleTeam_IsRetrievableById()
     {
         // Arrange
         var team = CreateTeam("Northford Athletic");
@@ -41,7 +41,7 @@ public class TeamRepositoryTests
     }
 
     [Fact]
-    public void Add_MultipleTeamsAreAllRetrievable()
+    public void Add_MultipleTeams_AllAreReturnedByGetAll()
     {
         // Arrange
         var team1 = CreateTeam("Northford Athletic");
@@ -54,9 +54,18 @@ public class TeamRepositoryTests
         _sut.Add(team3);
 
         // Assert
-        _sut.GetById(team1.Id)!.Name.Should().Be("Northford Athletic");
-        _sut.GetById(team2.Id)!.Name.Should().Be("Southwick City");
-        _sut.GetById(team3.Id)!.Name.Should().Be("Eastbridge United");
+        var result1 = _sut.GetById(team1.Id);
+        result1.Should().NotBeNull();
+        result1!.Name.Should().Be("Northford Athletic");
+
+        var result2 = _sut.GetById(team2.Id);
+        result2.Should().NotBeNull();
+        result2!.Name.Should().Be("Southwick City");
+
+        var result3 = _sut.GetById(team3.Id);
+        result3.Should().NotBeNull();
+        result3!.Name.Should().Be("Eastbridge United");
+
         _sut.GetAll().Should().HaveCount(3);
     }
 
@@ -67,7 +76,7 @@ public class TeamRepositoryTests
         var act = () => _sut.Add(null!);
 
         // Assert
-        act.Should().Throw<ArgumentNullException>();
+        act.Should().Throw<ArgumentNullException>().WithParameterName("team");
     }
 
     [Fact]
@@ -279,12 +288,24 @@ public class TeamRepositoryTests
         _sut.Update(updatedTeam);
         var result = _sut.GetById(team.Id);
 
-        // Assert
+        // Assert — fields explicitly set on updatedTeam
         result.Should().NotBeNull();
         result!.Name.Should().Be("Updated Town");
         result.Budget.Should().Be(999_000m);
         result.Fans.Should().Be(8000);
         result.TeamSpirit.Should().Be(9.0);
+
+        // Assert — fields NOT set on updatedTeam default to new Team() defaults,
+        // confirming full-object replacement (not a partial patch)
+        result.IsHumanControlled.Should().BeFalse("updatedTeam did not set IsHumanControlled");
+        result.FanClubSize.Should().Be(0, "updatedTeam did not set FanClubSize");
+        result.Confidence.Should().Be(0.0, "updatedTeam did not set Confidence");
+        result.CoachLevel.Should().Be(Team.MinCoachLevel, "updatedTeam did not set CoachLevel");
+        result.CoachType.Should().Be(CoachType.Offensive, "updatedTeam did not set CoachType");
+        result.AssistantCoachLevel.Should().Be(0, "updatedTeam did not set AssistantCoachLevel");
+        result.DoctorLevel.Should().Be(0, "updatedTeam did not set DoctorLevel");
+        result.SpokespersonLevel.Should().Be(0, "updatedTeam did not set SpokespersonLevel");
+        result.FinancialDirectorLevel.Should().Be(0, "updatedTeam did not set FinancialDirectorLevel");
     }
 
     [Fact]
@@ -318,7 +339,7 @@ public class TeamRepositoryTests
         var act = () => _sut.Update(null!);
 
         // Assert
-        act.Should().Throw<ArgumentNullException>();
+        act.Should().Throw<ArgumentNullException>().WithParameterName("team");
     }
 
     [Fact]
@@ -411,12 +432,13 @@ public class TeamRepositoryTests
     #region No Remove method (teams are permanent)
 
     [Fact]
-    public void TeamRepository_DoesNotExposeRemoveMethod()
+    public void Interface_WhenInspected_HasNoRemoveMethod()
     {
         // Teams are permanent in Phase 1 — verify ITeamRepository has no Remove method
         var interfaceType = typeof(ITeamRepository);
         var removeMethods = interfaceType.GetMethods()
-            .Where(m => m.Name.Equals("Remove", StringComparison.Ordinal));
+            .Where(m => m.Name.Equals("Remove", StringComparison.Ordinal))
+            .ToList();
 
         removeMethods.Should().BeEmpty("teams are permanent entities and ITeamRepository must not expose Remove");
     }
@@ -426,7 +448,7 @@ public class TeamRepositoryTests
     #region Interface compliance
 
     [Fact]
-    public void TeamRepository_ImplementsITeamRepository()
+    public void Class_WhenInstantiated_ImplementsITeamRepository()
     {
         // Assert
         _sut.Should().BeAssignableTo<ITeamRepository>();
@@ -441,16 +463,18 @@ public class TeamRepositoryTests
     {
         // Arrange
         const int teamCount = 200;
+        var teams = Enumerable.Range(0, teamCount)
+            .Select(i => CreateTeam($"Concurrent Team {i}"))
+            .ToList();
+        var teamIds = teams.Select(t => t.Id).ToList();
 
-        // Act
-        Parallel.For(0, teamCount, i =>
-        {
-            var team = CreateTeam($"Concurrent Team {i}");
-            _sut.Add(team);
-        });
+        // Act — intentional parallel adds to exercise thread safety
+        Parallel.For(0, teamCount, i => _sut.Add(teams[i]));
 
         // Assert
-        _sut.GetAll().Should().HaveCount(teamCount);
+        var results = _sut.GetAll();
+        results.Should().HaveCount(teamCount);
+        results.Select(t => t.Id).Should().BeEquivalentTo(teamIds, "all added team IDs must be present");
     }
 
     [Fact]
@@ -461,7 +485,8 @@ public class TeamRepositoryTests
         var preloadedTeams = new List<Team>();
 
         // Pre-load some teams
-        for (var i = 0; i < 50; i++)
+        const int preloadCount = 50;
+        for (var i = 0; i < preloadCount; i++)
         {
             var team = CreateTeam($"Preloaded Team {i}");
             _sut.Add(team);
@@ -520,6 +545,7 @@ public class TeamRepositoryTests
         var result = _sut.GetById(team.Id);
         result.Should().NotBeNull();
         result!.Name.Should().StartWith("Updated by thread ");
+        result.Budget.Should().BeGreaterThan(0, "some thread must have set Budget");
     }
 
     #endregion

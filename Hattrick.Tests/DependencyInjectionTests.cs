@@ -16,16 +16,16 @@ public class DependencyInjectionTests
         var container = services.BuildServiceProvider();
 
         // Act & Assert — GetRequiredService throws if not registered
-        container.GetRequiredService<IRandomProvider>().Should().NotBeNull();
-        container.GetRequiredService<IDateTimeProvider>().Should().NotBeNull();
-        container.GetRequiredService<ISaveGameService>().Should().NotBeNull();
-        container.GetRequiredService<ISaveSlotService>().Should().NotBeNull();
-        container.GetRequiredService<IGameStateService>().Should().NotBeNull();
-        container.GetRequiredService<IPlayerRepository>().Should().NotBeNull();
-        container.GetRequiredService<ITeamRepository>().Should().NotBeNull();
-        container.GetRequiredService<IPlayerDisplayService>().Should().NotBeNull();
-        container.GetRequiredService<IPlayerStatsService>().Should().NotBeNull();
-        container.GetRequiredService<IPlayerService>().Should().NotBeNull();
+        container.GetRequiredService<IRandomProvider>();
+        container.GetRequiredService<IDateTimeProvider>();
+        container.GetRequiredService<ISaveGameService>();
+        container.GetRequiredService<ISaveSlotService>();
+        container.GetRequiredService<IGameStateService>();
+        container.GetRequiredService<IPlayerRepository>();
+        container.GetRequiredService<ITeamRepository>();
+        container.GetRequiredService<IPlayerDisplayService>();
+        container.GetRequiredService<IPlayerStatsService>();
+        container.GetRequiredService<IPlayerService>();
     }
 
     [Fact]

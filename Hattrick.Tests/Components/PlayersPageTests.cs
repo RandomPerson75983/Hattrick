@@ -27,6 +27,7 @@ namespace Hattrick.Tests.Components;
 public class PlayersPageTests
 {
     private const int DefaultPlayerCount = 3;
+    private const int SkillColumnCount = 7;
 
     /// <summary>
     /// Builds a representative HTML structure string for the Players page.
@@ -118,7 +119,7 @@ public class PlayersPageTests
     }
 
     [Fact]
-    public void PlayersPage_Title_ShowsCorrectCountForSinglePlayer()
+    public void PlayersPage_Title_ShowsPlayerCountRegardlessOfPluralization()
     {
         var markup = BuildExpectedMarkup(playerCount: 1);
 
@@ -474,7 +475,7 @@ public class PlayersPageTests
             + "<div class=\"skill-bar\"></div>"
             + "</div>";
 
-        var sevenSkillCells = string.Concat(Enumerable.Repeat(SkillCell(), 7));
+        var sevenSkillCells = string.Concat(Enumerable.Repeat(SkillCell(), SkillColumnCount));
 
         return "<div class=\"player-row\">"
             + "<div class=\"player-name-cell\"><a class=\"player-name\" href=\"/players/1\">Erwin Brandt</a></div>"

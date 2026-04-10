@@ -57,6 +57,17 @@ public class PlayerStatsServiceTests
         };
     }
 
+    /// <summary>
+    /// Returns a representative three-player squad used by multiple sum/total tests.
+    /// Players: TSI 4500/2000/7000, wage 10000/8000/15000, nationalityId 1/2/3.
+    /// </summary>
+    private static IReadOnlyList<Player> CreateThreePlayerSquad() => new List<Player>
+    {
+        CreatePlayer(tsi: 4500, wage: 10000m, nationalityId: 1, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 5, stamina: 5, experience: 5, age: 25),
+        CreatePlayer(tsi: 2000, wage: 8000m,  nationalityId: 2, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 4, stamina: 4, experience: 4, age: 22),
+        CreatePlayer(tsi: 7000, wage: 15000m, nationalityId: 3, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 6, stamina: 7, experience: 9, age: 30),
+    }.AsReadOnly();
+
     // ─────────────────────────────────────────────────────────────────────────
     // GetTeamTotals — empty squad
     // ─────────────────────────────────────────────────────────────────────────
@@ -64,7 +75,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamTotals_WithEmptyList_ReturnsTotalTSIOfZero()
     {
-        var result = _sut.GetTeamTotals(new List<Player>());
+        var result = _sut.GetTeamTotals(Array.Empty<Player>());
 
         result.TotalTSI.Should().Be(0);
     }
@@ -72,7 +83,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamTotals_WithEmptyList_ReturnsTotalWageOfZero()
     {
-        var result = _sut.GetTeamTotals(new List<Player>());
+        var result = _sut.GetTeamTotals(Array.Empty<Player>());
 
         result.TotalWage.Should().Be(0m);
     }
@@ -80,7 +91,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamTotals_WithEmptyList_ReturnsTotalEstimatedValueOfZero()
     {
-        var result = _sut.GetTeamTotals(new List<Player>());
+        var result = _sut.GetTeamTotals(Array.Empty<Player>());
 
         result.TotalEstimatedValue.Should().Be(0m);
     }
@@ -88,7 +99,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamTotals_WithEmptyList_ReturnsNationalityCountOfZero()
     {
-        var result = _sut.GetTeamTotals(new List<Player>());
+        var result = _sut.GetTeamTotals(Array.Empty<Player>());
 
         result.NationalityCount.Should().Be(0);
     }
@@ -96,7 +107,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamTotals_WithEmptyList_ReturnsInjuredCountOfZero()
     {
-        var result = _sut.GetTeamTotals(new List<Player>());
+        var result = _sut.GetTeamTotals(Array.Empty<Player>());
 
         result.InjuredCount.Should().Be(0);
     }
@@ -104,7 +115,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamTotals_WithEmptyList_ReturnsRedCardCountOfZero()
     {
-        var result = _sut.GetTeamTotals(new List<Player>());
+        var result = _sut.GetTeamTotals(Array.Empty<Player>());
 
         result.RedCardCount.Should().Be(0);
     }
@@ -112,7 +123,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamTotals_WithEmptyList_ReturnsYellowCardCountOfZero()
     {
-        var result = _sut.GetTeamTotals(new List<Player>());
+        var result = _sut.GetTeamTotals(Array.Empty<Player>());
 
         result.YellowCardCount.Should().Be(0);
     }
@@ -168,6 +179,24 @@ public class PlayerStatsServiceTests
         result.TotalEstimatedValue.Should().Be(112500m);
     }
 
+    [Fact]
+    public void GetTeamTotals_WithSinglePlayer_EstimatedValueIsExactlyTSITimesMultiplier()
+    {
+        // Verifies the per-player EstimatedValue formula (TSI * 25) in isolation.
+        // Uses a distinct TSI value (3000) to avoid conflation with the 4500 test above.
+        // 3000 * 25 = 75000
+        var players = new List<Player>
+        {
+            CreatePlayer(tsi: 3000, wage: 10000m, nationalityId: 1,
+                         injuryWeeks: 0, redCard: false, yellowCards: 0,
+                         form: 5, stamina: 5, experience: 5, age: 25),
+        };
+
+        var result = _sut.GetTeamTotals(players);
+
+        result.TotalEstimatedValue.Should().Be(75000m);
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // GetTeamTotals — multiple players (sums)
     // ─────────────────────────────────────────────────────────────────────────
@@ -176,12 +205,7 @@ public class PlayerStatsServiceTests
     public void GetTeamTotals_WithMultiplePlayers_ReturnsSumOfTSI()
     {
         // 4500 + 2000 + 7000 = 13500
-        var players = new List<Player>
-        {
-            CreatePlayer(tsi: 4500, wage: 10000m, nationalityId: 1, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 5, stamina: 5, experience: 5, age: 25),
-            CreatePlayer(tsi: 2000, wage: 8000m,  nationalityId: 2, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 4, stamina: 4, experience: 4, age: 22),
-            CreatePlayer(tsi: 7000, wage: 15000m, nationalityId: 3, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 6, stamina: 7, experience: 9, age: 30),
-        };
+        var players = CreateThreePlayerSquad();
 
         var result = _sut.GetTeamTotals(players);
 
@@ -192,12 +216,7 @@ public class PlayerStatsServiceTests
     public void GetTeamTotals_WithMultiplePlayers_ReturnsSumOfWage()
     {
         // 10000 + 8000 + 15000 = 33000
-        var players = new List<Player>
-        {
-            CreatePlayer(tsi: 4500, wage: 10000m, nationalityId: 1, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 5, stamina: 5, experience: 5, age: 25),
-            CreatePlayer(tsi: 2000, wage: 8000m,  nationalityId: 2, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 4, stamina: 4, experience: 4, age: 22),
-            CreatePlayer(tsi: 7000, wage: 15000m, nationalityId: 3, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 6, stamina: 7, experience: 9, age: 30),
-        };
+        var players = CreateThreePlayerSquad();
 
         var result = _sut.GetTeamTotals(players);
 
@@ -208,12 +227,7 @@ public class PlayerStatsServiceTests
     public void GetTeamTotals_WithMultiplePlayers_ReturnsSumOfEstimatedValue()
     {
         // (4500 + 2000 + 7000) * 25 = 13500 * 25 = 337500
-        var players = new List<Player>
-        {
-            CreatePlayer(tsi: 4500, wage: 10000m, nationalityId: 1, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 5, stamina: 5, experience: 5, age: 25),
-            CreatePlayer(tsi: 2000, wage: 8000m,  nationalityId: 2, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 4, stamina: 4, experience: 4, age: 22),
-            CreatePlayer(tsi: 7000, wage: 15000m, nationalityId: 3, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 6, stamina: 7, experience: 9, age: 30),
-        };
+        var players = CreateThreePlayerSquad();
 
         var result = _sut.GetTeamTotals(players);
 
@@ -360,7 +374,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamAverages_WithEmptyList_ReturnsAvgTSIOfZero()
     {
-        var result = _sut.GetTeamAverages(new List<Player>());
+        var result = _sut.GetTeamAverages(Array.Empty<Player>());
 
         result.AvgTSI.Should().Be(0.0);
     }
@@ -368,7 +382,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamAverages_WithEmptyList_ReturnsAvgWageOfZero()
     {
-        var result = _sut.GetTeamAverages(new List<Player>());
+        var result = _sut.GetTeamAverages(Array.Empty<Player>());
 
         result.AvgWage.Should().Be(0.0);
     }
@@ -376,7 +390,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamAverages_WithEmptyList_ReturnsAvgEstimatedValueOfZero()
     {
-        var result = _sut.GetTeamAverages(new List<Player>());
+        var result = _sut.GetTeamAverages(Array.Empty<Player>());
 
         result.AvgEstimatedValue.Should().Be(0m);
     }
@@ -384,7 +398,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamAverages_WithEmptyList_ReturnsAvgAgeOfZero()
     {
-        var result = _sut.GetTeamAverages(new List<Player>());
+        var result = _sut.GetTeamAverages(Array.Empty<Player>());
 
         result.AvgAge.Should().Be(0.0);
     }
@@ -392,7 +406,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamAverages_WithEmptyList_ReturnsAvgFormOfZero()
     {
-        var result = _sut.GetTeamAverages(new List<Player>());
+        var result = _sut.GetTeamAverages(Array.Empty<Player>());
 
         result.AvgForm.Should().Be(0.0);
     }
@@ -400,7 +414,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamAverages_WithEmptyList_ReturnsAvgStaminaOfZero()
     {
-        var result = _sut.GetTeamAverages(new List<Player>());
+        var result = _sut.GetTeamAverages(Array.Empty<Player>());
 
         result.AvgStamina.Should().Be(0.0);
     }
@@ -408,7 +422,7 @@ public class PlayerStatsServiceTests
     [Fact]
     public void GetTeamAverages_WithEmptyList_ReturnsAvgExperienceOfZero()
     {
-        var result = _sut.GetTeamAverages(new List<Player>());
+        var result = _sut.GetTeamAverages(Array.Empty<Player>());
 
         result.AvgExperience.Should().Be(0.0);
     }

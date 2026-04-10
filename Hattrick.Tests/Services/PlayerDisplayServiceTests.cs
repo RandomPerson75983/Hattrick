@@ -339,6 +339,15 @@ public class PlayerDisplayServiceTests
         result.Should().Be("skill-good");
     }
 
+    // Boundary: exactly at the skill=8.0 point (floor=8, SkillGoodCeiling=8 → still "skill-good")
+    [Fact]
+    public void GetSkillColorClass_ExactlyAtEight_ReturnsGood()
+    {
+        var result = _sut.GetSkillColorClass(8.0);
+
+        result.Should().Be("skill-good");
+    }
+
     // Boundary: exactly at the transition from "skill-good" (8) to "skill-excellent" (9)
     [Fact]
     public void GetSkillColorClass_ExactlyAtNine_ReturnsExcellent()

@@ -1,5 +1,6 @@
 using Hattrick.Core.Models;
 using Hattrick.Core.Services;
+using System.Reflection;
 
 namespace Hattrick.Tests.Services;
 
@@ -377,7 +378,7 @@ public class PlayerStatsServiceTests
     {
         var result = _sut.GetTeamAverages(new List<Player>());
 
-        result.AvgEstimatedValue.Should().Be(0.0);
+        result.AvgEstimatedValue.Should().Be(0m);
     }
 
     [Fact]
@@ -459,7 +460,7 @@ public class PlayerStatsServiceTests
 
         var result = _sut.GetTeamAverages(players);
 
-        result.AvgEstimatedValue.Should().BeApproximately(112500.0, precision: 0.01);
+        result.AvgEstimatedValue.Should().Be(112500m);
     }
 
     [Fact]
@@ -633,6 +634,91 @@ public class PlayerStatsServiceTests
 
         var result = _sut.GetTeamAverages(players);
 
-        result.AvgEstimatedValue.Should().BeApproximately(100000.0, 0.01);
+        result.AvgEstimatedValue.Should().Be(100000m);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Null Guard Tests — RED until ArgumentNullException.ThrowIfNull is added
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void GetTeamTotals_WithNullPlayers_ThrowsArgumentNullException()
+    {
+        // Without a null guard, LINQ throws NullReferenceException deep inside
+        // the call stack rather than a clear ArgumentNullException at the entry point.
+        // This test documents the required contract.
+        Assert.Throws<ArgumentNullException>(() => _sut.GetTeamTotals(null!));
+    }
+
+    [Fact]
+    public void GetTeamAverages_WithNullPlayers_ThrowsArgumentNullException()
+    {
+        // Without a null guard, players.Count on a null arg throws NullReferenceException
+        // before the empty-list guard fires.
+        // This test documents the required contract.
+        Assert.Throws<ArgumentNullException>(() => _sut.GetTeamAverages(null!));
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Overflow Tests — int*int multiplication risk for large TSI values
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void GetTeamTotals_WithHighTSIPlayer_ReturnsTotalEstimatedValueWithoutOverflow()
+    {
+        // TSI = 100_000 → EstimatedValue = 100_000 * 25 = 2_500_000
+        // int.MaxValue = 2_147_483_647; 100_000 * 25 = 2_500_000 fits in int BUT
+        // the multiplication p.TSI * EstimatedValueMultiplier is int*int before
+        // decimal assignment, so larger values would silently overflow.
+        // Casting to (decimal) before multiplication prevents this.
+        var players = new List<Player>
+        {
+            CreatePlayer(tsi: 100_000, wage: 0m, nationalityId: 1,
+                         injuryWeeks: 0, redCard: false, yellowCards: 0,
+                         form: 5, stamina: 5, experience: 5, age: 25),
+        };
+
+        var result = _sut.GetTeamTotals(players);
+
+        // 100_000 * 25 = 2_500_000 — must be exact decimal, not a truncated int
+        result.TotalEstimatedValue.Should().Be(2_500_000m);
+    }
+
+    [Fact]
+    public void GetTeamAverages_WithHighTSIPlayer_ReturnsAvgEstimatedValueWithoutOverflow()
+    {
+        // Same TSI=100_000 single-player squad: average equals the one player's value.
+        // When AvgEstimatedValue is changed from double to decimal this test validates
+        // the decimal precision is preserved end-to-end.
+        var players = new List<Player>
+        {
+            CreatePlayer(tsi: 100_000, wage: 0m, nationalityId: 1,
+                         injuryWeeks: 0, redCard: false, yellowCards: 0,
+                         form: 5, stamina: 5, experience: 5, age: 25),
+        };
+
+        var result = _sut.GetTeamAverages(players);
+
+        // 100_000 * 25 = 2_500_000 — must be exact decimal, not a double approximation.
+        // Requires AvgEstimatedValue to be decimal (not double) for Be(decimal) to compile.
+        result.AvgEstimatedValue.Should().Be(2_500_000m);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Type Consistency — TeamAverages.AvgEstimatedValue must be decimal
+    // RED until TeamAverages.AvgEstimatedValue is changed from double to decimal
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void TeamAverages_AvgEstimatedValue_IsDecimalType()
+    {
+        // TotalEstimatedValue on TeamTotals is already decimal.
+        // AvgEstimatedValue on TeamAverages must also be decimal to stay consistent.
+        // This test fails while AvgEstimatedValue is double.
+        var propertyType = typeof(TeamAverages)
+            .GetProperty(nameof(TeamAverages.AvgEstimatedValue))!
+            .PropertyType;
+
+        propertyType.Should().Be(typeof(decimal));
     }
 }

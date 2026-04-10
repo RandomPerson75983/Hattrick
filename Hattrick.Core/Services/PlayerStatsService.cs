@@ -10,40 +10,81 @@ namespace Hattrick.Core.Services;
 /// </summary>
 public sealed class PlayerStatsService : IPlayerStatsService
 {
-    private const int EstimatedValueMultiplier = 25;
+    private const decimal EstimatedValueMultiplier = 25m;
+
+    private static decimal ComputeEstimatedValue(Player player) =>
+        (decimal)player.TSI * EstimatedValueMultiplier;
 
     /// <inheritdoc/>
     public TeamTotals GetTeamTotals(IReadOnlyList<Player> players)
     {
+        ArgumentNullException.ThrowIfNull(players);
+
+        int totalTSI = 0;
+        decimal totalWage = 0m;
+        decimal totalEstimatedValue = 0m;
+        var nationalities = new HashSet<int>();
+        int injured = 0;
+        int redCards = 0;
+        int yellowCards = 0;
+
+        foreach (var p in players)
+        {
+            totalTSI += p.TSI;
+            totalWage += p.Wage;
+            totalEstimatedValue += ComputeEstimatedValue(p);
+            nationalities.Add(p.NativeCountryId);
+            if (p.InjuryWeeks > 0) injured++;
+            if (p.RedCard) redCards++;
+            yellowCards += p.YellowCards;
+        }
+
         return new TeamTotals
         {
-            TotalTSI             = players.Sum(p => p.TSI),
-            TotalWage            = players.Sum(p => p.Wage),
-            TotalEstimatedValue  = players.Sum(p => p.TSI * EstimatedValueMultiplier),
-            NationalityCount     = players.Select(p => p.NativeCountryId).Distinct().Count(),
-            InjuredCount         = players.Count(p => p.InjuryWeeks > 0),
-            RedCardCount         = players.Count(p => p.RedCard),
-            YellowCardCount      = players.Sum(p => p.YellowCards),
+            TotalTSI             = totalTSI,
+            TotalWage            = totalWage,
+            TotalEstimatedValue  = totalEstimatedValue,
+            NationalityCount     = nationalities.Count,
+            InjuredCount         = injured,
+            RedCardCount         = redCards,
+            YellowCardCount      = yellowCards,
         };
     }
 
     /// <inheritdoc/>
     public TeamAverages GetTeamAverages(IReadOnlyList<Player> players)
     {
+        ArgumentNullException.ThrowIfNull(players);
+
         if (players.Count == 0)
         {
             return new TeamAverages();
         }
 
+        double totalTSI = 0, totalWage = 0, totalEstValue = 0;
+        double totalAge = 0, totalForm = 0, totalStamina = 0, totalExp = 0;
+
+        foreach (var p in players)
+        {
+            totalTSI      += p.TSI;
+            totalWage     += (double)p.Wage;
+            totalEstValue += (double)ComputeEstimatedValue(p);
+            totalAge      += p.Age;
+            totalForm     += p.Form;
+            totalStamina  += p.Stamina;
+            totalExp      += p.Experience;
+        }
+
+        double count = players.Count;
         return new TeamAverages
         {
-            AvgTSI            = players.Average(p => (double)p.TSI),
-            AvgWage           = players.Average(p => (double)p.Wage),
-            AvgEstimatedValue = players.Average(p => (double)(p.TSI * EstimatedValueMultiplier)),
-            AvgAge            = players.Average(p => (double)p.Age),
-            AvgForm           = players.Average(p => (double)p.Form),
-            AvgStamina        = players.Average(p => (double)p.Stamina),
-            AvgExperience     = players.Average(p => (double)p.Experience),
+            AvgTSI            = totalTSI      / count,
+            AvgWage           = totalWage     / count,
+            AvgEstimatedValue = (decimal)(totalEstValue / count),
+            AvgAge            = totalAge      / count,
+            AvgForm           = totalForm     / count,
+            AvgStamina        = totalStamina  / count,
+            AvgExperience     = totalExp      / count,
         };
     }
 }

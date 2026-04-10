@@ -16,7 +16,7 @@ public sealed class TeamAverages
     /// <summary>
     /// Arithmetic mean of estimated market values. Formula: each player's TSI * 25.
     /// </summary>
-    public double AvgEstimatedValue { get; init; }
+    public decimal AvgEstimatedValue { get; init; }
 
     /// <summary>Arithmetic mean of player ages.</summary>
     public double AvgAge { get; init; }

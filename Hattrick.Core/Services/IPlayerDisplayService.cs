@@ -42,4 +42,7 @@ public interface IPlayerDisplayService
     /// Returns an empty string for <see cref="Specialty.None"/>.
     /// </summary>
     string GetSpecialtyDisplay(Specialty specialty);
+
+    /// <summary>Returns the ordered list of skill types shown in the player table (excludes Stamina).</summary>
+    IReadOnlyList<SkillType> GetDisplayedSkillTypes();
 }

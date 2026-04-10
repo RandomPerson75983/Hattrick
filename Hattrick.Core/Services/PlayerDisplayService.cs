@@ -8,6 +8,12 @@ namespace Hattrick.Core.Services;
 /// </summary>
 public sealed class PlayerDisplayService : IPlayerDisplayService
 {
+    private static readonly IReadOnlyList<SkillType> _displayedSkillTypes = new[]
+    {
+        SkillType.Keeper, SkillType.Defending, SkillType.Playmaking,
+        SkillType.Winger, SkillType.Scoring, SkillType.Passing, SkillType.SetPieces
+    }.AsReadOnly();
+
     private const int SkillInadequateFloor = 5;
     private const int SkillPassableFloor = 6;
     private const int SkillGoodCeiling = 8;
@@ -52,6 +58,9 @@ public sealed class PlayerDisplayService : IPlayerDisplayService
         Position.Forward => "Forward",
         _ => position.ToString()
     };
+
+    /// <inheritdoc/>
+    public IReadOnlyList<SkillType> GetDisplayedSkillTypes() => _displayedSkillTypes;
 
     /// <inheritdoc/>
     public string GetSpecialtyDisplay(Specialty specialty) => specialty switch

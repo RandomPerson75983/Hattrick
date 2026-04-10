@@ -476,4 +476,49 @@ public class PlayerDisplayServiceTests
 
         result.Should().Be("Support");
     }
+
+    // ─────────────────────────────────────────────────────────────
+    // GetDisplayedSkillTypes
+    // ─────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void GetDisplayedSkillTypes_WhenCalled_ReturnsSevenSkills()
+    {
+        // Domain rule: exactly 7 field-player skills are displayed in the roster table
+        // (Keeper, Defending, Playmaking, Winger, Scoring, Passing, SetPieces).
+        var result = _sut.GetDisplayedSkillTypes();
+
+        result.Count.Should().Be(7);
+    }
+
+    [Fact]
+    public void GetDisplayedSkillTypes_WhenCalled_ContainsAllExpectedSkillTypes()
+    {
+        // All seven displayed skill columns must be present.
+        var result = _sut.GetDisplayedSkillTypes();
+
+        result.Should().Contain(SkillType.Keeper);
+        result.Should().Contain(SkillType.Defending);
+        result.Should().Contain(SkillType.Playmaking);
+        result.Should().Contain(SkillType.Winger);
+        result.Should().Contain(SkillType.Scoring);
+        result.Should().Contain(SkillType.Passing);
+        result.Should().Contain(SkillType.SetPieces);
+    }
+
+    [Fact]
+    public void GetDisplayedSkillTypes_WhenCalled_DoesNotContainStamina()
+    {
+        // Stamina is shown in the sidebar averages, NOT as a skill column.
+        var result = _sut.GetDisplayedSkillTypes();
+
+        result.Should().NotContain(SkillType.Stamina);
+    }
+
+    [Fact]
+    public void GetDisplayedSkillTypes_WhenCalled_ReturnsIReadOnlyList()
+    {
+        // Callers may only read the list; mutation is not permitted.
+        _sut.GetDisplayedSkillTypes().Should().BeAssignableTo<IReadOnlyList<SkillType>>();
+    }
 }

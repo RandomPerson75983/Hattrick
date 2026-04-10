@@ -1,11 +1,15 @@
 @page "/players"
 @using Hattrick.Core.Models
-@using Hattrick.Core.Repositories
 @using Hattrick.Core.Services
 @using System.Globalization
-@inject IPlayerRepository PlayerRepository
+@inject IPlayerService PlayerService
 @inject IPlayerDisplayService DisplayService
 @inject IPlayerStatsService StatsService
+
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div class="error-message">@_errorMessage</div>
+}
 
 <div class="players-page">
     <h1 class="players-title">Your @_players.Count players</h1>
@@ -20,19 +24,16 @@
                     <span class="col-wage">wage</span>
                     <span class="col-specialty">specialty</span>
                     <span class="col-form">form</span>
-                    <span class="col-skill">Kp</span>
-                    <span class="col-skill">Def</span>
-                    <span class="col-skill">Pm</span>
-                    <span class="col-skill">Wi</span>
-                    <span class="col-skill">Sc</span>
-                    <span class="col-skill">Ps</span>
-                    <span class="col-skill">Sp</span>
+                    @foreach (var skillType in _displayedSkillTypes)
+                    {
+                        <span class="col-skill">@GetSkillAbbreviation(skillType)</span>
+                    }
                     <span class="col-position">position</span>
                 </div>
 
                 @foreach (var player in _players)
                 {
-                    <div class="player-row">
+                    <div class="player-row" @key="player.Id">
                         <div class="player-name-cell">
                             <a class="player-name" href="/players/@player.Id">@player.Name</a>
                         </div>
@@ -42,10 +43,10 @@
                         <div class="specialty-cell">@DisplayService.GetSpecialtyDisplay(player.Specialty)</div>
                         <div class="form-cell">@player.Form</div>
 
-                        @foreach (var skillType in DisplayedSkills)
+                        @foreach (var skillType in _displayedSkillTypes)
                         {
                             var skillValue = player.Skills.TryGetValue(skillType, out var sv) ? sv : 0.0;
-                            <div class="skill-cell">
+                            <div class="skill-cell" @key="skillType">
                                 <div class="skill-bar @DisplayService.GetSkillColorClass(skillValue)"
                                      style="width: @DisplayService.GetSkillBarPercent(skillValue)%"></div>
                             </div>
@@ -85,25 +86,37 @@
 </div>
 
 @code {
-    private static readonly SkillType[] DisplayedSkills =
-    [
-        SkillType.Keeper,
-        SkillType.Defending,
-        SkillType.Playmaking,
-        SkillType.Winger,
-        SkillType.Scoring,
-        SkillType.Passing,
-        SkillType.SetPieces
-    ];
-
     private IReadOnlyList<Player> _players = [];
+    private IReadOnlyList<SkillType> _displayedSkillTypes = Array.Empty<SkillType>();
     private TeamTotals _totals = new();
     private TeamAverages _averages = new();
+    private string _errorMessage = string.Empty;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        _players = PlayerRepository.GetByTeamId(Guid.Empty);
-        _totals = StatsService.GetTeamTotals(_players);
-        _averages = StatsService.GetTeamAverages(_players);
+        try
+        {
+            _displayedSkillTypes = DisplayService.GetDisplayedSkillTypes();
+            _players = PlayerService.GetAllPlayers();
+            _totals = StatsService.GetTeamTotals(_players);
+            _averages = StatsService.GetTeamAverages(_players);
+            await Task.CompletedTask;
+        }
+        catch (Exception)
+        {
+            _errorMessage = "Failed to load player data.";
+        }
     }
+
+    private static string GetSkillAbbreviation(SkillType skillType) => skillType switch
+    {
+        SkillType.Keeper => "Kp",
+        SkillType.Defending => "Def",
+        SkillType.Playmaking => "Pm",
+        SkillType.Winger => "Wi",
+        SkillType.Scoring => "Sc",
+        SkillType.Passing => "Ps",
+        SkillType.SetPieces => "Sp",
+        _ => skillType.ToString()
+    };
 }

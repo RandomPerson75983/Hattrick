@@ -1,3 +1,4 @@
+using Hattrick.Core.Repositories;
 using Hattrick.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,11 +22,14 @@ public class DependencyInjectionTests
         var saveSlotService = container.GetRequiredService<ISaveSlotService>();
         var gameStateService = container.GetRequiredService<IGameStateService>();
 
+        var playerRepository = container.GetRequiredService<IPlayerRepository>();
+
         randomProvider.Should().NotBeNull();
         dateTimeProvider.Should().NotBeNull();
         saveGameService.Should().NotBeNull();
         saveSlotService.Should().NotBeNull();
         gameStateService.Should().NotBeNull();
+        playerRepository.Should().NotBeNull();
     }
 
     [Fact]
@@ -39,9 +43,12 @@ public class DependencyInjectionTests
         // Act
         var service1 = container.GetRequiredService<IGameStateService>();
         var service2 = container.GetRequiredService<IGameStateService>();
+        var repo1 = container.GetRequiredService<IPlayerRepository>();
+        var repo2 = container.GetRequiredService<IPlayerRepository>();
 
         // Assert (same instance)
         service1.Should().BeSameAs(service2);
+        repo1.Should().BeSameAs(repo2);
     }
 
     [Fact]
@@ -58,6 +65,7 @@ public class DependencyInjectionTests
         var saveGameService = container.GetRequiredService<ISaveGameService>();
         var saveSlotService = container.GetRequiredService<ISaveSlotService>();
         var gameStateService = container.GetRequiredService<IGameStateService>();
+        var playerRepository = container.GetRequiredService<IPlayerRepository>();
 
         // Assert
         randomProvider.Should().BeAssignableTo<IRandomProvider>();
@@ -65,6 +73,7 @@ public class DependencyInjectionTests
         saveGameService.Should().BeAssignableTo<ISaveGameService>();
         saveSlotService.Should().BeAssignableTo<ISaveSlotService>();
         gameStateService.Should().BeAssignableTo<IGameStateService>();
+        playerRepository.Should().BeAssignableTo<IPlayerRepository>();
     }
 
     private static void RegisterServices(IServiceCollection services)
@@ -74,5 +83,6 @@ public class DependencyInjectionTests
         services.AddSingleton<ISaveGameService, SaveGameService>();
         services.AddSingleton<ISaveSlotService, SaveSlotService>();
         services.AddSingleton<IGameStateService, GameStateService>();
+        services.AddSingleton<IPlayerRepository, PlayerRepository>();
     }
 }

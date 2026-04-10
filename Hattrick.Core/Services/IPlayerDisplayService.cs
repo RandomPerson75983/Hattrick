@@ -20,8 +20,8 @@ public interface IPlayerDisplayService
     int GetSkillFloor(double skill);
 
     /// <summary>
-    /// Returns the fractional part of a skill value as a 0-99 integer percentage,
-    /// e.g. 7.73 → 73. Truncates; does not round.
+    /// Returns the fractional part of a skill value as a 0-100 integer percentage,
+    /// e.g. 7.73 → 73. Truncates and clamps to [0, 100]; does not round.
     /// </summary>
     int GetSkillBarPercent(double skill);
 

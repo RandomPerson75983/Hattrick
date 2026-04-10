@@ -10,11 +10,8 @@ public sealed class PlayerDisplayService : IPlayerDisplayService
 {
     private const int SkillInadequateFloor = 5;
     private const int SkillPassableFloor = 6;
-    private const int SkillGoodFloor = 7;
     private const int SkillGoodCeiling = 8;
-    private const int SkillExcellentFloor = 9;
     private const int SkillExcellentCeiling = 10;
-    private const int SkillOutstandingFloor = 11;
     private const int SkillBarPercentMultiplier = 100;
 
     /// <inheritdoc/>
@@ -26,7 +23,7 @@ public sealed class PlayerDisplayService : IPlayerDisplayService
 
     /// <inheritdoc/>
     public int GetSkillBarPercent(double skill) =>
-        (int)Math.Round((skill % 1) * SkillBarPercentMultiplier);
+        Math.Clamp((int)((skill % 1) * SkillBarPercentMultiplier), 0, SkillBarPercentMultiplier);
 
     /// <inheritdoc/>
     public string GetSkillColorClass(double skill)

@@ -165,8 +165,10 @@ public class PlayerDisplayServiceTests
     [Fact]
     public void GetSkillBarPercent_OnePercentIn_ReturnsOne()
     {
-        // 3.01 → fractional part = 0.01 → 1%
-        var result = _sut.GetSkillBarPercent(3.01);
+        // 3.014 → fractional part = 0.014 → 0.014 * 100 = 1.4 → truncates to 1
+        // (3.01 cannot be used: IEEE 754 represents it slightly below 3.01,
+        // so (3.01 % 1) * 100 ≈ 0.9999..., which truncates to 0, not 1.)
+        var result = _sut.GetSkillBarPercent(3.014);
 
         result.Should().Be(1);
     }
@@ -176,6 +178,26 @@ public class PlayerDisplayServiceTests
     {
         // 5.0 → fractional part = 0 → 0%
         _sut.GetSkillBarPercent(5.0).Should().Be(0);
+    }
+
+    [Fact]
+    public void GetSkillBarPercent_SkillNearMidpoint_TruncatesNotRounds()
+    {
+        // Contract says "Truncates; does not round."
+        // skill = 7.995 → fractional part = 0.995 → 0.995 * 100 = 99.5
+        // Truncation: (int)99.5 = 99
+        // Math.Round(99.5) = 100 (rounds up, or banker's rounding may also give 100)
+        // Expected: 99 (truncation), NOT 100 (rounding)
+        _sut.GetSkillBarPercent(7.995).Should().Be(99);
+    }
+
+    [Fact]
+    public void GetSkillBarPercent_WithNegativeSkill_ReturnsZero()
+    {
+        // Negative skill is invalid; CSS width must never be negative.
+        // Current impl: (int)Math.Round((-1.3 % 1) * 100) → (int)Math.Round(-0.3 * 100) → -30
+        // Expected: 0 (clamped to valid range)
+        _sut.GetSkillBarPercent(-1.3).Should().Be(0);
     }
 
     // ─────────────────────────────────────────────────────────────

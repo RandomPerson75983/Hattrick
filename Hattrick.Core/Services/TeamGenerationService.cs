@@ -38,7 +38,7 @@ public class TeamGenerationService : ITeamGenerationService
     private const int DefaultFanClubSize = 100;
 
     /// <inheritdoc />
-    public Team GenerateTeam(string teamName, bool isHumanControlled)
+    public (Team Team, IReadOnlyList<Player> Players) GenerateTeam(string teamName, bool isHumanControlled)
     {
         ArgumentNullException.ThrowIfNull(teamName);
 
@@ -58,27 +58,32 @@ public class TeamGenerationService : ITeamGenerationService
             FanClubSize = DefaultFanClubSize
         };
 
-        GeneratePlayers(team);
+        var players = GeneratePlayers(team);
 
-        return team;
+        return (team, players);
     }
 
-    private void GeneratePlayers(Team team)
+    private List<Player> GeneratePlayers(Team team)
     {
-        GeneratePlayersForPosition(team, Position.Keeper, KeeperCount);
-        GeneratePlayersForPosition(team, Position.CentralDefender, CentralDefenderCount);
-        GeneratePlayersForPosition(team, Position.WingBack, WingBackCount);
-        GeneratePlayersForPosition(team, Position.InnerMidfielder, InnerMidfielderCount);
-        GeneratePlayersForPosition(team, Position.Winger, WingerCount);
-        GeneratePlayersForPosition(team, Position.Forward, ForwardCount);
+        var players = new List<Player>();
+        players.AddRange(GeneratePlayersForPosition(team, Position.Keeper, KeeperCount));
+        players.AddRange(GeneratePlayersForPosition(team, Position.CentralDefender, CentralDefenderCount));
+        players.AddRange(GeneratePlayersForPosition(team, Position.WingBack, WingBackCount));
+        players.AddRange(GeneratePlayersForPosition(team, Position.InnerMidfielder, InnerMidfielderCount));
+        players.AddRange(GeneratePlayersForPosition(team, Position.Winger, WingerCount));
+        players.AddRange(GeneratePlayersForPosition(team, Position.Forward, ForwardCount));
+        return players;
     }
 
-    private void GeneratePlayersForPosition(Team team, Position position, int count)
+    private List<Player> GeneratePlayersForPosition(Team team, Position position, int count)
     {
+        var players = new List<Player>();
         for (var i = 0; i < count; i++)
         {
             var player = _playerGenerationService.GeneratePlayer(position);
             player.TeamId = team.Id;
+            players.Add(player);
         }
+        return players;
     }
 }

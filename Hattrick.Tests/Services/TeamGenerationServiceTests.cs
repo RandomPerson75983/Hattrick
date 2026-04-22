@@ -67,7 +67,7 @@ public class TeamGenerationServiceTests
         const string teamName = "FC Test Club";
 
         // Act
-        var team = _sut.GenerateTeam(teamName, isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam(teamName, isHumanControlled: true);
 
         // Assert
         team.Name.Should().Be(teamName);
@@ -80,7 +80,7 @@ public class TeamGenerationServiceTests
         const string teamName = "";
 
         // Act
-        var team = _sut.GenerateTeam(teamName, isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam(teamName, isHumanControlled: true);
 
         // Assert
         team.Name.Should().BeEmpty();
@@ -93,7 +93,7 @@ public class TeamGenerationServiceTests
         const string teamName = "   ";
 
         // Act
-        var team = _sut.GenerateTeam(teamName, isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam(teamName, isHumanControlled: true);
 
         // Assert
         team.Name.Should().Be("   ");
@@ -107,7 +107,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WithVariousTeamNames_SetsNameCorrectly(string teamName)
     {
         // Act
-        var team = _sut.GenerateTeam(teamName, isHumanControlled: false);
+        var (team, _) = _sut.GenerateTeam(teamName, isHumanControlled: false);
 
         // Assert
         team.Name.Should().Be(teamName);
@@ -121,7 +121,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WithIsHumanControlledTrue_SetsIsHumanControlledTrue()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert
         team.IsHumanControlled.Should().BeTrue();
@@ -131,7 +131,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WithIsHumanControlledFalse_SetsIsHumanControlledFalse()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: false);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: false);
 
         // Assert
         team.IsHumanControlled.Should().BeFalse();
@@ -145,7 +145,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_ReturnsTeamWithNonEmptyId()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert
         team.Id.Should().NotBe(Guid.Empty);
@@ -159,7 +159,7 @@ public class TeamGenerationServiceTests
 
         // Act
         var teamIds = Enumerable.Range(0, teamCount)
-            .Select(i => _sut.GenerateTeam($"Team {i}", isHumanControlled: true).Id)
+            .Select(i => _sut.GenerateTeam($"Team {i}", isHumanControlled: true).Team.Id)
             .ToList();
 
         // Assert
@@ -174,7 +174,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_SetsBudgetToReasonableDefault()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: Budget should be around 10M (allow some variance)
         team.Budget.Should().BeInRange(5_000_000m, 15_000_000m,
@@ -185,7 +185,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_SetsBudgetToExpectedDefault()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: Exact default value
         team.Budget.Should().Be(ExpectedDefaultBudget);
@@ -195,7 +195,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_SetsTeamSpiritToReasonableDefault()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: TeamSpirit should be in valid range [0.0, 10.0] with neutral default
         team.TeamSpirit.Should().BeInRange(0.0, 10.0);
@@ -206,7 +206,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_SetsConfidenceToReasonableDefault()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: Confidence should be in valid range [0.0, 10.0] with neutral default
         team.Confidence.Should().BeInRange(0.0, 10.0);
@@ -217,7 +217,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_SetsCoachLevelToReasonableDefault()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: CoachLevel should be within valid bounds [1, 8]
         team.CoachLevel.Should().BeInRange(Team.MinCoachLevel, Team.MaxCoachLevel);
@@ -228,7 +228,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_SetsAssistantCoachLevelToZero()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: New teams should not have assistant coach hired
         team.AssistantCoachLevel.Should().Be(0);
@@ -238,7 +238,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_SetsDoctorLevelToZero()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: New teams should not have doctor hired
         team.DoctorLevel.Should().Be(0);
@@ -248,7 +248,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_SetsSpokespersonLevelToZero()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: New teams should not have spokesperson hired
         team.SpokespersonLevel.Should().Be(0);
@@ -258,7 +258,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_SetsFinancialDirectorLevelToZero()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: New teams should not have financial director hired
         team.FinancialDirectorLevel.Should().Be(0);
@@ -268,7 +268,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_SetsFansToReasonableDefault()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: Should have some fans (non-negative)
         team.Fans.Should().BeGreaterThanOrEqualTo(0);
@@ -278,7 +278,7 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_SetsFanClubSizeToReasonableDefault()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: Should have reasonable fan club size (non-negative)
         team.FanClubSize.Should().BeGreaterThanOrEqualTo(0);
@@ -364,11 +364,10 @@ public class TeamGenerationServiceTests
     public void GenerateTeam_WhenCalled_Returns25PlayersAttachedToTeam()
     {
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (_, players) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
-        // Assert: Need to verify players somehow - the team model doesn't have a Players property
-        // This test verifies the mock was called correctly
-        _playerGenMock.ReceivedWithAnyArgs(ExpectedTotalPlayers).GeneratePlayer(default);
+        // Assert: Verify 25 players are returned
+        players.Should().HaveCount(ExpectedTotalPlayers);
     }
 
     [Fact]
@@ -432,72 +431,32 @@ public class TeamGenerationServiceTests
     [Fact]
     public void GenerateTeam_WhenCalled_SetsTeamIdOnAllGeneratedPlayers()
     {
-        // Arrange: Track generated players and verify their TeamId is set
-        var generatedPlayers = new List<Player>();
-        _playerGenMock.GeneratePlayer(Arg.Any<Position>()).Returns(callInfo =>
-        {
-            var position = callInfo.ArgAt<Position>(0);
-            var player = CreateTestPlayer(position);
-            generatedPlayers.Add(player);
-            return player;
-        });
-
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (team, players) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: All generated players should have TeamId set to team's Id
-        generatedPlayers.Should().HaveCount(ExpectedTotalPlayers);
-        generatedPlayers.Should().OnlyContain(p => p.TeamId == team.Id,
+        players.Should().HaveCount(ExpectedTotalPlayers);
+        players.Should().OnlyContain(p => p.TeamId == team.Id,
             "all generated players should have TeamId matching the team's Id");
     }
 
     [Fact]
     public void GenerateTeam_WhenCalled_DoesNotLeavePlayersWithEmptyTeamId()
     {
-        // Arrange
-        var generatedPlayers = new List<Player>();
-        _playerGenMock.GeneratePlayer(Arg.Any<Position>()).Returns(callInfo =>
-        {
-            var position = callInfo.ArgAt<Position>(0);
-            var player = CreateTestPlayer(position);
-            generatedPlayers.Add(player);
-            return player;
-        });
-
         // Act
-        _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (_, players) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
         // Assert: No player should have empty TeamId
-        generatedPlayers.Should().NotContain(p => p.TeamId == Guid.Empty,
+        players.Should().NotContain(p => p.TeamId == Guid.Empty,
             "no player should have empty TeamId after team generation");
     }
 
     [Fact]
     public void GenerateTeam_CalledTwice_AssignsDifferentTeamIdsToPlayers()
     {
-        // Arrange
-        var team1Players = new List<Player>();
-        var team2Players = new List<Player>();
-        var callCount = 0;
-
-        _playerGenMock.GeneratePlayer(Arg.Any<Position>()).Returns(callInfo =>
-        {
-            var position = callInfo.ArgAt<Position>(0);
-            var player = CreateTestPlayer(position);
-
-            // First 25 calls are for team1, next 25 for team2
-            if (callCount < 25)
-                team1Players.Add(player);
-            else
-                team2Players.Add(player);
-
-            callCount++;
-            return player;
-        });
-
         // Act
-        var team1 = _sut.GenerateTeam("Team 1", isHumanControlled: true);
-        var team2 = _sut.GenerateTeam("Team 2", isHumanControlled: false);
+        var (team1, team1Players) = _sut.GenerateTeam("Team 1", isHumanControlled: true);
+        var (team2, team2Players) = _sut.GenerateTeam("Team 2", isHumanControlled: false);
 
         // Assert
         team1Players.Should().OnlyContain(p => p.TeamId == team1.Id);
@@ -517,11 +476,10 @@ public class TeamGenerationServiceTests
         _playerGenMock.GeneratePlayer(Position.Forward).Returns(mockPlayer);
 
         // Act
-        var team = _sut.GenerateTeam("Test Team", isHumanControlled: true);
+        var (_, players) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
-        // Assert: Verify the service was called (we can't check returned players directly
-        // without knowing the Team structure for player storage)
-        _playerGenMock.Received().GeneratePlayer(Position.Forward);
+        // Assert: Verify the mock player is in the returned list
+        players.Should().Contain(mockPlayer);
     }
 
     // -------------------------------------------------------------------------

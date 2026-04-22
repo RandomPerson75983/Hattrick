@@ -12,6 +12,6 @@ public interface ITeamGenerationService
     /// </summary>
     /// <param name="teamName">The name for the new team.</param>
     /// <param name="isHumanControlled">Whether the team is controlled by a human player.</param>
-    /// <returns>A newly generated team with a complete squad of 25 players.</returns>
-    Team GenerateTeam(string teamName, bool isHumanControlled);
+    /// <returns>A tuple containing the newly generated team and its 25 players.</returns>
+    (Team Team, IReadOnlyList<Player> Players) GenerateTeam(string teamName, bool isHumanControlled);
 }

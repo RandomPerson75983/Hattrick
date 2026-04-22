@@ -37,6 +37,7 @@ public static class ServiceCollectionExtensions
 
         // Generation services
         services.AddSingleton<IPlayerGenerationService, PlayerGenerationService>();
+        services.AddSingleton<ITeamGenerationService, TeamGenerationService>();
 
         return services;
     }

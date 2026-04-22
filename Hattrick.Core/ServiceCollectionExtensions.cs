@@ -39,6 +39,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IPlayerGenerationService, PlayerGenerationService>();
         services.AddSingleton<ITeamGenerationService, TeamGenerationService>();
 
+        // Seeding services
+        services.AddSingleton<IDevSeedService, DevSeedService>();
+
         return services;
     }
 }

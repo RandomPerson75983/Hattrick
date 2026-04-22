@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using Hattrick.Core;
+﻿using Hattrick.Core;
+using Hattrick.Core.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Hattrick;
 
@@ -23,6 +24,12 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 
-		return builder.Build();
+		var app = builder.Build();
+
+		// Seed development data on startup
+		var devSeedService = app.Services.GetRequiredService<IDevSeedService>();
+		devSeedService.SeedAsync().GetAwaiter().GetResult();
+
+		return app;
 	}
 }

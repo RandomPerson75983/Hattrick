@@ -2,9 +2,8 @@
 @using Hattrick.Core.Models
 @using Hattrick.Core.Services
 @using System.Globalization
-@inject IPlayerService PlayerService
+@inject IPlayersPageService PlayersPageService
 @inject IPlayerDisplayService DisplayService
-@inject IPlayerStatsService StatsService
 
 @if (!string.IsNullOrEmpty(_errorMessage))
 {
@@ -97,9 +96,9 @@
         try
         {
             _displayedSkillTypes = DisplayService.GetDisplayedSkillTypes();
-            _players = PlayerService.GetAllPlayers();
-            _totals = StatsService.GetTeamTotals(_players);
-            _averages = StatsService.GetTeamAverages(_players);
+            _players = PlayersPageService.GetPlayers();
+            _totals = PlayersPageService.GetTeamTotals();
+            _averages = PlayersPageService.GetTeamAverages();
             await Task.CompletedTask;
         }
         catch (Exception)

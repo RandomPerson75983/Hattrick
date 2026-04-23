@@ -13,23 +13,11 @@
 @code {
     private static readonly string[] TabLabels = ["Load", "Lineup", "Team Orders", "Penalty Takers", "Review", "Send Orders"];
 
-    private int _previousTab;
-
     [Parameter]
     public int CurrentTab { get; set; }
 
     [Parameter]
     public EventCallback<int> OnTabChanged { get; set; }
-
-    protected override void OnParametersSet()
-    {
-        _previousTab = CurrentTab;
-    }
-
-    protected override bool ShouldRender()
-    {
-        return CurrentTab != _previousTab;
-    }
 
     private async Task OnTabClicked(int tabIndex)
     {

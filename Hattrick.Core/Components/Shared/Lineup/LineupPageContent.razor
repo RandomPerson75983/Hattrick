@@ -1,0 +1,35 @@
+@namespace Hattrick.Components.Shared.Lineup
+@using Hattrick.Core.Models
+@using Hattrick.Core.Services
+
+@inject ILineupPageService LineupPageService
+
+<div class="lineup-page">
+    <TabNavigation CurrentTab="currentTab" OnTabChanged="HandleTabChanged" />
+    <FormationPitch Formation="lineup.Formation" Slots="starters" />
+    <BenchPanel BenchPlayers="benchPlayers" />
+</div>
+
+@code {
+    private const int DefaultTab = 1; // Lineup tab
+
+    private int currentTab = DefaultTab;
+    private TeamLineup lineup = new();
+    private IReadOnlyList<MatchLineupSlot> starters = Array.Empty<MatchLineupSlot>();
+    private IReadOnlyList<MatchLineupSlot> benchPlayers = Array.Empty<MatchLineupSlot>();
+
+    [Parameter]
+    public Guid TeamId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        lineup = LineupPageService.GetLineupForTeam(TeamId);
+        starters = lineup.Slots.Where(s => s.IsStarter).ToList();
+        benchPlayers = lineup.Slots.Where(s => !s.IsStarter).ToList();
+    }
+
+    private void HandleTabChanged(int tabIndex)
+    {
+        currentTab = tabIndex;
+    }
+}

@@ -413,11 +413,10 @@ public class TabNavigationTests : BunitContext
             .Add(p => p.CurrentTab, TabLoad)
             .Add(p => p.OnTabChanged, EventCallback.Factory.Create<int>(this, index => clickedIndices.Add(index))));
 
-        // Act
-        var tabs = cut.FindAll(".tab-item");
-        tabs[TabLineup].Click();
-        tabs[TabPenaltyTakers].Click();
-        tabs[TabSendOrders].Click();
+        // Act (re-fetch after each click due to DOM re-render)
+        cut.FindAll(".tab-item")[TabLineup].Click();
+        cut.FindAll(".tab-item")[TabPenaltyTakers].Click();
+        cut.FindAll(".tab-item")[TabSendOrders].Click();
 
         // Assert
         clickedIndices.Should().HaveCount(3);

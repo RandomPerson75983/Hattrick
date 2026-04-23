@@ -1,0 +1,38 @@
+@namespace Hattrick.Components.Shared.Lineup
+
+<div class="tab-navigation bg-green">
+    @for (int i = 0; i < TabLabels.Length; i++)
+    {
+        var tabIndex = i;
+        <div class="tab-item @(CurrentTab == tabIndex ? "active" : "")" @onclick="() => OnTabClicked(tabIndex)">
+            @TabLabels[tabIndex]
+        </div>
+    }
+</div>
+
+@code {
+    private static readonly string[] TabLabels = ["Load", "Lineup", "Team Orders", "Penalty Takers", "Review", "Send Orders"];
+
+    private int _previousTab;
+
+    [Parameter]
+    public int CurrentTab { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnTabChanged { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _previousTab = CurrentTab;
+    }
+
+    protected override bool ShouldRender()
+    {
+        return CurrentTab != _previousTab;
+    }
+
+    private async Task OnTabClicked(int tabIndex)
+    {
+        await OnTabChanged.InvokeAsync(tabIndex);
+    }
+}

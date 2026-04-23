@@ -1,0 +1,172 @@
+@namespace Hattrick.Components.Shared.Lineup
+@using Hattrick.Core.Models
+
+<svg class="formation-pitch" viewBox="0 0 400 600">
+    <!-- Pitch background -->
+    <rect class="pitch-background" x="0" y="0" width="400" height="600" />
+
+    <!-- Penalty areas -->
+    <rect class="penalty-area-top" x="100" y="0" width="200" height="80" />
+    <rect class="penalty-area-bottom" x="100" y="520" width="200" height="80" />
+
+    <!-- Goal areas -->
+    <rect class="goal-area-top" x="150" y="0" width="100" height="30" />
+    <rect class="goal-area-bottom" x="150" y="570" width="100" height="30" />
+
+    <!-- Center circle and halfway line -->
+    <line class="halfway-line" x1="0" y1="300" x2="400" y2="300" />
+    <circle class="center-circle" cx="200" cy="300" r="50" />
+
+    <!-- Player positions -->
+    <g class="player-positions">
+        @foreach (var slot in Starters)
+        {
+            var position = GetPositionCoordinates(slot);
+            <foreignObject @key="slot.PlayerId" class="player-slot" x="@(position.X - 25)" y="@(position.Y - 30)" width="50" height="60" @onclick="() => HandleSlotClick(slot)">
+                <PlayerAvatar PlayerId="@slot.PlayerId" Position="@slot.Position" Size="PlayerAvatarSize.Small" />
+            </foreignObject>
+        }
+    </g>
+
+    <!-- Formation label -->
+    <text class="formation-label" x="200" y="20" text-anchor="middle">@FormationLabel</text>
+</svg>
+
+@code {
+    private Formation _previousFormation;
+    private IReadOnlyList<MatchLineupSlot> _previousSlots = Array.Empty<MatchLineupSlot>();
+
+    [Parameter]
+    public Formation Formation { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<MatchLineupSlot> Slots { get; set; } = Array.Empty<MatchLineupSlot>();
+
+    [Parameter]
+    public EventCallback<MatchLineupSlot> OnSlotClick { get; set; }
+
+    private IEnumerable<MatchLineupSlot> Starters => Slots.Where(s => s.IsStarter);
+
+    protected override void OnParametersSet()
+    {
+        _previousFormation = Formation;
+        _previousSlots = Slots;
+    }
+
+    protected override bool ShouldRender()
+    {
+        // Only re-render when parameters actually change, not on event callback invocations
+        return Formation != _previousFormation || !ReferenceEquals(Slots, _previousSlots);
+    }
+
+    private string FormationLabel => Formation switch
+    {
+        Formation.Formation442 => "4-4-2",
+        Formation.Formation433 => "4-3-3",
+        Formation.Formation352 => "3-5-2",
+        Formation.Formation343 => "3-4-3",
+        Formation.Formation541 => "5-4-1",
+        Formation.Formation451 => "4-5-1",
+        Formation.Formation532 => "5-3-2",
+        Formation.Formation523 => "5-2-3",
+        Formation.Formation550 => "5-5-0",
+        Formation.Formation253 => "2-5-3",
+        _ => "4-4-2"
+    };
+
+    private async Task HandleSlotClick(MatchLineupSlot slot)
+    {
+        await OnSlotClick.InvokeAsync(slot);
+    }
+
+    private (int X, int Y) GetPositionCoordinates(MatchLineupSlot slot)
+    {
+        // Get the index of this slot among starters of the same position type
+        var startersOfPosition = Starters.Where(s => s.Position == slot.Position).ToList();
+        var index = startersOfPosition.IndexOf(slot);
+        var count = startersOfPosition.Count;
+
+        return slot.Position switch
+        {
+            // Goalkeeper - bottom center
+            Position.Keeper => (200, 550),
+
+            // Central Defenders - row at y=480
+            Position.CentralDefender => GetHorizontalPosition(index, count, 480),
+
+            // Wing Backs - wide positions at y=450
+            Position.WingBack => GetWingBackPosition(index, count),
+
+            // Inner Midfielders - row at y=300
+            Position.InnerMidfielder => GetHorizontalPosition(index, count, 300),
+
+            // Wingers - wide positions at y=250
+            Position.Winger => GetWingerPosition(index, count),
+
+            // Forwards - row at y=100
+            Position.Forward => GetHorizontalPosition(index, count, 100),
+
+            _ => (200, 300)
+        };
+    }
+
+    private static (int X, int Y) GetHorizontalPosition(int index, int count, int y)
+    {
+        if (count == 0) return (200, y);
+        if (count == 1) return (200, y);
+        if (count == 2)
+        {
+            return index == 0 ? (150, y) : (250, y);
+        }
+        if (count == 3)
+        {
+            return index switch
+            {
+                0 => (100, y),
+                1 => (200, y),
+                _ => (300, y)
+            };
+        }
+        if (count == 4)
+        {
+            return index switch
+            {
+                0 => (80, y),
+                1 => (160, y),
+                2 => (240, y),
+                _ => (320, y)
+            };
+        }
+        // 5 or more
+        var spacing = 320 / (count - 1);
+        return (40 + index * spacing, y);
+    }
+
+    private static (int X, int Y) GetWingBackPosition(int index, int count)
+    {
+        const int y = 450;
+        if (count == 0) return (200, y);
+        if (count == 1) return index == 0 ? (60, y) : (340, y);
+        if (count == 2)
+        {
+            return index == 0 ? (60, y) : (340, y);
+        }
+        // More than 2 wingbacks (rare formations)
+        var spacing = 280 / (count - 1);
+        return (60 + index * spacing, y);
+    }
+
+    private static (int X, int Y) GetWingerPosition(int index, int count)
+    {
+        const int y = 250;
+        if (count == 0) return (200, y);
+        if (count == 1) return index == 0 ? (60, y) : (340, y);
+        if (count == 2)
+        {
+            return index == 0 ? (60, y) : (340, y);
+        }
+        // More than 2 wingers
+        var spacing = 280 / (count - 1);
+        return (60 + index * spacing, y);
+    }
+}

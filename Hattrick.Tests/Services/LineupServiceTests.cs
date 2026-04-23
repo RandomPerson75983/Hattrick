@@ -18,6 +18,7 @@ namespace Hattrick.Tests.Services;
 /// 7. CaptainId must be in lineup if specified
 /// 8. No injured players (InjuryWeeks > 0)
 /// 9. No red-carded players (RedCard=true)
+/// 10. No yellow-card-suspended players (YellowCards >= 3)
 ///
 /// ValidateLineup returns LineupValidationResult with:
 /// - IsValid (bool): true if all rules pass
@@ -737,6 +738,129 @@ public class LineupServiceTests
 
         // Assert
         result.IsValid.Should().BeTrue("only lineup players are validated for red cards");
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Rule 10: No yellow-card-suspended players (YellowCards >= 3)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void ValidateLineup_WithYellowCardSuspendedStarter_ReturnsIsValidFalse()
+    {
+        // Arrange: Player with 3 yellow cards is suspended and cannot play
+        var (lineup, squad) = CreateValidLineupWithSquad();
+        var starterPlayerId = lineup.Slots.First(s => s.IsStarter && s.Position != Position.Keeper).PlayerId;
+        var suspendedPlayer = squad.First(p => p.Id == starterPlayerId);
+        suspendedPlayer.YellowCards = 3;
+
+        // Act
+        var result = _sut.ValidateLineup(lineup, squad);
+
+        // Assert
+        result.IsValid.Should().BeFalse("player with 3 yellow cards is suspended");
+    }
+
+    [Fact]
+    public void ValidateLineup_WithYellowCardSuspendedStarter_ReturnsSuspensionError()
+    {
+        // Arrange
+        var (lineup, squad) = CreateValidLineupWithSquad();
+        var starterPlayerId = lineup.Slots.First(s => s.IsStarter && s.Position != Position.Keeper).PlayerId;
+        var suspendedPlayer = squad.First(p => p.Id == starterPlayerId);
+        suspendedPlayer.YellowCards = 3;
+
+        // Act
+        var result = _sut.ValidateLineup(lineup, squad);
+
+        // Assert
+        result.Errors.Should().ContainSingle(e =>
+            e.Contains("yellow", StringComparison.OrdinalIgnoreCase) ||
+            e.Contains("suspend", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void ValidateLineup_WithYellowCardSuspendedSubstitute_ReturnsIsValidFalse()
+    {
+        // Arrange: Substitute with 3 yellow cards is also suspended
+        var (lineup, squad) = CreateValidLineupWithSquadAndSubstitutes(substituteCount: 1);
+        var substitutePlayerId = lineup.Slots.First(s => !s.IsStarter).PlayerId;
+        var suspendedPlayer = squad.First(p => p.Id == substitutePlayerId);
+        suspendedPlayer.YellowCards = 3;
+
+        // Act
+        var result = _sut.ValidateLineup(lineup, squad);
+
+        // Assert
+        result.IsValid.Should().BeFalse("yellow-card-suspended players cannot be substitutes either");
+    }
+
+    [Fact]
+    public void ValidateLineup_WithYellowCards2_ReturnsIsValidTrue()
+    {
+        // Arrange: Player with 2 yellow cards is NOT yet suspended
+        var (lineup, squad) = CreateValidLineupWithSquad();
+        var starterPlayerId = lineup.Slots.First(s => s.IsStarter && s.Position != Position.Keeper).PlayerId;
+        var playerWithYellows = squad.First(p => p.Id == starterPlayerId);
+        playerWithYellows.YellowCards = 2;
+
+        // Act
+        var result = _sut.ValidateLineup(lineup, squad);
+
+        // Assert
+        result.IsValid.Should().BeTrue("2 yellow cards does not trigger suspension, only 3 does");
+    }
+
+    [Fact]
+    public void ValidateLineup_WithYellowCardSuspendedPlayerNotInLineup_ReturnsIsValidTrue()
+    {
+        // Arrange: Player in squad has 3 yellow cards but is NOT in lineup
+        var (lineup, squad) = CreateValidLineupWithSquad();
+        var extraPlayer = CreatePlayer(Position.Forward);
+        extraPlayer.YellowCards = 3;
+        squad = squad.Concat([extraPlayer]).ToList();
+
+        // Act
+        var result = _sut.ValidateLineup(lineup, squad);
+
+        // Assert
+        result.IsValid.Should().BeTrue("only lineup players are validated for yellow card suspension");
+    }
+
+    [Fact]
+    public void ValidateLineup_WithMultipleYellowCardSuspendedPlayers_ReturnsMultipleErrors()
+    {
+        // Arrange: Two players with 3 yellow cards each
+        var (lineup, squad) = CreateValidLineupWithSquad();
+        var starters = lineup.Slots.Where(s => s.IsStarter && s.Position != Position.Keeper).ToList();
+
+        var suspendedPlayer1 = squad.First(p => p.Id == starters[0].PlayerId);
+        suspendedPlayer1.YellowCards = 3;
+
+        var suspendedPlayer2 = squad.First(p => p.Id == starters[1].PlayerId);
+        suspendedPlayer2.YellowCards = 3;
+
+        // Act
+        var result = _sut.ValidateLineup(lineup, squad);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().HaveCount(2, "each suspended player should generate an error");
+    }
+
+    [Fact]
+    public void ValidateLineup_WithYellowCards4_ReturnsIsValidFalse()
+    {
+        // Arrange: Edge case - YellowCards > 3 (should not happen but still suspended)
+        var (lineup, squad) = CreateValidLineupWithSquad();
+        var starterPlayerId = lineup.Slots.First(s => s.IsStarter && s.Position != Position.Keeper).PlayerId;
+        var suspendedPlayer = squad.First(p => p.Id == starterPlayerId);
+        suspendedPlayer.YellowCards = 4;
+
+        // Act
+        var result = _sut.ValidateLineup(lineup, squad);
+
+        // Assert
+        result.IsValid.Should().BeFalse("YellowCards >= 3 means suspended");
     }
 
     // ─────────────────────────────────────────────────────────────────────────

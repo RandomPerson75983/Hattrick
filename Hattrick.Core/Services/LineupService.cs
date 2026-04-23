@@ -11,6 +11,7 @@ public class LineupService : ILineupService
     private const int RequiredStarterCount = 11;
     private const int MaxSubstituteCount = 3;
     private const int RequiredKeeperCount = 1;
+    private const int YellowCardSuspensionThreshold = 3;
 
     /// <inheritdoc />
     public LineupValidationResult ValidateLineup(TeamLineup lineup, IReadOnlyList<Player> squad)
@@ -97,6 +98,12 @@ public class LineupService : ILineupService
             {
                 errors.Add($"Player {player.Name} has a red card suspension and cannot be in the lineup.");
             }
+
+            // Rule 10: No yellow-card-suspended players
+            if (player.YellowCards >= YellowCardSuspensionThreshold)
+            {
+                errors.Add($"Player {player.Name} has a yellow card suspension and cannot be in the lineup.");
+            }
         }
 
         return new LineupValidationResult(errors.Count == 0, errors);
@@ -107,9 +114,9 @@ public class LineupService : ILineupService
     {
         ArgumentNullException.ThrowIfNull(squad);
 
-        // Step 1: Filter available players (not injured, no red card)
+        // Step 1: Filter available players (not injured, no red card, no yellow card suspension)
         var availablePlayers = squad
-            .Where(p => p.InjuryWeeks == 0 && !p.RedCard)
+            .Where(p => p.InjuryWeeks == 0 && !p.RedCard && p.YellowCards < YellowCardSuspensionThreshold)
             .ToList();
 
         // Step 2: Validate minimum player count

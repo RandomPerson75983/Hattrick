@@ -2,8 +2,10 @@
 @using Hattrick.Core.Models
 @using Hattrick.Core.Services
 @using System.Globalization
+@using Microsoft.Extensions.Logging
 @inject IPlayersPageService PlayersPageService
 @inject IPlayerDisplayService DisplayService
+@inject ILogger<Players> Logger
 
 @if (!string.IsNullOrEmpty(_errorMessage))
 {
@@ -101,8 +103,9 @@
             _averages = PlayersPageService.GetTeamAverages();
             await Task.CompletedTask;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to load player data");
             _errorMessage = "Failed to load player data.";
         }
     }
@@ -116,6 +119,7 @@
         SkillType.Scoring => "Sc",
         SkillType.Passing => "Ps",
         SkillType.SetPieces => "Sp",
+        SkillType.Stamina => "St",
         _ => skillType.ToString()
     };
 }

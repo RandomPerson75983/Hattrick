@@ -26,6 +26,14 @@ public class PlayersPageServiceTests
     private readonly IPlayerStatsService _playerStatsService;
     private readonly IGameStateService _gameStateService;
 
+    // Test fixture constants
+    private const int TestPlayerAge = 25;
+    private const int TestPlayerForm = 5;
+    private const int TestPlayerStamina = 5;
+    private const int TestPlayerExperience = 5;
+    private const int TestPlayerTSI = 4500;
+    private const decimal TestPlayerWage = 10000m;
+
     public PlayersPageServiceTests()
     {
         _playerRepository = Substitute.For<IPlayerRepository>();
@@ -47,12 +55,12 @@ public class PlayersPageServiceTests
             Id = Guid.NewGuid(),
             TeamId = teamId,
             Name = name,
-            Age = 25,
-            Form = 5,
-            Stamina = 5,
-            Experience = 5,
-            TSI = 4500,
-            Wage = 10000m,
+            Age = TestPlayerAge,
+            Form = TestPlayerForm,
+            Stamina = TestPlayerStamina,
+            Experience = TestPlayerExperience,
+            TSI = TestPlayerTSI,
+            Wage = TestPlayerWage,
         };
     }
 

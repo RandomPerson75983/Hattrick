@@ -54,6 +54,26 @@ public class PlayerGenerationService : IPlayerGenerationService
     private const int StaminaSkillMin = 3;
     private const int StaminaSkillMaxExclusive = 8;
 
+    // Cached enum values to avoid allocation per call
+    private static readonly Specialty[] CachedSpecialties = Enum.GetValues<Specialty>();
+    private static readonly SkillType[] CachedSkillTypes = Enum.GetValues<SkillType>();
+
+    // Cached skill configurations per position
+    private static readonly IReadOnlyDictionary<SkillType, (int Min, int MaxExclusive)> KeeperSkillConfig =
+        CreateKeeperSkillConfig();
+    private static readonly IReadOnlyDictionary<SkillType, (int Min, int MaxExclusive)> CentralDefenderSkillConfig =
+        CreateCentralDefenderSkillConfig();
+    private static readonly IReadOnlyDictionary<SkillType, (int Min, int MaxExclusive)> WingBackSkillConfig =
+        CreateWingBackSkillConfig();
+    private static readonly IReadOnlyDictionary<SkillType, (int Min, int MaxExclusive)> InnerMidfielderSkillConfig =
+        CreateInnerMidfielderSkillConfig();
+    private static readonly IReadOnlyDictionary<SkillType, (int Min, int MaxExclusive)> WingerSkillConfig =
+        CreateWingerSkillConfig();
+    private static readonly IReadOnlyDictionary<SkillType, (int Min, int MaxExclusive)> ForwardSkillConfig =
+        CreateForwardSkillConfig();
+    private static readonly IReadOnlyDictionary<SkillType, (int Min, int MaxExclusive)> DefaultSkillConfig =
+        CreateDefaultSkillConfig();
+
     /// <summary>
     /// Fictional first names for generated players.
     /// </summary>
@@ -114,8 +134,7 @@ public class PlayerGenerationService : IPlayerGenerationService
 
     private Specialty GenerateSpecialty()
     {
-        var specialties = Enum.GetValues<Specialty>();
-        return specialties[_random.Next(specialties.Length)];
+        return CachedSpecialties[_random.Next(CachedSpecialties.Length)];
     }
 
     private Dictionary<SkillType, double> GenerateSkills(Position position)
@@ -123,7 +142,7 @@ public class PlayerGenerationService : IPlayerGenerationService
         var skills = new Dictionary<SkillType, double>();
         var skillConfig = GetSkillConfiguration(position);
 
-        foreach (var skillType in Enum.GetValues<SkillType>())
+        foreach (var skillType in CachedSkillTypes)
         {
             var (min, maxExclusive) = skillConfig[skillType];
             skills[skillType] = _random.Next(min, maxExclusive);
@@ -132,22 +151,22 @@ public class PlayerGenerationService : IPlayerGenerationService
         return skills;
     }
 
-    private static Dictionary<SkillType, (int Min, int MaxExclusive)> GetSkillConfiguration(
+    private static IReadOnlyDictionary<SkillType, (int Min, int MaxExclusive)> GetSkillConfiguration(
         Position position)
     {
         return position switch
         {
-            Position.Keeper => GetKeeperSkillConfig(),
-            Position.CentralDefender => GetCentralDefenderSkillConfig(),
-            Position.WingBack => GetWingBackSkillConfig(),
-            Position.InnerMidfielder => GetInnerMidfielderSkillConfig(),
-            Position.Winger => GetWingerSkillConfig(),
-            Position.Forward => GetForwardSkillConfig(),
-            _ => GetDefaultSkillConfig()
+            Position.Keeper => KeeperSkillConfig,
+            Position.CentralDefender => CentralDefenderSkillConfig,
+            Position.WingBack => WingBackSkillConfig,
+            Position.InnerMidfielder => InnerMidfielderSkillConfig,
+            Position.Winger => WingerSkillConfig,
+            Position.Forward => ForwardSkillConfig,
+            _ => DefaultSkillConfig
         };
     }
 
-    private static Dictionary<SkillType, (int Min, int MaxExclusive)> GetKeeperSkillConfig()
+    private static Dictionary<SkillType, (int Min, int MaxExclusive)> CreateKeeperSkillConfig()
     {
         return new Dictionary<SkillType, (int, int)>
         {
@@ -162,7 +181,7 @@ public class PlayerGenerationService : IPlayerGenerationService
         };
     }
 
-    private static Dictionary<SkillType, (int Min, int MaxExclusive)> GetCentralDefenderSkillConfig()
+    private static Dictionary<SkillType, (int Min, int MaxExclusive)> CreateCentralDefenderSkillConfig()
     {
         return new Dictionary<SkillType, (int, int)>
         {
@@ -177,7 +196,7 @@ public class PlayerGenerationService : IPlayerGenerationService
         };
     }
 
-    private static Dictionary<SkillType, (int Min, int MaxExclusive)> GetWingBackSkillConfig()
+    private static Dictionary<SkillType, (int Min, int MaxExclusive)> CreateWingBackSkillConfig()
     {
         return new Dictionary<SkillType, (int, int)>
         {
@@ -192,7 +211,7 @@ public class PlayerGenerationService : IPlayerGenerationService
         };
     }
 
-    private static Dictionary<SkillType, (int Min, int MaxExclusive)> GetInnerMidfielderSkillConfig()
+    private static Dictionary<SkillType, (int Min, int MaxExclusive)> CreateInnerMidfielderSkillConfig()
     {
         return new Dictionary<SkillType, (int, int)>
         {
@@ -207,7 +226,7 @@ public class PlayerGenerationService : IPlayerGenerationService
         };
     }
 
-    private static Dictionary<SkillType, (int Min, int MaxExclusive)> GetWingerSkillConfig()
+    private static Dictionary<SkillType, (int Min, int MaxExclusive)> CreateWingerSkillConfig()
     {
         return new Dictionary<SkillType, (int, int)>
         {
@@ -222,7 +241,7 @@ public class PlayerGenerationService : IPlayerGenerationService
         };
     }
 
-    private static Dictionary<SkillType, (int Min, int MaxExclusive)> GetForwardSkillConfig()
+    private static Dictionary<SkillType, (int Min, int MaxExclusive)> CreateForwardSkillConfig()
     {
         return new Dictionary<SkillType, (int, int)>
         {
@@ -237,7 +256,7 @@ public class PlayerGenerationService : IPlayerGenerationService
         };
     }
 
-    private static Dictionary<SkillType, (int Min, int MaxExclusive)> GetDefaultSkillConfig()
+    private static Dictionary<SkillType, (int Min, int MaxExclusive)> CreateDefaultSkillConfig()
     {
         return new Dictionary<SkillType, (int, int)>
         {

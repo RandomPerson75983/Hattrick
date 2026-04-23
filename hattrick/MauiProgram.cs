@@ -27,8 +27,16 @@ public static class MauiProgram
 		var app = builder.Build();
 
 		// Seed development data on startup
-		var devSeedService = app.Services.GetRequiredService<IDevSeedService>();
-		devSeedService.SeedAsync().GetAwaiter().GetResult();
+		try
+		{
+			var devSeedService = app.Services.GetRequiredService<IDevSeedService>();
+			devSeedService.SeedAsync().GetAwaiter().GetResult();
+		}
+		catch (Exception ex)
+		{
+			var logger = app.Services.GetService<ILogger<MauiApp>>();
+			logger?.LogError(ex, "Failed to seed development data on startup");
+		}
 
 		return app;
 	}

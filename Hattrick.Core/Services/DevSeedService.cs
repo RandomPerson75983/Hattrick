@@ -1,3 +1,4 @@
+using System.Threading;
 using Hattrick.Core.Repositories;
 
 namespace Hattrick.Core.Services;
@@ -11,6 +12,7 @@ public class DevSeedService : IDevSeedService
     private readonly IPlayerRepository _playerRepository;
     private readonly ITeamRepository _teamRepository;
     private readonly IGameStateService _gameStateService;
+    private readonly Lock _seedLock = new();
 
     public DevSeedService(
         ITeamGenerationService teamGenerationService,
@@ -34,27 +36,30 @@ public class DevSeedService : IDevSeedService
     /// <inheritdoc />
     public Task SeedAsync()
     {
-        // Idempotency check: if already seeded, return early
-        if (_gameStateService.HumanPlayerTeamId.HasValue)
+        lock (_seedLock)
         {
+            // Idempotency check: if already seeded, return early
+            if (_gameStateService.HumanPlayerTeamId.HasValue)
+            {
+                return Task.CompletedTask;
+            }
+
+            // Generate the team and players
+            var (team, players) = _teamGenerationService.GenerateTeam(TeamName, isHumanControlled: true);
+
+            // Add each player to the repository
+            foreach (var player in players)
+            {
+                _playerRepository.Add(player);
+            }
+
+            // Add team to repository BEFORE setting HumanPlayerTeamId
+            _teamRepository.Add(team);
+
+            // Set the human player team ID
+            _gameStateService.HumanPlayerTeamId = team.Id;
+
             return Task.CompletedTask;
         }
-
-        // Generate the team and players
-        var (team, players) = _teamGenerationService.GenerateTeam(TeamName, isHumanControlled: true);
-
-        // Add each player to the repository
-        foreach (var player in players)
-        {
-            _playerRepository.Add(player);
-        }
-
-        // Add team to repository BEFORE setting HumanPlayerTeamId
-        _teamRepository.Add(team);
-
-        // Set the human player team ID
-        _gameStateService.HumanPlayerTeamId = team.Id;
-
-        return Task.CompletedTask;
     }
 }

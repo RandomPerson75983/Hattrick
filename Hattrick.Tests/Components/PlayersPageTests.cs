@@ -3,12 +3,24 @@ using FluentAssertions;
 namespace Hattrick.Tests.Components;
 
 /// <summary>
-/// Tests for the Players.razor page.
+/// Specification tests for the Players.razor page structure.
 ///
-/// Note: These tests verify the expected output of Players.razor by testing the
-/// rendered HTML structure. Since the test project cannot directly reference the
-/// MAUI Hattrick library, we verify against the expected HTML output documented
-/// in the component implementation.
+/// IMPORTANT: These are SPECIFICATION tests, not integration tests.
+/// The test project cannot reference the MAUI Hattrick project due to target
+/// framework incompatibility (MAUI targets platform-specific TFMs like
+/// net10.0-windows while tests target net10.0). This is a known limitation
+/// of MAUI Blazor Hybrid apps.
+///
+/// These tests document the EXPECTED structure of Players.razor. They serve as:
+/// 1. Living documentation of the component's layout contract
+/// 2. A reference for developers modifying the component
+/// 3. A specification that should be kept in sync with the actual component
+///
+/// For actual component behavior testing, see PlayersPageServiceTests which
+/// verifies the data flow through the service layer.
+///
+/// To enable true component testing, the Blazor components would need to be
+/// extracted to a Razor Class Library (RCL) that both projects could reference.
 ///
 /// Players page layout:
 /// - Outer: players-page container

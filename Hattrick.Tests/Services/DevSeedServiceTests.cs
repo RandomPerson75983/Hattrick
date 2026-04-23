@@ -32,6 +32,17 @@ public class DevSeedServiceTests
     private const string ExpectedTeamName = "FC Development";
     private const int ExpectedPlayerCount = 25;
 
+    // Test fixture constants
+    private const decimal TestBudget = 10_000_000m;
+    private const double TestTeamSpirit = 5.0;
+    private const double TestConfidence = 5.0;
+    private const int TestCoachLevel = 5;
+    private const int TestPlayerAge = 25;
+    private const int TestPlayerForm = 6;
+    private const int TestPlayerStamina = 7;
+    private const int TestPlayerExperience = 3;
+    private const double TestSkillValue = 5.0;
+
     public DevSeedServiceTests()
     {
         _teamGenerationServiceMock = Substitute.For<ITeamGenerationService>();
@@ -110,8 +121,9 @@ public class DevSeedServiceTests
             _teamRepositoryMock,
             _gameStateServiceMock);
 
-        // Assert
+        // Assert: Service constructed successfully and is ready to seed
         service.Should().NotBeNull();
+        service.Should().BeAssignableTo<IDevSeedService>();
     }
 
     // -------------------------------------------------------------------------
@@ -617,10 +629,10 @@ public class DevSeedServiceTests
             Id = Guid.NewGuid(),
             Name = ExpectedTeamName,
             IsHumanControlled = true,
-            Budget = 10_000_000m,
-            TeamSpirit = 5.0,
-            Confidence = 5.0,
-            CoachLevel = 5
+            Budget = TestBudget,
+            TeamSpirit = TestTeamSpirit,
+            Confidence = TestConfidence,
+            CoachLevel = TestCoachLevel
         };
 
         var players = new List<Player>();
@@ -642,21 +654,21 @@ public class DevSeedServiceTests
             Id = Guid.NewGuid(),
             TeamId = teamId,
             Name = $"Test Player {index}",
-            Age = 25,
+            Age = TestPlayerAge,
             BestPosition = Position.Forward,
-            Form = 6,
-            Stamina = 7,
-            Experience = 3,
+            Form = TestPlayerForm,
+            Stamina = TestPlayerStamina,
+            Experience = TestPlayerExperience,
             Skills = new Dictionary<SkillType, double>
             {
-                [SkillType.Keeper] = 5,
-                [SkillType.Defending] = 5,
-                [SkillType.Playmaking] = 5,
-                [SkillType.Winger] = 5,
-                [SkillType.Passing] = 5,
-                [SkillType.Scoring] = 5,
-                [SkillType.SetPieces] = 5,
-                [SkillType.Stamina] = 5
+                [SkillType.Keeper] = TestSkillValue,
+                [SkillType.Defending] = TestSkillValue,
+                [SkillType.Playmaking] = TestSkillValue,
+                [SkillType.Winger] = TestSkillValue,
+                [SkillType.Passing] = TestSkillValue,
+                [SkillType.Scoring] = TestSkillValue,
+                [SkillType.SetPieces] = TestSkillValue,
+                [SkillType.Stamina] = TestSkillValue
             }
         };
     }

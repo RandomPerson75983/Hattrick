@@ -33,6 +33,20 @@ public class PlayerGenerationServiceTests
     private readonly IRandomProvider _randomMock;
     private readonly IPlayerGenerationService _sut;
 
+    // Constants matching PlayerGenerationService bounds
+    private const int MinAge = 17;
+    private const int MaxAge = 32;
+    private const int AgeMaxExclusive = MaxAge + 1;
+    private const int MinForm = 5;
+    private const int MaxForm = 8;
+    private const int MinStamina = 5;
+    private const int MaxStamina = 8;
+    private const int MinExperience = 1;
+    private const int MaxExperience = 5;
+    private const int MinSkillValue = 1;
+    private const int StatisticalSampleSize = 1000;
+    private const double LowSkillThreshold = 3.0;
+
     public PlayerGenerationServiceTests()
     {
         _randomMock = Substitute.For<IRandomProvider>();
@@ -154,9 +168,9 @@ public class PlayerGenerationServiceTests
         {
             var min = callInfo.ArgAt<int>(0);
             var max = callInfo.ArgAt<int>(1);
-            // Age range: 17-33 exclusive -> return 17 for min age
-            if (min == 17 && max == 33)
-                return 17;
+            // Age range: MinAge to AgeMaxExclusive -> return MinAge
+            if (min == MinAge && max == AgeMaxExclusive)
+                return MinAge;
             // For other ranges, return middle value
             return (min + max) / 2;
         });
@@ -166,21 +180,21 @@ public class PlayerGenerationServiceTests
         // Act
         var player = _sut.GeneratePlayer(Position.Forward);
 
-        // Assert: Age should be 17 (minimum)
-        player.Age.Should().Be(17);
+        // Assert: Age should be MinAge (minimum)
+        player.Age.Should().Be(MinAge);
     }
 
     [Fact]
     public void GeneratePlayer_WhenRandomReturnsMaxAge_ReturnsPlayerWithAge32()
     {
         // Arrange: Mock returns 32 for age (max value)
-        SetupDeterministicRandomWithAge(32);
+        SetupDeterministicRandomWithAge(MaxAge);
 
         // Act
         var player = _sut.GeneratePlayer(Position.Forward);
 
         // Assert
-        player.Age.Should().Be(32);
+        player.Age.Should().Be(MaxAge);
     }
 
     [Fact]
@@ -189,7 +203,7 @@ public class PlayerGenerationServiceTests
         // Arrange: Use a real random provider for statistical test
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var ages = Enumerable.Range(0, sampleSize)
@@ -197,7 +211,7 @@ public class PlayerGenerationServiceTests
             .ToList();
 
         // Assert: All ages must be in [17, 32]
-        ages.Should().OnlyContain(age => age >= 17 && age <= 32);
+        ages.Should().OnlyContain(age => age >= MinAge && age <= MaxAge);
     }
 
     [Fact]
@@ -206,7 +220,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var ages = Enumerable.Range(0, sampleSize)
@@ -228,7 +242,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var forms = Enumerable.Range(0, sampleSize)
@@ -275,7 +289,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var staminas = Enumerable.Range(0, sampleSize)
@@ -322,7 +336,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var experiences = Enumerable.Range(0, sampleSize)
@@ -390,8 +404,8 @@ public class PlayerGenerationServiceTests
         // Act
         var player = _sut.GeneratePlayer(Position.Forward);
 
-        // Assert
-        player.Skills.Values.Should().OnlyContain(value => value >= 0.0);
+        // Assert: Minimum skill value is 1 (LowSkillMin)
+        player.Skills.Values.Should().OnlyContain(value => value >= 1.0);
     }
 
     [Fact]
@@ -400,7 +414,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var allSkills = Enumerable.Range(0, sampleSize)
@@ -421,7 +435,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var keepers = Enumerable.Range(0, sampleSize)
@@ -445,7 +459,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var keepers = Enumerable.Range(0, sampleSize)
@@ -471,7 +485,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var defenders = Enumerable.Range(0, sampleSize)
@@ -495,7 +509,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var defenders = Enumerable.Range(0, sampleSize)
@@ -519,7 +533,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var wingbacks = Enumerable.Range(0, sampleSize)
@@ -551,7 +565,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var midfielders = Enumerable.Range(0, sampleSize)
@@ -583,7 +597,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var wingers = Enumerable.Range(0, sampleSize)
@@ -615,7 +629,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var forwards = Enumerable.Range(0, sampleSize)
@@ -643,7 +657,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var keepers = Enumerable.Range(0, sampleSize)
@@ -688,7 +702,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var specialties = Enumerable.Range(0, sampleSize)
@@ -705,7 +719,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var specialties = Enumerable.Range(0, sampleSize)
@@ -782,7 +796,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var setPiecesSkills = Enumerable.Range(0, sampleSize)
@@ -821,7 +835,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var forwards = Enumerable.Range(0, sampleSize)
@@ -831,7 +845,7 @@ public class PlayerGenerationServiceTests
         var avgKeeperSkill = forwards.Average(p => p.Skills[SkillType.Keeper]);
 
         // Assert: Forwards should have low Keeper skill (below 3.0 average)
-        avgKeeperSkill.Should().BeLessThan(3.0,
+        avgKeeperSkill.Should().BeLessThan(LowSkillThreshold,
             "Forwards should have low Keeper skill (non-primary)");
     }
 
@@ -841,7 +855,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var forwards = Enumerable.Range(0, sampleSize)
@@ -851,7 +865,7 @@ public class PlayerGenerationServiceTests
         var avgDefendingSkill = forwards.Average(p => p.Skills[SkillType.Defending]);
 
         // Assert: Forwards should have low Defending skill (below 3.0 average)
-        avgDefendingSkill.Should().BeLessThan(3.0,
+        avgDefendingSkill.Should().BeLessThan(LowSkillThreshold,
             "Forwards should have low Defending skill (non-primary)");
     }
 
@@ -861,7 +875,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var keepers = Enumerable.Range(0, sampleSize)
@@ -871,7 +885,7 @@ public class PlayerGenerationServiceTests
         var avgScoringSkill = keepers.Average(p => p.Skills[SkillType.Scoring]);
 
         // Assert: Keepers should have low Scoring skill (below 3.0 average)
-        avgScoringSkill.Should().BeLessThan(3.0,
+        avgScoringSkill.Should().BeLessThan(LowSkillThreshold,
             "Keepers should have low Scoring skill (non-primary)");
     }
 
@@ -881,7 +895,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var keepers = Enumerable.Range(0, sampleSize)
@@ -891,7 +905,7 @@ public class PlayerGenerationServiceTests
         var avgWingerSkill = keepers.Average(p => p.Skills[SkillType.Winger]);
 
         // Assert: Keepers should have low Winger skill (below 3.0 average)
-        avgWingerSkill.Should().BeLessThan(3.0,
+        avgWingerSkill.Should().BeLessThan(LowSkillThreshold,
             "Keepers should have low Winger skill (non-primary)");
     }
 
@@ -901,7 +915,7 @@ public class PlayerGenerationServiceTests
         // Arrange
         var realRandom = new RandomProvider();
         var service = new PlayerGenerationService(realRandom);
-        const int sampleSize = 1000;
+        var sampleSize = StatisticalSampleSize;
 
         // Act
         var defenders = Enumerable.Range(0, sampleSize)
@@ -911,7 +925,7 @@ public class PlayerGenerationServiceTests
         var avgScoringSkill = defenders.Average(p => p.Skills[SkillType.Scoring]);
 
         // Assert: Central Defenders should have low Scoring skill (below 3.0 average)
-        avgScoringSkill.Should().BeLessThan(3.0,
+        avgScoringSkill.Should().BeLessThan(LowSkillThreshold,
             "Central Defenders should have low Scoring skill (non-primary)");
     }
 

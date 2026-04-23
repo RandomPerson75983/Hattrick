@@ -37,6 +37,13 @@ public class TeamGenerationServiceTests
     private const int ExpectedForwardCount = 8;
     private const int ExpectedTotalPlayers = 25;
 
+    // Test fixture constants
+    private const int TestPlayerAge = 25;
+    private const int TestPlayerForm = 6;
+    private const int TestPlayerStamina = 7;
+    private const int TestPlayerExperience = 3;
+    private const double TestSkillValue = 5.0;
+
     public TeamGenerationServiceTests()
     {
         _playerGenMock = Substitute.For<IPlayerGenerationService>();
@@ -270,8 +277,8 @@ public class TeamGenerationServiceTests
         // Act
         var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
-        // Assert: Should have some fans (non-negative)
-        team.Fans.Should().BeGreaterThanOrEqualTo(0);
+        // Assert: Should have default fans (1000)
+        team.Fans.Should().Be(1000);
     }
 
     [Fact]
@@ -280,8 +287,8 @@ public class TeamGenerationServiceTests
         // Act
         var (team, _) = _sut.GenerateTeam("Test Team", isHumanControlled: true);
 
-        // Assert: Should have reasonable fan club size (non-negative)
-        team.FanClubSize.Should().BeGreaterThanOrEqualTo(0);
+        // Assert: Should have default fan club size (100)
+        team.FanClubSize.Should().Be(100);
     }
 
     // -------------------------------------------------------------------------
@@ -638,22 +645,22 @@ public class TeamGenerationServiceTests
         {
             Id = Guid.NewGuid(),
             Name = $"Test Player {position}",
-            Age = 25,
+            Age = TestPlayerAge,
             BestPosition = position,
-            Form = 6,
-            Stamina = 7,
-            Experience = 3,
+            Form = TestPlayerForm,
+            Stamina = TestPlayerStamina,
+            Experience = TestPlayerExperience,
             TeamId = Guid.Empty, // Service should set this
             Skills = new Dictionary<SkillType, double>
             {
-                [SkillType.Keeper] = 5,
-                [SkillType.Defending] = 5,
-                [SkillType.Playmaking] = 5,
-                [SkillType.Winger] = 5,
-                [SkillType.Passing] = 5,
-                [SkillType.Scoring] = 5,
-                [SkillType.SetPieces] = 5,
-                [SkillType.Stamina] = 5
+                [SkillType.Keeper] = TestSkillValue,
+                [SkillType.Defending] = TestSkillValue,
+                [SkillType.Playmaking] = TestSkillValue,
+                [SkillType.Winger] = TestSkillValue,
+                [SkillType.Passing] = TestSkillValue,
+                [SkillType.Scoring] = TestSkillValue,
+                [SkillType.SetPieces] = TestSkillValue,
+                [SkillType.Stamina] = TestSkillValue
             }
         };
     }

@@ -254,11 +254,10 @@ public class BenchPanelTests : BunitContext
             .Add(p => p.BenchPlayers, bench)
             .Add(p => p.OnPlayerClick, EventCallback.Factory.Create<MatchLineupSlot>(this, slot => clickedSlots.Add(slot))));
 
-        // Act - Click all three bench players
-        var benchPlayers = cut.FindAll(".bench-player");
-        benchPlayers[0].Click();
-        benchPlayers[1].Click();
-        benchPlayers[2].Click();
+        // Act - Click all three bench players (re-find after each click to avoid stale references)
+        cut.FindAll(".bench-player")[0].Click();
+        cut.FindAll(".bench-player")[1].Click();
+        cut.FindAll(".bench-player")[2].Click();
 
         // Assert - Should have 3 different clicks, all substitutes
         clickedSlots.Should().HaveCount(3);
@@ -434,11 +433,11 @@ public class BenchPanelTests : BunitContext
             .Add(p => p.BenchPlayers, bench)
             .Add(p => p.OnPlayerClick, EventCallback.Factory.Create<MatchLineupSlot>(this, slot => clickedSlots.Add(slot))));
 
-        // Act - Click all bench players
-        var benchPlayers = cut.FindAll(".bench-player");
-        foreach (var player in benchPlayers)
+        // Act - Click all bench players (re-find after each click to avoid stale references)
+        var benchPlayerCount = cut.FindAll(".bench-player").Count;
+        for (var i = 0; i < benchPlayerCount; i++)
         {
-            player.Click();
+            cut.FindAll(".bench-player")[i].Click();
         }
 
         // Assert - All clicked slots should be substitutes (IsStarter = false)

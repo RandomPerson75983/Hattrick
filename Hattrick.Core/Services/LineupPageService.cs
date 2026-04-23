@@ -69,4 +69,18 @@ public sealed class LineupPageService : ILineupPageService
         var availablePlayers = GetAvailablePlayers(teamId);
         return _lineupService.SuggestLineup(teamId, availablePlayers);
     }
+
+    /// <inheritdoc />
+    public IReadOnlyList<MatchLineupSlot> GetStarters(Guid teamId)
+    {
+        var lineup = GetLineupForTeam(teamId);
+        return lineup.Slots.Where(s => s.IsStarter).ToList().AsReadOnly();
+    }
+
+    /// <inheritdoc />
+    public IReadOnlyList<MatchLineupSlot> GetBenchPlayers(Guid teamId)
+    {
+        var lineup = GetLineupForTeam(teamId);
+        return lineup.Slots.Where(s => !s.IsStarter).ToList().AsReadOnly();
+    }
 }

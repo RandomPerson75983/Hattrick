@@ -36,4 +36,20 @@ public interface ILineupPageService
     /// <param name="teamId">The team ID.</param>
     /// <returns>A suggested TeamLineup.</returns>
     TeamLineup SuggestLineup(Guid teamId);
+
+    /// <summary>
+    /// Gets the starting players (IsStarter = true) from the team's lineup.
+    /// Architecture rule: Blazor components have ZERO business logic - all filtering in services.
+    /// </summary>
+    /// <param name="teamId">The team ID.</param>
+    /// <returns>List of starter lineup slots.</returns>
+    IReadOnlyList<MatchLineupSlot> GetStarters(Guid teamId);
+
+    /// <summary>
+    /// Gets the bench players (IsStarter = false) from the team's lineup.
+    /// Architecture rule: Blazor components have ZERO business logic - all filtering in services.
+    /// </summary>
+    /// <param name="teamId">The team ID.</param>
+    /// <returns>List of bench lineup slots.</returns>
+    IReadOnlyList<MatchLineupSlot> GetBenchPlayers(Guid teamId);
 }

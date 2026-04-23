@@ -3,6 +3,7 @@ using FluentAssertions;
 using Hattrick.Core.Models;
 using Hattrick.Core.Services;
 using Hattrick.Components.Shared.Lineup;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 
@@ -110,6 +111,8 @@ public class LineupPageTests : BunitContext
     {
         var mockService = Substitute.For<ILineupPageService>();
         mockService.GetLineupForTeam(Arg.Any<Guid>()).Returns(lineup);
+        mockService.GetStarters(Arg.Any<Guid>()).Returns(lineup.Slots.Where(s => s.IsStarter).ToList());
+        mockService.GetBenchPlayers(Arg.Any<Guid>()).Returns(lineup.Slots.Where(s => !s.IsStarter).ToList());
         Services.AddSingleton(mockService);
         return mockService;
     }
@@ -699,5 +702,258 @@ public class LineupPageTests : BunitContext
         var activeTabs = cut.FindAll(".tab-item.active");
         activeTabs.Should().HaveCount(1);
         activeTabs[0].TextContent.Should().Be(expectedTabName);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // BUG: OnInitialized vs OnParametersSet - TeamId parameter changes
+    // Issue: Component uses OnInitialized() which only runs once.
+    // When TeamId parameter changes, data should reload but currently shows stale data.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task LineupPageContent_WhenTeamIdChanges_ReloadsDataForNewTeam()
+    {
+        // Arrange - Create two different teams with different lineups
+        var teamId1 = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var teamId2 = Guid.Parse("22222222-2222-2222-2222-222222222222");
+
+        var lineup1 = new TeamLineup
+        {
+            TeamId = teamId1,
+            Formation = Formation.Formation442,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(PlayerId1, Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(PlayerId2, Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+            }
+        };
+
+        var lineup2 = new TeamLineup
+        {
+            TeamId = teamId2,
+            Formation = Formation.Formation433,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(PlayerId3, Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(PlayerId4, Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+                new(PlayerId5, Position.Forward, IndividualOrder.Normal, isStarter: true),
+            }
+        };
+
+        var mockService = Substitute.For<ILineupPageService>();
+        mockService.GetLineupForTeam(teamId1).Returns(lineup1);
+        mockService.GetLineupForTeam(teamId2).Returns(lineup2);
+        mockService.GetStarters(teamId1).Returns(lineup1.Slots.Where(s => s.IsStarter).ToList());
+        mockService.GetStarters(teamId2).Returns(lineup2.Slots.Where(s => s.IsStarter).ToList());
+        mockService.GetBenchPlayers(teamId1).Returns(lineup1.Slots.Where(s => !s.IsStarter).ToList());
+        mockService.GetBenchPlayers(teamId2).Returns(lineup2.Slots.Where(s => !s.IsStarter).ToList());
+        Services.AddSingleton(mockService);
+
+        // Act - Render with first team
+        var cut = Render<LineupPageContent>(parameters => parameters
+            .Add(p => p.TeamId, teamId1));
+
+        // Verify initial state shows team1's formation (4-4-2)
+        cut.Find(".formation-label").TextContent.Should().Contain("4-4-2");
+
+        // Now change TeamId parameter to team2
+        await cut.InvokeAsync(() => cut.Instance.SetParametersAsync(
+            ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                { nameof(LineupPageContent.TeamId), teamId2 }
+            })));
+
+        // Assert - Should now show team2's formation (4-3-3)
+        // BUG: Currently this fails because OnInitialized doesn't re-run on parameter changes
+        cut.Find(".formation-label").TextContent.Should().Contain("4-3-3");
+    }
+
+    [Fact]
+    public async Task LineupPageContent_WhenTeamIdChanges_CallsServiceWithNewTeamId()
+    {
+        // Arrange
+        var teamId1 = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var teamId2 = Guid.Parse("22222222-2222-2222-2222-222222222222");
+
+        var testLineup = CreateTestLineup();
+        var mockService = Substitute.For<ILineupPageService>();
+        mockService.GetLineupForTeam(Arg.Any<Guid>()).Returns(testLineup);
+        mockService.GetStarters(Arg.Any<Guid>()).Returns(testLineup.Slots.Where(s => s.IsStarter).ToList());
+        mockService.GetBenchPlayers(Arg.Any<Guid>()).Returns(testLineup.Slots.Where(s => !s.IsStarter).ToList());
+        Services.AddSingleton(mockService);
+
+        var cut = Render<LineupPageContent>(parameters => parameters
+            .Add(p => p.TeamId, teamId1));
+
+        // Clear received calls to track only the next call
+        mockService.ClearReceivedCalls();
+
+        // Act - Change TeamId parameter
+        await cut.InvokeAsync(() => cut.Instance.SetParametersAsync(
+            ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                { nameof(LineupPageContent.TeamId), teamId2 }
+            })));
+
+        // Assert - Service should be called with the new team ID
+        // BUG: Currently fails because OnInitialized doesn't re-run
+        mockService.Received(1).GetLineupForTeam(teamId2);
+    }
+
+    [Fact]
+    public async Task LineupPageContent_WhenTeamIdChanges_UpdatesStartersList()
+    {
+        // Arrange - Team1 has 2 starters, Team2 has 4 starters
+        var teamId1 = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var teamId2 = Guid.Parse("22222222-2222-2222-2222-222222222222");
+
+        var lineup1 = new TeamLineup
+        {
+            TeamId = teamId1,
+            Formation = Formation.Formation442,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(PlayerId1, Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(PlayerId2, Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+            }
+        };
+
+        var lineup2 = new TeamLineup
+        {
+            TeamId = teamId2,
+            Formation = Formation.Formation433,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(PlayerId3, Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(PlayerId4, Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+                new(PlayerId5, Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+                new(PlayerId6, Position.Forward, IndividualOrder.Normal, isStarter: true),
+            }
+        };
+
+        var mockService = Substitute.For<ILineupPageService>();
+        mockService.GetLineupForTeam(teamId1).Returns(lineup1);
+        mockService.GetLineupForTeam(teamId2).Returns(lineup2);
+        mockService.GetStarters(teamId1).Returns(lineup1.Slots.Where(s => s.IsStarter).ToList());
+        mockService.GetStarters(teamId2).Returns(lineup2.Slots.Where(s => s.IsStarter).ToList());
+        mockService.GetBenchPlayers(teamId1).Returns(lineup1.Slots.Where(s => !s.IsStarter).ToList());
+        mockService.GetBenchPlayers(teamId2).Returns(lineup2.Slots.Where(s => !s.IsStarter).ToList());
+        Services.AddSingleton(mockService);
+
+        var cut = Render<LineupPageContent>(parameters => parameters
+            .Add(p => p.TeamId, teamId1));
+
+        // Initial state: 2 player slots
+        var initialSlots = cut.FindAll(".player-slot");
+        initialSlots.Should().HaveCount(2);
+
+        // Act - Change to team2
+        await cut.InvokeAsync(() => cut.Instance.SetParametersAsync(
+            ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                { nameof(LineupPageContent.TeamId), teamId2 }
+            })));
+
+        // Assert - Should now have 4 player slots
+        // BUG: Currently fails because starters list isn't updated
+        var updatedSlots = cut.FindAll(".player-slot");
+        updatedSlots.Should().HaveCount(4);
+    }
+
+    [Fact]
+    public async Task LineupPageContent_WhenTeamIdChanges_UpdatesBenchPlayersList()
+    {
+        // Arrange - Team1 has 1 bench player, Team2 has 3 bench players
+        var teamId1 = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var teamId2 = Guid.Parse("22222222-2222-2222-2222-222222222222");
+
+        var lineup1 = new TeamLineup
+        {
+            TeamId = teamId1,
+            Formation = Formation.Formation442,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(PlayerId1, Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(SubPlayerId1, Position.Keeper, IndividualOrder.Normal, isStarter: false),
+            }
+        };
+
+        var lineup2 = new TeamLineup
+        {
+            TeamId = teamId2,
+            Formation = Formation.Formation433,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(PlayerId3, Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(SubPlayerId1, Position.Keeper, IndividualOrder.Normal, isStarter: false),
+                new(SubPlayerId2, Position.CentralDefender, IndividualOrder.Normal, isStarter: false),
+                new(SubPlayerId3, Position.Forward, IndividualOrder.Normal, isStarter: false),
+            }
+        };
+
+        // Pre-compute lists to avoid LINQ evaluation issues
+        var starters1 = lineup1.Slots.Where(s => s.IsStarter).ToList();
+        var starters2 = lineup2.Slots.Where(s => s.IsStarter).ToList();
+        var bench1 = lineup1.Slots.Where(s => !s.IsStarter).ToList();
+        var bench2 = lineup2.Slots.Where(s => !s.IsStarter).ToList();
+
+        var mockService = Substitute.For<ILineupPageService>();
+        mockService.GetLineupForTeam(teamId1).Returns(lineup1);
+        mockService.GetLineupForTeam(teamId2).Returns(lineup2);
+        mockService.GetStarters(teamId1).Returns(starters1);
+        mockService.GetStarters(teamId2).Returns(starters2);
+        mockService.GetBenchPlayers(teamId1).Returns(bench1);
+        mockService.GetBenchPlayers(teamId2).Returns(bench2);
+        Services.AddSingleton(mockService);
+
+        var cut = Render<LineupPageContent>(parameters => parameters
+            .Add(p => p.TeamId, teamId1));
+
+        // Initial state: 1 bench player
+        var initialBench = cut.FindAll(".bench-player");
+        initialBench.Should().HaveCount(1);
+
+        // Act - Change to team2
+        await cut.InvokeAsync(() => cut.Instance.SetParametersAsync(
+            ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                { nameof(LineupPageContent.TeamId), teamId2 }
+            })));
+
+        // Assert - Should now have 3 bench players
+        var updatedBench = cut.FindAll(".bench-player");
+        updatedBench.Should().HaveCount(3);
+    }
+
+    [Fact]
+    public async Task LineupPageContent_WhenTeamIdChangesToSameValue_DoesNotReloadData()
+    {
+        // Arrange - Optimization: same TeamId shouldn't trigger unnecessary reload
+        var teamId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+
+        var testLineup = CreateTestLineup();
+        var mockService = Substitute.For<ILineupPageService>();
+        mockService.GetLineupForTeam(teamId).Returns(testLineup);
+        mockService.GetStarters(teamId).Returns(testLineup.Slots.Where(s => s.IsStarter).ToList());
+        mockService.GetBenchPlayers(teamId).Returns(testLineup.Slots.Where(s => !s.IsStarter).ToList());
+        Services.AddSingleton(mockService);
+
+        var cut = Render<LineupPageContent>(parameters => parameters
+            .Add(p => p.TeamId, teamId));
+
+        // Initial call count should be 1
+        mockService.Received(1).GetLineupForTeam(teamId);
+        mockService.ClearReceivedCalls();
+
+        // Act - Set same TeamId again
+        await cut.InvokeAsync(() => cut.Instance.SetParametersAsync(
+            ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                { nameof(LineupPageContent.TeamId), teamId }
+            })));
+
+        // Assert - Should NOT call service again for same team
+        // This tests for proper parameter change detection
+        mockService.DidNotReceive().GetLineupForTeam(Arg.Any<Guid>());
     }
 }

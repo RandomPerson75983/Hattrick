@@ -17,15 +17,25 @@
     private TeamLineup lineup = new();
     private IReadOnlyList<MatchLineupSlot> starters = Array.Empty<MatchLineupSlot>();
     private IReadOnlyList<MatchLineupSlot> benchPlayers = Array.Empty<MatchLineupSlot>();
+    private Guid _previousTeamId;
 
     [Parameter]
     public Guid TeamId { get; set; }
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
+    {
+        if (TeamId != _previousTeamId)
+        {
+            _previousTeamId = TeamId;
+            LoadLineupData();
+        }
+    }
+
+    private void LoadLineupData()
     {
         lineup = LineupPageService.GetLineupForTeam(TeamId);
-        starters = lineup.Slots.Where(s => s.IsStarter).ToList();
-        benchPlayers = lineup.Slots.Where(s => !s.IsStarter).ToList();
+        starters = LineupPageService.GetStarters(TeamId);
+        benchPlayers = LineupPageService.GetBenchPlayers(TeamId);
     }
 
     private void HandleTabChanged(int tabIndex)

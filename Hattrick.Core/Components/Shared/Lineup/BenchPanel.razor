@@ -19,15 +19,15 @@
     [Parameter]
     public EventCallback<MatchLineupSlot> OnPlayerClick { get; set; }
 
-    protected override void OnParametersSet()
-    {
-        _previousBenchPlayers = BenchPlayers;
-    }
-
     protected override bool ShouldRender()
     {
-        // Only re-render when parameters actually change, not on event callback invocations
-        return !ReferenceEquals(BenchPlayers, _previousBenchPlayers);
+        // Check if parameters changed before updating the reference
+        bool shouldRender = !ReferenceEquals(BenchPlayers, _previousBenchPlayers);
+
+        // Update reference AFTER the check, so next ShouldRender can detect future changes
+        _previousBenchPlayers = BenchPlayers;
+
+        return shouldRender;
     }
 
     private async Task HandlePlayerClick(MatchLineupSlot slot)

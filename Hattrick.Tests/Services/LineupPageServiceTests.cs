@@ -736,4 +736,423 @@ public class LineupPageServiceTests
         // Assert
         result.Should().BeAssignableTo<IReadOnlyList<Player>>();
     }
+
+    // =========================================================================
+    // GetStarters - New method to move filtering logic from component to service
+    // Architecture rule: "Blazor components have ZERO business logic"
+    // =========================================================================
+
+    [Fact]
+    public void GetStarters_WithMixedSlots_ReturnsOnlyStarters()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var lineup = new TeamLineup
+        {
+            TeamId = teamId,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: false),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: false),
+            }
+        };
+
+        var sut = CreateSut();
+        sut.SaveLineup(lineup);
+
+        // Act
+        var result = sut.GetStarters(teamId);
+
+        // Assert
+        result.Should().HaveCount(3);
+        result.Should().OnlyContain(s => s.IsStarter);
+    }
+
+    [Fact]
+    public void GetStarters_WithNoStarters_ReturnsEmptyList()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var lineup = new TeamLineup
+        {
+            TeamId = teamId,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: false),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: false),
+            }
+        };
+
+        var sut = CreateSut();
+        sut.SaveLineup(lineup);
+
+        // Act
+        var result = sut.GetStarters(teamId);
+
+        // Assert
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GetStarters_WithOnlyStarters_ReturnsAllSlots()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var lineup = new TeamLineup
+        {
+            TeamId = teamId,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: true),
+            }
+        };
+
+        var sut = CreateSut();
+        sut.SaveLineup(lineup);
+
+        // Act
+        var result = sut.GetStarters(teamId);
+
+        // Assert
+        result.Should().HaveCount(3);
+    }
+
+    [Fact]
+    public void GetStarters_WithEmptyLineup_ReturnsEmptyList()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var sut = CreateSut();
+        // Don't save any lineup - GetLineupForTeam will create empty one
+
+        // Act
+        var result = sut.GetStarters(teamId);
+
+        // Assert
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GetStarters_ReturnsIReadOnlyList()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var lineup = new TeamLineup
+        {
+            TeamId = teamId,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: true),
+            }
+        };
+
+        var sut = CreateSut();
+        sut.SaveLineup(lineup);
+
+        // Act
+        var result = sut.GetStarters(teamId);
+
+        // Assert
+        result.Should().BeAssignableTo<IReadOnlyList<MatchLineupSlot>>();
+    }
+
+    [Fact]
+    public void GetStarters_WithFull11Starters_ReturnsAll11()
+    {
+        // Arrange - Full 4-4-2 lineup
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var lineup = new TeamLineup
+        {
+            TeamId = teamId,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.WingBack, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.WingBack, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.Winger, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.InnerMidfielder, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.InnerMidfielder, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.Winger, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: true),
+                // Subs
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: false),
+                new(Guid.NewGuid(), Position.CentralDefender, IndividualOrder.Normal, isStarter: false),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: false),
+            }
+        };
+
+        var sut = CreateSut();
+        sut.SaveLineup(lineup);
+
+        // Act
+        var result = sut.GetStarters(teamId);
+
+        // Assert
+        result.Should().HaveCount(11);
+    }
+
+    // =========================================================================
+    // GetBenchPlayers - New method to move filtering logic from component to service
+    // Architecture rule: "Blazor components have ZERO business logic"
+    // =========================================================================
+
+    [Fact]
+    public void GetBenchPlayers_WithMixedSlots_ReturnsOnlyBenchPlayers()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var lineup = new TeamLineup
+        {
+            TeamId = teamId,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: false),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: false),
+            }
+        };
+
+        var sut = CreateSut();
+        sut.SaveLineup(lineup);
+
+        // Act
+        var result = sut.GetBenchPlayers(teamId);
+
+        // Assert
+        result.Should().HaveCount(2);
+        result.Should().OnlyContain(s => !s.IsStarter);
+    }
+
+    [Fact]
+    public void GetBenchPlayers_WithNoBenchPlayers_ReturnsEmptyList()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var lineup = new TeamLineup
+        {
+            TeamId = teamId,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: true),
+            }
+        };
+
+        var sut = CreateSut();
+        sut.SaveLineup(lineup);
+
+        // Act
+        var result = sut.GetBenchPlayers(teamId);
+
+        // Assert
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GetBenchPlayers_WithOnlyBenchPlayers_ReturnsAllSlots()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var lineup = new TeamLineup
+        {
+            TeamId = teamId,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: false),
+                new(Guid.NewGuid(), Position.CentralDefender, IndividualOrder.Normal, isStarter: false),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: false),
+            }
+        };
+
+        var sut = CreateSut();
+        sut.SaveLineup(lineup);
+
+        // Act
+        var result = sut.GetBenchPlayers(teamId);
+
+        // Assert
+        result.Should().HaveCount(3);
+    }
+
+    [Fact]
+    public void GetBenchPlayers_WithEmptyLineup_ReturnsEmptyList()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var sut = CreateSut();
+        // Don't save any lineup - GetLineupForTeam will create empty one
+
+        // Act
+        var result = sut.GetBenchPlayers(teamId);
+
+        // Assert
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GetBenchPlayers_ReturnsIReadOnlyList()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var lineup = new TeamLineup
+        {
+            TeamId = teamId,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: false),
+            }
+        };
+
+        var sut = CreateSut();
+        sut.SaveLineup(lineup);
+
+        // Act
+        var result = sut.GetBenchPlayers(teamId);
+
+        // Assert
+        result.Should().BeAssignableTo<IReadOnlyList<MatchLineupSlot>>();
+    }
+
+    [Fact]
+    public void GetBenchPlayers_With3Substitutes_ReturnsAll3()
+    {
+        // Arrange - Standard 3 substitutes
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var lineup = new TeamLineup
+        {
+            TeamId = teamId,
+            Slots = new List<MatchLineupSlot>
+            {
+                // 11 starters (minimal)
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+                // 3 substitutes
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: false),
+                new(Guid.NewGuid(), Position.CentralDefender, IndividualOrder.Normal, isStarter: false),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: false),
+            }
+        };
+
+        var sut = CreateSut();
+        sut.SaveLineup(lineup);
+
+        // Act
+        var result = sut.GetBenchPlayers(teamId);
+
+        // Assert
+        result.Should().HaveCount(3);
+    }
+
+    // =========================================================================
+    // GetStarters and GetBenchPlayers - Partition property tests
+    // Verify these methods are mutually exclusive and complete
+    // =========================================================================
+
+    [Fact]
+    public void GetStarters_And_GetBenchPlayers_CoverAllSlots()
+    {
+        // Arrange - Verify that starters + bench = all slots
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var lineup = new TeamLineup
+        {
+            TeamId = teamId,
+            Slots = new List<MatchLineupSlot>
+            {
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: true),
+                new(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: false),
+                new(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: false),
+            }
+        };
+
+        var sut = CreateSut();
+        sut.SaveLineup(lineup);
+
+        // Act
+        var starters = sut.GetStarters(teamId);
+        var bench = sut.GetBenchPlayers(teamId);
+
+        // Assert - Combined count should equal total slots
+        (starters.Count + bench.Count).Should().Be(lineup.Slots.Count);
+    }
+
+    [Fact]
+    public void GetStarters_And_GetBenchPlayers_AreDisjoint()
+    {
+        // Arrange - Verify no slot appears in both starters and bench
+        var teamId = Guid.NewGuid();
+        var team = CreateTeam(teamId);
+        _teamRepository.GetById(teamId).Returns(team);
+
+        var slot1 = new MatchLineupSlot(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: true);
+        var slot2 = new MatchLineupSlot(Guid.NewGuid(), Position.CentralDefender, IndividualOrder.Normal, isStarter: true);
+        var slot3 = new MatchLineupSlot(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: false);
+        var slot4 = new MatchLineupSlot(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: false);
+
+        var lineup = new TeamLineup
+        {
+            TeamId = teamId,
+            Slots = new List<MatchLineupSlot> { slot1, slot2, slot3, slot4 }
+        };
+
+        var sut = CreateSut();
+        sut.SaveLineup(lineup);
+
+        // Act
+        var starters = sut.GetStarters(teamId);
+        var bench = sut.GetBenchPlayers(teamId);
+
+        // Assert - No overlap
+        starters.Should().NotIntersectWith(bench);
+    }
 }

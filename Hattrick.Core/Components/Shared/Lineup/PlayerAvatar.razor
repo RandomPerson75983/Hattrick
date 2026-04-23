@@ -1,0 +1,106 @@
+@namespace Hattrick.Components.Shared.Lineup
+@using Hattrick.Core.Models
+
+<div class="player-avatar @SizeClass @SelectedClass" @onclick="OnClick">
+    <div class="avatar-circle @PositionColorClass">
+        <span class="avatar-content">@AvatarContent</span>
+    </div>
+    <span class="position-badge">@PositionBadge</span>
+</div>
+
+@code {
+    [Parameter]
+    public Guid PlayerId { get; set; }
+
+    [Parameter]
+    public string Name { get; set; } = string.Empty;
+
+    [Parameter]
+    public Position Position { get; set; }
+
+    [Parameter]
+    public int? JerseyNumber { get; set; }
+
+    [Parameter]
+    public PlayerAvatarSize Size { get; set; } = PlayerAvatarSize.Medium;
+
+    [Parameter]
+    public bool IsSelected { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    private string SizeClass => Size switch
+    {
+        PlayerAvatarSize.Small => "player-avatar-small",
+        PlayerAvatarSize.Medium => "player-avatar-medium",
+        PlayerAvatarSize.Large => "player-avatar-large",
+        _ => "player-avatar-medium"
+    };
+
+    private string SelectedClass => IsSelected ? "selected" : string.Empty;
+
+    private string PositionColorClass => Position switch
+    {
+        Position.Keeper => "position-yellow",
+        Position.CentralDefender => "position-blue",
+        Position.WingBack => "position-blue",
+        Position.InnerMidfielder => "position-green",
+        Position.Winger => "position-green",
+        Position.Forward => "position-red",
+        _ => "position-blue"
+    };
+
+    private string PositionBadge => Position switch
+    {
+        Position.Keeper => "GK",
+        Position.CentralDefender => "CD",
+        Position.WingBack => "WB",
+        Position.InnerMidfielder => "IM",
+        Position.Winger => "WI",
+        Position.Forward => "FW",
+        _ => "??"
+    };
+
+    private string AvatarContent
+    {
+        get
+        {
+            if (JerseyNumber.HasValue)
+            {
+                return JerseyNumber.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            }
+
+            return GetInitials(Name);
+        }
+    }
+
+    private static string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return string.Empty;
+        }
+
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0)
+        {
+            return string.Empty;
+        }
+
+        if (parts.Length == 1)
+        {
+            // Single name - take first two characters
+            var singleName = parts[0];
+            return singleName.Length >= 2
+                ? singleName[..2].ToUpperInvariant()
+                : singleName.ToUpperInvariant();
+        }
+
+        // Multiple parts - first and last initials
+        var firstInitial = char.ToUpperInvariant(parts[0][0]);
+        var lastInitial = char.ToUpperInvariant(parts[^1][0]);
+        return $"{firstInitial}{lastInitial}";
+    }
+}

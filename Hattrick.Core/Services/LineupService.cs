@@ -101,4 +101,182 @@ public class LineupService : ILineupService
 
         return new LineupValidationResult(errors.Count == 0, errors);
     }
+
+    /// <inheritdoc />
+    public TeamLineup SuggestLineup(Guid teamId, IReadOnlyList<Player> squad)
+    {
+        ArgumentNullException.ThrowIfNull(squad);
+
+        // Step 1: Filter available players (not injured, no red card)
+        var availablePlayers = squad
+            .Where(p => p.InjuryWeeks == 0 && !p.RedCard)
+            .ToList();
+
+        // Step 2: Validate minimum player count
+        if (availablePlayers.Count < RequiredStarterCount)
+        {
+            throw new InvalidOperationException(
+                $"Cannot suggest lineup: need at least {RequiredStarterCount} available players, but only {availablePlayers.Count} are available.");
+        }
+
+        var selectedPlayers = new HashSet<Guid>();
+        var slots = new List<MatchLineupSlot>();
+
+        // Step 3: Pick 1 best keeper
+        var keeper = PickBestPlayerForPosition(
+            availablePlayers,
+            selectedPlayers,
+            Position.Keeper,
+            SkillType.Keeper,
+            count: 1);
+        slots.AddRange(keeper);
+
+        // Step 4: Pick defenders for 4-4-2
+        // 2 Central Defenders by Defending skill
+        var centralDefenders = PickBestPlayerForPosition(
+            availablePlayers,
+            selectedPlayers,
+            Position.CentralDefender,
+            SkillType.Defending,
+            count: 2);
+        slots.AddRange(centralDefenders);
+
+        // 2 Wing Backs by Defending skill
+        var wingBacks = PickBestPlayerForPosition(
+            availablePlayers,
+            selectedPlayers,
+            Position.WingBack,
+            SkillType.Defending,
+            count: 2);
+        slots.AddRange(wingBacks);
+
+        // Step 5: Pick midfielders for 4-4-2
+        // 2 Inner Midfielders by Playmaking skill
+        var innerMids = PickBestPlayerForPosition(
+            availablePlayers,
+            selectedPlayers,
+            Position.InnerMidfielder,
+            SkillType.Playmaking,
+            count: 2);
+        slots.AddRange(innerMids);
+
+        // 2 Wingers by Winger skill
+        var wingers = PickBestPlayerForPosition(
+            availablePlayers,
+            selectedPlayers,
+            Position.Winger,
+            SkillType.Winger,
+            count: 2);
+        slots.AddRange(wingers);
+
+        // Step 6: Pick 2 Forwards by Scoring skill
+        var forwards = PickBestPlayerForPosition(
+            availablePlayers,
+            selectedPlayers,
+            Position.Forward,
+            SkillType.Scoring,
+            count: 2);
+        slots.AddRange(forwards);
+
+        // Step 7: Add up to 3 substitutes from remaining players
+        var remainingPlayers = availablePlayers
+            .Where(p => !selectedPlayers.Contains(p.Id))
+            .Take(MaxSubstituteCount)
+            .ToList();
+
+        foreach (var sub in remainingPlayers)
+        {
+            slots.Add(new MatchLineupSlot(
+                sub.Id,
+                sub.BestPosition,
+                IndividualOrder.Normal,
+                isStarter: false));
+            selectedPlayers.Add(sub.Id);
+        }
+
+        // Step 8: Set Captain = starter with highest Leadership
+        var starterIds = slots.Where(s => s.IsStarter).Select(s => s.PlayerId).ToHashSet();
+        var captain = availablePlayers
+            .Where(p => starterIds.Contains(p.Id))
+            .OrderByDescending(p => p.Leadership)
+            .FirstOrDefault();
+
+        // Step 9: Build and return TeamLineup
+        return new TeamLineup
+        {
+            TeamId = teamId,
+            Formation = Formation.Formation442,
+            Tactic = Tactic.Normal,
+            Attitude = TeamAttitude.Normal,
+            Slots = slots,
+            CaptainId = captain?.Id,
+            SetPiecesTakerId = null
+        };
+    }
+
+    /// <summary>
+    /// Picks the best available players for a position based on skill, with BestPosition priority.
+    /// </summary>
+    private static List<MatchLineupSlot> PickBestPlayerForPosition(
+        List<Player> availablePlayers,
+        HashSet<Guid> selectedPlayers,
+        Position targetPosition,
+        SkillType primarySkill,
+        int count)
+    {
+        var slots = new List<MatchLineupSlot>();
+
+        // Get unselected players
+        var candidates = availablePlayers
+            .Where(p => !selectedPlayers.Contains(p.Id))
+            .ToList();
+
+        // First, try to pick players who have this as their BestPosition, sorted by skill
+        var naturalPlayers = candidates
+            .Where(p => p.BestPosition == targetPosition)
+            .OrderByDescending(p => GetSkillValue(p, primarySkill))
+            .Take(count)
+            .ToList();
+
+        foreach (var player in naturalPlayers)
+        {
+            slots.Add(new MatchLineupSlot(
+                player.Id,
+                targetPosition,
+                IndividualOrder.Normal,
+                isStarter: true));
+            selectedPlayers.Add(player.Id);
+        }
+
+        // If we still need more players, fill from remaining candidates by skill
+        var remaining = count - slots.Count;
+        if (remaining > 0)
+        {
+            var fallbackPlayers = candidates
+                .Where(p => !selectedPlayers.Contains(p.Id))
+                .OrderByDescending(p => GetSkillValue(p, primarySkill))
+                .Take(remaining)
+                .ToList();
+
+            foreach (var player in fallbackPlayers)
+            {
+                slots.Add(new MatchLineupSlot(
+                    player.Id,
+                    targetPosition,
+                    IndividualOrder.Normal,
+                    isStarter: true));
+                selectedPlayers.Add(player.Id);
+            }
+        }
+
+        return slots;
+    }
+
+    /// <summary>
+    /// Gets the skill value for a player, returning 0 if the skill is not present.
+    /// </summary>
+    private static double GetSkillValue(Player player, SkillType skillType)
+    {
+        return player.Skills.TryGetValue(skillType, out var value) ? value : 0.0;
+    }
 }

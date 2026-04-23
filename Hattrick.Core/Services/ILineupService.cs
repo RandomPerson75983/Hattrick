@@ -15,4 +15,14 @@ public interface ILineupService
     /// <param name="squad">The squad of available players.</param>
     /// <returns>Validation result with IsValid flag and list of errors.</returns>
     LineupValidationResult ValidateLineup(TeamLineup lineup, IReadOnlyList<Player> squad);
+
+    /// <summary>
+    /// Suggests an optimal lineup for a team using a 4-4-2 formation.
+    /// </summary>
+    /// <param name="teamId">The team ID for the lineup.</param>
+    /// <param name="squad">The squad of available players.</param>
+    /// <returns>A suggested TeamLineup with optimal player placements.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when squad is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when fewer than 11 available players.</exception>
+    TeamLineup SuggestLineup(Guid teamId, IReadOnlyList<Player> squad);
 }

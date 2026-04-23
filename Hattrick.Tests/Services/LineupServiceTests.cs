@@ -1121,4 +1121,854 @@ public class LineupServiceTests
             YellowCards = 0
         };
     }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SuggestLineup Tests - Phase 2 Sprint 2, Quartet 4 (AutoSuggest)
+    // ═══════════════════════════════════════════════════════════════════════════
+    //
+    // Tests for SuggestLineup(Guid teamId, IReadOnlyList<Player> squad) method.
+    //
+    // Algorithm:
+    // 1. Filter available players (InjuryWeeks=0, RedCard=false)
+    // 2. Pick 1 best keeper by Keeper skill
+    // 3. For 4-4-2: pick 4 defenders, 4 midfielders, 2 forwards based on BestPosition and skill
+    //    - 2 Central Defenders (by Defending skill)
+    //    - 2 Wing Backs (by Defending skill)
+    //    - 2 Inner Midfielders (by Playmaking skill)
+    //    - 2 Wingers (by Winger skill)
+    //    - 2 Forwards (by Scoring skill)
+    // 4. Add up to 3 best remaining players as substitutes
+    // 5. Return TeamLineup with Formation442, Tactic.Normal, TeamAttitude.Normal
+    // 6. Captain = player with highest Leadership among starters
+    // 7. All slots have IndividualOrder.Normal
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // SuggestLineup — Happy Path
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void SuggestLineup_With25PlayerSquad_Returns11StartersAnd3Substitutes()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var starters = lineup.Slots.Where(s => s.IsStarter).ToList();
+        var subs = lineup.Slots.Where(s => !s.IsStarter).ToList();
+
+        starters.Should().HaveCount(RequiredStarterCount, "must have exactly 11 starters");
+        subs.Should().HaveCount(MaxSubstituteCount, "must have exactly 3 substitutes with large squad");
+    }
+
+    [Fact]
+    public void SuggestLineup_WithValidSquad_ReturnsFormation442()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        lineup.Formation.Should().Be(Formation.Formation442);
+    }
+
+    [Fact]
+    public void SuggestLineup_WithValidSquad_ReturnsTacticNormal()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        lineup.Tactic.Should().Be(Tactic.Normal);
+    }
+
+    [Fact]
+    public void SuggestLineup_WithValidSquad_ReturnsTeamAttitudeNormal()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        lineup.Attitude.Should().Be(TeamAttitude.Normal);
+    }
+
+    [Fact]
+    public void SuggestLineup_WithValidSquad_SetsTeamId()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        lineup.TeamId.Should().Be(teamId);
+    }
+
+    [Fact]
+    public void SuggestLineup_WithValidSquad_AllSlotsHaveIndividualOrderNormal()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        lineup.Slots.Should().AllSatisfy(slot =>
+            slot.IndividualOrder.Should().Be(IndividualOrder.Normal));
+    }
+
+    [Fact]
+    public void SuggestLineup_WithValidSquad_StartersInclude1Keeper()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var keeperSlots = lineup.Slots.Where(s => s.IsStarter && s.Position == Position.Keeper);
+        keeperSlots.Should().HaveCount(1, "4-4-2 requires exactly 1 keeper");
+    }
+
+    [Fact]
+    public void SuggestLineup_WithValidSquad_StartersInclude4Defenders()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var defenderSlots = lineup.Slots.Where(s =>
+            s.IsStarter &&
+            (s.Position == Position.CentralDefender || s.Position == Position.WingBack));
+        defenderSlots.Should().HaveCount(4, "4-4-2 requires exactly 4 defenders (2 CD + 2 WB)");
+    }
+
+    [Fact]
+    public void SuggestLineup_WithValidSquad_StartersInclude4Midfielders()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var midSlots = lineup.Slots.Where(s =>
+            s.IsStarter &&
+            (s.Position == Position.InnerMidfielder || s.Position == Position.Winger));
+        midSlots.Should().HaveCount(4, "4-4-2 requires exactly 4 midfielders (2 IM + 2 W)");
+    }
+
+    [Fact]
+    public void SuggestLineup_WithValidSquad_StartersInclude2Forwards()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var forwardSlots = lineup.Slots.Where(s => s.IsStarter && s.Position == Position.Forward);
+        forwardSlots.Should().HaveCount(2, "4-4-2 requires exactly 2 forwards");
+    }
+
+    [Fact]
+    public void SuggestLineup_WithValidSquad_HasNoDuplicatePlayers()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var playerIds = lineup.Slots.Select(s => s.PlayerId).ToList();
+        playerIds.Should().OnlyHaveUniqueItems("each player should appear only once");
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // SuggestLineup — Skill-Based Selection
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void SuggestLineup_PicksHighestKeeperSkillForKeeperPosition()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 15);
+
+        // Add two keepers with known skill values
+        var bestKeeper = CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 18.0, leadership: 3);
+        var worstKeeper = CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 3);
+        squad.Add(bestKeeper);
+        squad.Add(worstKeeper);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var keeperSlot = lineup.Slots.Single(s => s.IsStarter && s.Position == Position.Keeper);
+        keeperSlot.PlayerId.Should().Be(bestKeeper.Id,
+            "keeper with highest Keeper skill (18.0) should be selected over one with (10.0)");
+    }
+
+    [Fact]
+    public void SuggestLineup_PicksHighestDefendingSkillForCentralDefenders()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        // Add keeper
+        squad.Add(CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 3));
+
+        // Add CDs with varying Defending skill - best two should be picked
+        var bestCD = CreatePlayerWithSkill(Position.CentralDefender, SkillType.Defending, 17.0, leadership: 3);
+        var goodCD = CreatePlayerWithSkill(Position.CentralDefender, SkillType.Defending, 15.0, leadership: 3);
+        var worstCD = CreatePlayerWithSkill(Position.CentralDefender, SkillType.Defending, 8.0, leadership: 3);
+        squad.Add(bestCD);
+        squad.Add(goodCD);
+        squad.Add(worstCD);
+
+        // Add other players to fill positions
+        squad.AddRange(CreatePlayersForPosition(Position.WingBack, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.InnerMidfielder, 2, SkillType.Playmaking, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Winger, 2, SkillType.Winger, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Forward, 3, SkillType.Scoring, 10.0));
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var cdSlots = lineup.Slots.Where(s => s.IsStarter && s.Position == Position.CentralDefender).ToList();
+        cdSlots.Should().HaveCount(2);
+        cdSlots.Select(s => s.PlayerId).Should().Contain(bestCD.Id, "best CD should be selected");
+        cdSlots.Select(s => s.PlayerId).Should().Contain(goodCD.Id, "second best CD should be selected");
+        cdSlots.Select(s => s.PlayerId).Should().NotContain(worstCD.Id, "worst CD should NOT be selected");
+    }
+
+    [Fact]
+    public void SuggestLineup_PicksHighestPlaymakingSkillForInnerMidfielders()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        // Add keeper and defenders
+        squad.Add(CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 3));
+        squad.AddRange(CreatePlayersForPosition(Position.CentralDefender, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.WingBack, 2, SkillType.Defending, 10.0));
+
+        // Add IMs with varying Playmaking skill
+        var bestIM = CreatePlayerWithSkill(Position.InnerMidfielder, SkillType.Playmaking, 16.0, leadership: 3);
+        var goodIM = CreatePlayerWithSkill(Position.InnerMidfielder, SkillType.Playmaking, 14.0, leadership: 3);
+        var worstIM = CreatePlayerWithSkill(Position.InnerMidfielder, SkillType.Playmaking, 7.0, leadership: 3);
+        squad.Add(bestIM);
+        squad.Add(goodIM);
+        squad.Add(worstIM);
+
+        // Add other players
+        squad.AddRange(CreatePlayersForPosition(Position.Winger, 2, SkillType.Winger, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Forward, 3, SkillType.Scoring, 10.0));
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var imSlots = lineup.Slots.Where(s => s.IsStarter && s.Position == Position.InnerMidfielder).ToList();
+        imSlots.Should().HaveCount(2);
+        imSlots.Select(s => s.PlayerId).Should().Contain(bestIM.Id);
+        imSlots.Select(s => s.PlayerId).Should().Contain(goodIM.Id);
+        imSlots.Select(s => s.PlayerId).Should().NotContain(worstIM.Id);
+    }
+
+    [Fact]
+    public void SuggestLineup_PicksHighestWingerSkillForWingers()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        // Add keeper, defenders, IMs
+        squad.Add(CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 3));
+        squad.AddRange(CreatePlayersForPosition(Position.CentralDefender, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.WingBack, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.InnerMidfielder, 2, SkillType.Playmaking, 10.0));
+
+        // Add wingers with varying Winger skill
+        var bestWinger = CreatePlayerWithSkill(Position.Winger, SkillType.Winger, 15.0, leadership: 3);
+        var goodWinger = CreatePlayerWithSkill(Position.Winger, SkillType.Winger, 13.0, leadership: 3);
+        var worstWinger = CreatePlayerWithSkill(Position.Winger, SkillType.Winger, 6.0, leadership: 3);
+        squad.Add(bestWinger);
+        squad.Add(goodWinger);
+        squad.Add(worstWinger);
+
+        // Add forwards
+        squad.AddRange(CreatePlayersForPosition(Position.Forward, 3, SkillType.Scoring, 10.0));
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var wingerSlots = lineup.Slots.Where(s => s.IsStarter && s.Position == Position.Winger).ToList();
+        wingerSlots.Should().HaveCount(2);
+        wingerSlots.Select(s => s.PlayerId).Should().Contain(bestWinger.Id);
+        wingerSlots.Select(s => s.PlayerId).Should().Contain(goodWinger.Id);
+        wingerSlots.Select(s => s.PlayerId).Should().NotContain(worstWinger.Id);
+    }
+
+    [Fact]
+    public void SuggestLineup_PicksHighestScoringSkillForForwards()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        // Add keeper, defenders, midfielders
+        squad.Add(CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 3));
+        squad.AddRange(CreatePlayersForPosition(Position.CentralDefender, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.WingBack, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.InnerMidfielder, 2, SkillType.Playmaking, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Winger, 2, SkillType.Winger, 10.0));
+
+        // Add forwards with varying Scoring skill
+        var bestFwd = CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 18.0, leadership: 3);
+        var goodFwd = CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 14.0, leadership: 3);
+        var worstFwd = CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 5.0, leadership: 3);
+        squad.Add(bestFwd);
+        squad.Add(goodFwd);
+        squad.Add(worstFwd);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var fwdSlots = lineup.Slots.Where(s => s.IsStarter && s.Position == Position.Forward).ToList();
+        fwdSlots.Should().HaveCount(2);
+        fwdSlots.Select(s => s.PlayerId).Should().Contain(bestFwd.Id);
+        fwdSlots.Select(s => s.PlayerId).Should().Contain(goodFwd.Id);
+        fwdSlots.Select(s => s.PlayerId).Should().NotContain(worstFwd.Id);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // SuggestLineup — Excludes Injured/Red-Carded Players
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void SuggestLineup_ExcludesInjuredPlayers()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        // Best keeper is injured
+        var injuredKeeper = CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 20.0, leadership: 3);
+        injuredKeeper.InjuryWeeks = 2;
+
+        var healthyKeeper = CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 3);
+        squad.Add(injuredKeeper);
+        squad.Add(healthyKeeper);
+
+        // Add other players
+        squad.AddRange(CreatePlayersForPosition(Position.CentralDefender, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.WingBack, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.InnerMidfielder, 2, SkillType.Playmaking, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Winger, 2, SkillType.Winger, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Forward, 3, SkillType.Scoring, 10.0));
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var allPlayerIds = lineup.Slots.Select(s => s.PlayerId).ToList();
+        allPlayerIds.Should().NotContain(injuredKeeper.Id, "injured player should be excluded");
+        allPlayerIds.Should().Contain(healthyKeeper.Id, "healthy player should be selected instead");
+    }
+
+    [Fact]
+    public void SuggestLineup_ExcludesRedCardedPlayers()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        // Best forward is red-carded
+        var redCardedFwd = CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 20.0, leadership: 3);
+        redCardedFwd.RedCard = true;
+
+        var healthyFwd1 = CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 12.0, leadership: 3);
+        var healthyFwd2 = CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 10.0, leadership: 3);
+
+        squad.Add(redCardedFwd);
+        squad.Add(healthyFwd1);
+        squad.Add(healthyFwd2);
+
+        // Add other players
+        squad.Add(CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 3));
+        squad.AddRange(CreatePlayersForPosition(Position.CentralDefender, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.WingBack, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.InnerMidfielder, 2, SkillType.Playmaking, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Winger, 2, SkillType.Winger, 10.0));
+        squad.Add(CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 8.0, leadership: 3)); // Extra for subs
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var allPlayerIds = lineup.Slots.Select(s => s.PlayerId).ToList();
+        allPlayerIds.Should().NotContain(redCardedFwd.Id, "red-carded player should be excluded");
+    }
+
+    [Fact]
+    public void SuggestLineup_ExcludesBothInjuredAndRedCarded()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        // Create unavailable players
+        var injuredCD = CreatePlayerWithSkill(Position.CentralDefender, SkillType.Defending, 20.0, leadership: 3);
+        injuredCD.InjuryWeeks = 3;
+
+        var redCardedWinger = CreatePlayerWithSkill(Position.Winger, SkillType.Winger, 19.0, leadership: 3);
+        redCardedWinger.RedCard = true;
+
+        squad.Add(injuredCD);
+        squad.Add(redCardedWinger);
+
+        // Add available players
+        squad.Add(CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 3));
+        squad.AddRange(CreatePlayersForPosition(Position.CentralDefender, 3, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.WingBack, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.InnerMidfielder, 2, SkillType.Playmaking, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Winger, 3, SkillType.Winger, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Forward, 3, SkillType.Scoring, 10.0));
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var allPlayerIds = lineup.Slots.Select(s => s.PlayerId).ToList();
+        allPlayerIds.Should().NotContain(injuredCD.Id);
+        allPlayerIds.Should().NotContain(redCardedWinger.Id);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // SuggestLineup — Captain Selection (Highest Leadership)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void SuggestLineup_SelectsCaptainWithHighestLeadership()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        // Add keeper with low leadership
+        var keeper = CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 12.0, leadership: 3);
+        squad.Add(keeper);
+
+        // Add CD with highest leadership - should be captain
+        var leaderCD = CreatePlayerWithSkill(Position.CentralDefender, SkillType.Defending, 14.0, leadership: 8);
+        squad.Add(leaderCD);
+
+        // Add other players with lower leadership
+        squad.Add(CreatePlayerWithSkill(Position.CentralDefender, SkillType.Defending, 12.0, leadership: 5));
+        squad.AddRange(CreatePlayersForPosition(Position.WingBack, 2, SkillType.Defending, 10.0, leadership: 4));
+        squad.AddRange(CreatePlayersForPosition(Position.InnerMidfielder, 2, SkillType.Playmaking, 10.0, leadership: 4));
+        squad.AddRange(CreatePlayersForPosition(Position.Winger, 2, SkillType.Winger, 10.0, leadership: 4));
+        squad.AddRange(CreatePlayersForPosition(Position.Forward, 3, SkillType.Scoring, 10.0, leadership: 4));
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        lineup.CaptainId.Should().Be(leaderCD.Id,
+            "player with highest Leadership (8) should be captain");
+    }
+
+    [Fact]
+    public void SuggestLineup_CaptainMustBeInStartingLineup()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 20);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        lineup.CaptainId.Should().NotBeNull();
+        var starterIds = lineup.Slots.Where(s => s.IsStarter).Select(s => s.PlayerId).ToList();
+        starterIds.Should().Contain(lineup.CaptainId.Value,
+            "captain must be among the starting 11");
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // SuggestLineup — Edge Cases
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void SuggestLineup_WithExactly11AvailablePlayers_Returns11StartersAnd0Substitutes()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>
+        {
+            CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 5),
+            CreatePlayerWithSkill(Position.CentralDefender, SkillType.Defending, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.CentralDefender, SkillType.Defending, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.WingBack, SkillType.Defending, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.WingBack, SkillType.Defending, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.InnerMidfielder, SkillType.Playmaking, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.InnerMidfielder, SkillType.Playmaking, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Winger, SkillType.Winger, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Winger, SkillType.Winger, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 10.0, leadership: 3)
+        };
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        lineup.Slots.Where(s => s.IsStarter).Should().HaveCount(RequiredStarterCount);
+        lineup.Slots.Where(s => !s.IsStarter).Should().BeEmpty("no players left for substitutes");
+    }
+
+    [Fact]
+    public void SuggestLineup_WithExactly12Players_Returns11StartersAnd1Substitute()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>
+        {
+            CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 5),
+            CreatePlayerWithSkill(Position.CentralDefender, SkillType.Defending, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.CentralDefender, SkillType.Defending, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.WingBack, SkillType.Defending, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.WingBack, SkillType.Defending, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.InnerMidfielder, SkillType.Playmaking, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.InnerMidfielder, SkillType.Playmaking, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Winger, SkillType.Winger, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Winger, SkillType.Winger, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 8.0, leadership: 3) // Extra = sub
+        };
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        lineup.Slots.Where(s => s.IsStarter).Should().HaveCount(RequiredStarterCount);
+        lineup.Slots.Where(s => !s.IsStarter).Should().HaveCount(1, "1 player left for substitute");
+    }
+
+    [Fact]
+    public void SuggestLineup_WithFewerThan11AvailablePlayers_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>
+        {
+            CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 5),
+            CreatePlayerWithSkill(Position.CentralDefender, SkillType.Defending, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 10.0, leadership: 3)
+            // Only 3 players - not enough for 11
+        };
+
+        // Act
+        var act = () => _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("*11*", "should indicate minimum 11 players needed");
+    }
+
+    [Fact]
+    public void SuggestLineup_WithNoKeeper_FallsBackToOtherPlayer()
+    {
+        // Arrange: Squad has no keeper, must pick someone else for that slot
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        // No keepers - all field players
+        squad.AddRange(CreatePlayersForPosition(Position.CentralDefender, 3, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.WingBack, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.InnerMidfielder, 3, SkillType.Playmaking, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Winger, 2, SkillType.Winger, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Forward, 3, SkillType.Scoring, 10.0));
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert: Should still produce a lineup with someone in keeper slot
+        var keeperSlot = lineup.Slots.SingleOrDefault(s => s.IsStarter && s.Position == Position.Keeper);
+        keeperSlot.Should().NotBeNull("a keeper slot must be filled even without natural keepers");
+        lineup.Slots.Where(s => s.IsStarter).Should().HaveCount(RequiredStarterCount);
+    }
+
+    [Fact]
+    public void SuggestLineup_WithNullSquad_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+
+        // Act
+        var act = () => _sut.SuggestLineup(teamId, null!);
+
+        // Assert
+        act.Should().Throw<ArgumentNullException>()
+            .Which.ParamName.Should().Be("squad");
+    }
+
+    [Fact]
+    public void SuggestLineup_WithEmptySquad_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        // Act
+        var act = () => _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // SuggestLineup — Fallback Behavior (Not Enough Position-Specific Players)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void SuggestLineup_WithOnly1CentralDefender_FillsOtherDefenderFromAvailable()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>
+        {
+            CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 5),
+            // Only 1 natural CD
+            CreatePlayerWithSkill(Position.CentralDefender, SkillType.Defending, 12.0, leadership: 3),
+            // 2 WBs - expected
+            CreatePlayerWithSkill(Position.WingBack, SkillType.Defending, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.WingBack, SkillType.Defending, 10.0, leadership: 3),
+            // Extra players with Defending skill that can fill CD
+            CreatePlayerWithSkill(Position.InnerMidfielder, SkillType.Playmaking, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.InnerMidfielder, SkillType.Playmaking, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Winger, SkillType.Winger, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Winger, SkillType.Winger, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 10.0, leadership: 3),
+            CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 8.0, leadership: 3) // Extra for fallback
+        };
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert: Should still have 2 CD slots filled
+        var cdSlots = lineup.Slots.Where(s => s.IsStarter && s.Position == Position.CentralDefender);
+        cdSlots.Should().HaveCount(2, "2 CD positions must be filled even if not all are natural CDs");
+        lineup.Slots.Where(s => s.IsStarter).Should().HaveCount(RequiredStarterCount);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // SuggestLineup — Adversarial / Over-Correction Tests
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void SuggestLineup_DoesNotModifyInputSquad()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 20);
+        var originalCount = squad.Count;
+        var originalIds = squad.Select(p => p.Id).ToList();
+        var originalInjuryWeeks = squad.Select(p => p.InjuryWeeks).ToList();
+
+        // Act
+        _sut.SuggestLineup(teamId, squad);
+
+        // Assert: Squad should be unchanged
+        squad.Should().HaveCount(originalCount);
+        squad.Select(p => p.Id).Should().BeEquivalentTo(originalIds);
+        squad.Select(p => p.InjuryWeeks).Should().BeEquivalentTo(originalInjuryWeeks);
+    }
+
+    [Fact]
+    public void SuggestLineup_ReturnedLineupPassesValidation()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert: The suggested lineup should be valid according to ValidateLineup
+        var validationResult = _sut.ValidateLineup(lineup, squad);
+        validationResult.IsValid.Should().BeTrue(
+            "auto-suggested lineup should pass all validation rules. Errors: {0}",
+            string.Join(", ", validationResult.Errors));
+    }
+
+    [Fact]
+    public void SuggestLineup_YellowCardsDoNotExcludePlayers()
+    {
+        // Arrange: Player with 2 yellow cards should still be available
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        var yellowCardedFwd = CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 18.0, leadership: 5);
+        yellowCardedFwd.YellowCards = 2;
+        yellowCardedFwd.RedCard = false;
+
+        squad.Add(yellowCardedFwd);
+        squad.Add(CreatePlayerWithSkill(Position.Keeper, SkillType.Keeper, 10.0, leadership: 3));
+        squad.AddRange(CreatePlayersForPosition(Position.CentralDefender, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.WingBack, 2, SkillType.Defending, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.InnerMidfielder, 2, SkillType.Playmaking, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Winger, 2, SkillType.Winger, 10.0));
+        squad.AddRange(CreatePlayersForPosition(Position.Forward, 2, SkillType.Scoring, 10.0));
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert: Player with yellow cards should be included (best forward)
+        var forwardSlots = lineup.Slots.Where(s => s.IsStarter && s.Position == Position.Forward);
+        forwardSlots.Select(s => s.PlayerId).Should().Contain(yellowCardedFwd.Id,
+            "yellow cards do not prevent selection, only red cards");
+    }
+
+    [Fact]
+    public void SuggestLineup_SubstitutesAreNotStarters()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 20);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var subs = lineup.Slots.Where(s => !s.IsStarter).ToList();
+        var starterIds = lineup.Slots.Where(s => s.IsStarter).Select(s => s.PlayerId).ToHashSet();
+
+        subs.Should().AllSatisfy(sub =>
+            starterIds.Should().NotContain(sub.PlayerId, "substitute should not also be a starter"));
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // SuggestLineup — Helper Methods
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Creates a full squad with a mix of positions suitable for SuggestLineup tests.
+    /// </summary>
+    private static List<Player> CreateFullSquad(int playerCount)
+    {
+        var squad = new List<Player>();
+        var positions = new[]
+        {
+            (Position.Keeper, SkillType.Keeper, 2),
+            (Position.CentralDefender, SkillType.Defending, 4),
+            (Position.WingBack, SkillType.Defending, 3),
+            (Position.InnerMidfielder, SkillType.Playmaking, 4),
+            (Position.Winger, SkillType.Winger, 3),
+            (Position.Forward, SkillType.Scoring, 4)
+        };
+
+        var leadershipCounter = 1;
+        foreach (var (position, skillType, count) in positions)
+        {
+            for (var i = 0; i < count && squad.Count < playerCount; i++)
+            {
+                squad.Add(CreatePlayerWithSkill(position, skillType, 8.0 + (i * 0.5), leadershipCounter++));
+            }
+        }
+
+        // Fill remaining with forwards
+        while (squad.Count < playerCount)
+        {
+            squad.Add(CreatePlayerWithSkill(Position.Forward, SkillType.Scoring, 6.0, leadershipCounter++));
+        }
+
+        return squad;
+    }
+
+    /// <summary>
+    /// Creates a player with a specific skill value for testing skill-based selection.
+    /// </summary>
+    private static Player CreatePlayerWithSkill(Position position, SkillType primarySkill, double skillValue, int leadership)
+    {
+        var player = new Player
+        {
+            Id = Guid.NewGuid(),
+            Name = $"Test Player {Guid.NewGuid():N}",
+            Age = 25,
+            Form = 7,
+            Stamina = 7,
+            Experience = 3,
+            BestPosition = position,
+            InjuryWeeks = 0,
+            RedCard = false,
+            YellowCards = 0,
+            Leadership = leadership,
+            Skills = new Dictionary<SkillType, double>
+            {
+                { SkillType.Keeper, primarySkill == SkillType.Keeper ? skillValue : 1.0 },
+                { SkillType.Defending, primarySkill == SkillType.Defending ? skillValue : 1.0 },
+                { SkillType.Playmaking, primarySkill == SkillType.Playmaking ? skillValue : 1.0 },
+                { SkillType.Winger, primarySkill == SkillType.Winger ? skillValue : 1.0 },
+                { SkillType.Passing, 1.0 },
+                { SkillType.Scoring, primarySkill == SkillType.Scoring ? skillValue : 1.0 },
+                { SkillType.SetPieces, 1.0 },
+                { SkillType.Stamina, 7.0 }
+            }
+        };
+        return player;
+    }
+
+    /// <summary>
+    /// Creates multiple players for a specific position.
+    /// </summary>
+    private static List<Player> CreatePlayersForPosition(Position position, int count, SkillType primarySkill, double skillValue, int leadership = 3)
+    {
+        var players = new List<Player>();
+        for (var i = 0; i < count; i++)
+        {
+            players.Add(CreatePlayerWithSkill(position, primarySkill, skillValue, leadership));
+        }
+        return players;
+    }
 }

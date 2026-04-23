@@ -1,15 +1,15 @@
 # Hattrick Clone - Project Status
 
-**Date:** April 9, 2026
-**Current Phase:** 1 (Core Data Models + Lineup Management) — SPRINT 4 COMPLETE ✅
-**Overall Progress:** 25% (Phase 1 Sprint 4 done)
+**Date:** April 22, 2026
+**Current Phase:** 2 (Team Creation & Lineup Management) — SPRINT 1 COMPLETE ✅
+**Overall Progress:** 30% (Phase 2 Sprint 1 done)
 
 ## Project Stats
 
 - **Solution:** Hattrick.slnx with 3 projects
-- **Tests:** 570 passing (Phase 0 infrastructure + Phase 1 enums + Phase 1 models/repos + Phase 1 player list UI)
+- **Tests:** 736 passing (Phase 0-1 + Phase 2 Sprint 1 team/player generation)
 - **Compilation:** OK
-- **App Runs:** Yes (navigable shell with 8 placeholder pages)
+- **App Runs:** Yes (Players page shows generated team with 25 players)
 
 ## Phase 0 - COMPLETE ✅
 
@@ -114,12 +114,50 @@ All foundation infrastructure complete:
 
 **Sprint 4 Summary:** 2 quartets, 155 new tests, 570 total passing
 
+## Phase 2 - Sprint 1 COMPLETE ✅
+
+### Team & Player Generation (4 Quartets)
+
+**Quartet 1: PlayerGenerationService** ✅
+- IPlayerGenerationService + PlayerGenerationService: Generate players with position-appropriate skills
+- Age 17-32, Form 5-8, Stamina 5-8, Experience 1-5
+- Position-specific skill distributions (Keeper high GK, Forward high Scoring, etc.)
+- Uses IRandomProvider for all randomness
+- Tests: 58 passing
+
+**Quartet 2: TeamGenerationService** ✅
+- ITeamGenerationService + TeamGenerationService: Generate team with 25 players
+- Distribution: 3 GK, 6 DEF (4 CD + 2 WB), 8 MID (4 IM + 4 W), 8 FWD
+- Returns (Team, IReadOnlyList<Player>) tuple
+- Defaults: Budget 10M, TeamSpirit 5, Confidence 5, CoachLevel 5
+- Tests: 46 passing
+
+**Quartet 3: DevSeedService** ✅
+- IDevSeedService + DevSeedService: Seeds development data on startup
+- Creates human-controlled team "FC Development" with 25 players
+- Idempotent (skips if HumanPlayerTeamId already set)
+- Wired into MauiProgram.cs
+- Tests: 32 passing
+
+**Quartet 4: PlayersPageService + Players.razor Integration** ✅
+- IPlayersPageService + PlayersPageService: Mediates between component and repositories
+- Players.razor now uses service (not repository directly) per architecture rules
+- Fixed Guid.Empty issue from Phase 1 code review
+- Tests: 14 passing
+
+**Phase 2 Sprint 1 Summary:** 4 quartets, 166 new tests, 736 total passing
+**Gameplay:** App now displays real player data on Players page
+
 ## Upcoming Work
 
-### Phase 2 (Pending)
-- Match Engine
+### Phase 2 Sprint 2 (Next)
+- Lineup Models (MatchLineupSlot, TeamLineup)
+- ILineupService (validation, auto-suggest)
 
 ### Phase 3 (Pending)
+- Match Engine
+
+### Phase 4 (Pending)
 - Season & League + Friendlies
 
 ## Key Implementation Notes

@@ -38,6 +38,7 @@ public static class ServiceCollectionExtensions
 
         // Page services
         services.AddSingleton<IPlayersPageService, PlayersPageService>();
+        services.AddSingleton<ILineupPageService, LineupPageService>();
 
         // Generation services
         services.AddSingleton<IPlayerGenerationService, PlayerGenerationService>();

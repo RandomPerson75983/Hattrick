@@ -153,10 +153,26 @@ public class ServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void AddHattrickCoreServices_Registers15Services()
+    public void AddHattrickCoreServices_RegistersLineupService()
+    {
+        var service = _serviceProvider.GetService<ILineupService>();
+        service.Should().NotBeNull();
+        service.Should().BeOfType<LineupService>();
+    }
+
+    [Fact]
+    public void AddHattrickCoreServices_RegistersLineupPageService()
+    {
+        var service = _serviceProvider.GetService<ILineupPageService>();
+        service.Should().NotBeNull();
+        service.Should().BeOfType<LineupPageService>();
+    }
+
+    [Fact]
+    public void AddHattrickCoreServices_Registers16Services()
     {
         var services = new ServiceCollection();
         services.AddHattrickCoreServices();
-        services.Should().HaveCount(15);
+        services.Should().HaveCount(16);
     }
 }

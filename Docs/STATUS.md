@@ -7,7 +7,7 @@
 ## Project Stats
 
 - **Solution:** Hattrick.slnx with 3 projects
-- **Tests:** 1191 passing (Phase 0-1 + Phase 2 Sprint 1-3)
+- **Tests:** 1224 passing (Phase 0-1 + Phase 2 Sprint 1-3 + code review fixes)
 - **Compilation:** OK
 - **App Runs:** Yes (Players page shows generated team with 25 players)
 

@@ -445,8 +445,10 @@ public class FormationPitchTests : BunitContext
         var playerSlots = cut.FindAll(".player-slot");
         playerSlots[0].Click();
 
-        // Assert
+        // Assert - Verify callback fired with a valid starter slot
         clickedSlot.Should().NotBeNull();
+        clickedSlot!.IsStarter.Should().BeTrue();
+        lineup.Should().Contain(clickedSlot);
     }
 
     [Fact]
@@ -489,8 +491,9 @@ public class FormationPitchTests : BunitContext
         playerSlots[5].Click();
         playerSlots[10].Click();
 
-        // Assert
+        // Assert - Verify three distinct slots were returned
         clickedSlots.Should().HaveCount(3);
+        clickedSlots.Select(s => s.PlayerId).Distinct().Should().HaveCount(3);
     }
 
     // ─────────────────────────────────────────────────────────────────────────

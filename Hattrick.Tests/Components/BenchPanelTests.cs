@@ -219,8 +219,10 @@ public class BenchPanelTests : BunitContext
         var benchPlayers = cut.FindAll(".bench-player");
         benchPlayers[0].Click();
 
-        // Assert
+        // Assert - Verify callback fired with correct slot data
         clickedSlot.Should().NotBeNull();
+        clickedSlot!.PlayerId.Should().Be(bench[0].PlayerId);
+        clickedSlot.Position.Should().Be(bench[0].Position);
     }
 
     [Fact]

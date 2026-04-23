@@ -102,9 +102,10 @@ public class LineupPageServiceTests
         // Act
         var result = sut.GetLineupForTeam(teamId);
 
-        // Assert
+        // Assert - Verify initial lineup state
         result.Should().NotBeNull();
         result.TeamId.Should().Be(teamId);
+        result.Slots.Should().BeEmpty();
     }
 
     [Fact]
@@ -134,8 +135,8 @@ public class LineupPageServiceTests
         var result1 = sut.GetLineupForTeam(teamId);
         var result2 = sut.GetLineupForTeam(teamId);
 
-        // Assert - both calls should return equivalent lineups
-        result1.TeamId.Should().Be(result2.TeamId);
+        // Assert - both calls should return the same instance
+        ReferenceEquals(result1, result2).Should().BeTrue();
     }
 
     // =========================================================================

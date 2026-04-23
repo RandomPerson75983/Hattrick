@@ -35,7 +35,6 @@ public class LineupPageTests : BunitContext
 {
     // Tab index constants (mirrors TabNavigation)
     private const int TabLoad = 0;
-    private const int TabLineup = 1;
     private const int TabTeamOrders = 2;
     private const int TabPenaltyTakers = 3;
     private const int TabReview = 4;

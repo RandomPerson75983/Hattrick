@@ -53,9 +53,7 @@ public sealed class LineupPageService : ILineupPageService
         var players = _playerRepository.GetByTeamId(teamId);
 
         return players
-            .Where(p => p.InjuryWeeks == 0)
-            .Where(p => !p.RedCard)
-            .Where(p => p.YellowCards < YellowCardSuspensionThreshold)
+            .Where(p => p.InjuryWeeks == 0 && !p.RedCard && p.YellowCards < YellowCardSuspensionThreshold)
             .ToList()
             .AsReadOnly();
     }

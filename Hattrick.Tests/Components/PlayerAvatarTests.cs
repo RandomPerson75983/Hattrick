@@ -28,8 +28,6 @@ public class PlayerAvatarTests : BunitContext
     private static readonly Guid DefaultPlayerId = Guid.Parse("11111111-1111-1111-1111-111111111111");
     private const string DefaultPlayerName = "Max Schmidt";
     private const Position DefaultPosition = Position.Forward;
-    private const int DefaultJerseyNumber = 9;
-    private const PlayerAvatarSize DefaultSize = PlayerAvatarSize.Medium;
 
     // ─────────────────────────────────────────────────────────────────────────
     // Container rendering
@@ -562,8 +560,10 @@ public class PlayerAvatarTests : BunitContext
             .Add(p => p.Name, "")
             .Add(p => p.Position, DefaultPosition));
 
-        // Assert - Should handle empty name gracefully
-        cut.Find(".avatar-content").Should().NotBeNull();
+        // Assert - Should handle empty name gracefully with empty initials
+        var content = cut.Find(".avatar-content");
+        content.Should().NotBeNull();
+        content.TextContent.Should().BeEmpty();
     }
 
     [Fact]

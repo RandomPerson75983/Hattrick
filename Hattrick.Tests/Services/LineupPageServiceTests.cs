@@ -14,8 +14,6 @@ namespace Hattrick.Tests.Services;
 /// Dependencies:
 ///   - ILineupService: for validating and suggesting lineups
 ///   - IPlayerRepository: for getting players by team ID
-///   - ITeamRepository: for verifying team existence
-///   - IGameStateService: for getting HumanPlayerTeamId
 ///
 /// Key behaviors:
 ///   - GetAvailablePlayers excludes injured (InjuryWeeks > 0) and suspended players
@@ -26,8 +24,6 @@ public class LineupPageServiceTests
 {
     private readonly ILineupService _lineupService;
     private readonly IPlayerRepository _playerRepository;
-    private readonly ITeamRepository _teamRepository;
-    private readonly IGameStateService _gameStateService;
 
     // Test fixture constants
     private const int TestPlayerAge = 25;
@@ -39,12 +35,10 @@ public class LineupPageServiceTests
     {
         _lineupService = Substitute.For<ILineupService>();
         _playerRepository = Substitute.For<IPlayerRepository>();
-        _teamRepository = Substitute.For<ITeamRepository>();
-        _gameStateService = Substitute.For<IGameStateService>();
     }
 
     private ILineupPageService CreateSut() =>
-        new LineupPageService(_lineupService, _playerRepository, _teamRepository, _gameStateService);
+        new LineupPageService(_lineupService, _playerRepository);
 
     // -------------------------------------------------------------------------
     // Helper: Create a minimal player for testing
@@ -71,14 +65,6 @@ public class LineupPageServiceTests
         };
     }
 
-    private static Team CreateTeam(Guid? id = null, string name = "Test Team")
-    {
-        return new Team
-        {
-            Id = id ?? Guid.NewGuid(),
-            Name = name,
-        };
-    }
 
     // =========================================================================
     // Constructor null checks
@@ -87,7 +73,7 @@ public class LineupPageServiceTests
     [Fact]
     public void Constructor_WithNullLineupService_ThrowsArgumentNullException()
     {
-        var act = () => new LineupPageService(null!, _playerRepository, _teamRepository, _gameStateService);
+        var act = () => new LineupPageService(null!, _playerRepository);
 
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("lineupService");
@@ -96,28 +82,10 @@ public class LineupPageServiceTests
     [Fact]
     public void Constructor_WithNullPlayerRepository_ThrowsArgumentNullException()
     {
-        var act = () => new LineupPageService(_lineupService, null!, _teamRepository, _gameStateService);
+        var act = () => new LineupPageService(_lineupService, null!);
 
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("playerRepository");
-    }
-
-    [Fact]
-    public void Constructor_WithNullTeamRepository_ThrowsArgumentNullException()
-    {
-        var act = () => new LineupPageService(_lineupService, _playerRepository, null!, _gameStateService);
-
-        act.Should().Throw<ArgumentNullException>()
-            .WithParameterName("teamRepository");
-    }
-
-    [Fact]
-    public void Constructor_WithNullGameStateService_ThrowsArgumentNullException()
-    {
-        var act = () => new LineupPageService(_lineupService, _playerRepository, _teamRepository, null!);
-
-        act.Should().Throw<ArgumentNullException>()
-            .WithParameterName("gameStateService");
     }
 
     // =========================================================================
@@ -129,9 +97,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var sut = CreateSut();
 
         // Act
@@ -147,8 +112,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        _teamRepository.GetById(teamId).Returns((Team?)null);
-
         var sut = CreateSut();
 
         // Act
@@ -165,9 +128,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var sut = CreateSut();
 
         // Act
@@ -541,9 +501,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var lineup = new TeamLineup
         {
             TeamId = teamId,
@@ -568,10 +525,6 @@ public class LineupPageServiceTests
         // Arrange
         var teamId1 = Guid.NewGuid();
         var teamId2 = Guid.NewGuid();
-        var team1 = CreateTeam(teamId1);
-        var team2 = CreateTeam(teamId2);
-        _teamRepository.GetById(teamId1).Returns(team1);
-        _teamRepository.GetById(teamId2).Returns(team2);
 
         var lineup1 = new TeamLineup { TeamId = teamId1, Formation = Formation.Formation442 };
         var lineup2 = new TeamLineup { TeamId = teamId2, Formation = Formation.Formation352 };
@@ -747,9 +700,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var lineup = new TeamLineup
         {
             TeamId = teamId,
@@ -779,9 +729,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var lineup = new TeamLineup
         {
             TeamId = teamId,
@@ -807,9 +754,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var lineup = new TeamLineup
         {
             TeamId = teamId,
@@ -836,9 +780,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var sut = CreateSut();
         // Don't save any lineup - GetLineupForTeam will create empty one
 
@@ -854,9 +795,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var lineup = new TeamLineup
         {
             TeamId = teamId,
@@ -881,9 +819,6 @@ public class LineupPageServiceTests
     {
         // Arrange - Full 4-4-2 lineup
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var lineup = new TeamLineup
         {
             TeamId = teamId,
@@ -927,9 +862,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var lineup = new TeamLineup
         {
             TeamId = teamId,
@@ -959,9 +891,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var lineup = new TeamLineup
         {
             TeamId = teamId,
@@ -987,9 +916,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var lineup = new TeamLineup
         {
             TeamId = teamId,
@@ -1016,9 +942,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var sut = CreateSut();
         // Don't save any lineup - GetLineupForTeam will create empty one
 
@@ -1034,9 +957,6 @@ public class LineupPageServiceTests
     {
         // Arrange
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var lineup = new TeamLineup
         {
             TeamId = teamId,
@@ -1061,9 +981,6 @@ public class LineupPageServiceTests
     {
         // Arrange - Standard 3 substitutes
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var lineup = new TeamLineup
         {
             TeamId = teamId,
@@ -1099,9 +1016,6 @@ public class LineupPageServiceTests
     {
         // Arrange - Verify that starters + bench = all slots
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var lineup = new TeamLineup
         {
             TeamId = teamId,
@@ -1131,9 +1045,6 @@ public class LineupPageServiceTests
     {
         // Arrange - Verify no slot appears in both starters and bench
         var teamId = Guid.NewGuid();
-        var team = CreateTeam(teamId);
-        _teamRepository.GetById(teamId).Returns(team);
-
         var slot1 = new MatchLineupSlot(Guid.NewGuid(), Position.Keeper, IndividualOrder.Normal, isStarter: true);
         var slot2 = new MatchLineupSlot(Guid.NewGuid(), Position.CentralDefender, IndividualOrder.Normal, isStarter: true);
         var slot3 = new MatchLineupSlot(Guid.NewGuid(), Position.Forward, IndividualOrder.Normal, isStarter: false);
@@ -1154,5 +1065,276 @@ public class LineupPageServiceTests
 
         // Assert - No overlap
         starters.Should().NotIntersectWith(bench);
+    }
+
+    // =========================================================================
+    // Guard clause tests - Guid.Empty validation
+    // Methods should throw ArgumentException for Guid.Empty teamId
+    // =========================================================================
+
+    [Fact]
+    public void GetLineupForTeam_WithEmptyGuid_ThrowsArgumentException()
+    {
+        // Arrange
+        var sut = CreateSut();
+
+        // Act
+        var act = () => sut.GetLineupForTeam(Guid.Empty);
+
+        // Assert
+        act.Should().Throw<ArgumentException>()
+            .WithParameterName("teamId")
+            .WithMessage("*cannot be empty*");
+    }
+
+    [Fact]
+    public void GetAvailablePlayers_WithEmptyGuid_ThrowsArgumentException()
+    {
+        // Arrange
+        var sut = CreateSut();
+
+        // Act
+        var act = () => sut.GetAvailablePlayers(Guid.Empty);
+
+        // Assert
+        act.Should().Throw<ArgumentException>()
+            .WithParameterName("teamId")
+            .WithMessage("*cannot be empty*");
+    }
+
+    [Fact]
+    public void SuggestLineup_WithEmptyGuid_ThrowsArgumentException()
+    {
+        // Arrange
+        var sut = CreateSut();
+
+        // Act
+        var act = () => sut.SuggestLineup(Guid.Empty);
+
+        // Assert
+        act.Should().Throw<ArgumentException>()
+            .WithParameterName("teamId")
+            .WithMessage("*cannot be empty*");
+    }
+
+    [Fact]
+    public void GetStarters_WithEmptyGuid_ThrowsArgumentException()
+    {
+        // Arrange
+        var sut = CreateSut();
+
+        // Act
+        var act = () => sut.GetStarters(Guid.Empty);
+
+        // Assert
+        act.Should().Throw<ArgumentException>()
+            .WithParameterName("teamId")
+            .WithMessage("*cannot be empty*");
+    }
+
+    [Fact]
+    public void GetBenchPlayers_WithEmptyGuid_ThrowsArgumentException()
+    {
+        // Arrange
+        var sut = CreateSut();
+
+        // Act
+        var act = () => sut.GetBenchPlayers(Guid.Empty);
+
+        // Assert
+        act.Should().Throw<ArgumentException>()
+            .WithParameterName("teamId")
+            .WithMessage("*cannot be empty*");
+    }
+
+    // =========================================================================
+    // Thread Safety Tests
+    // LineupPageService is registered as Singleton, so it must be thread-safe
+    // =========================================================================
+
+    [Fact]
+    public void ConcurrentGetLineupForTeam_WhenRunInParallel_DoNotCorruptState()
+    {
+        // Arrange
+        const int iterationCount = 200;
+        var teamIds = Enumerable.Range(0, iterationCount)
+            .Select(_ => Guid.NewGuid())
+            .ToList();
+
+        var sut = CreateSut();
+
+        // Act - parallel gets for different teams
+        Parallel.For(0, iterationCount, i => sut.GetLineupForTeam(teamIds[i]));
+
+        // Assert - each team should have its own lineup
+        foreach (var teamId in teamIds)
+        {
+            var lineup = sut.GetLineupForTeam(teamId);
+            lineup.Should().NotBeNull();
+            lineup.TeamId.Should().Be(teamId);
+        }
+    }
+
+    [Fact]
+    public void ConcurrentSaveLineup_WhenRunInParallel_DoNotCorruptState()
+    {
+        // Arrange
+        const int iterationCount = 200;
+        var lineups = Enumerable.Range(0, iterationCount)
+            .Select(i => new TeamLineup
+            {
+                TeamId = Guid.NewGuid(),
+                Formation = Formation.Formation442,
+            })
+            .ToList();
+        var teamIds = lineups.Select(l => l.TeamId).ToHashSet();
+
+        var sut = CreateSut();
+
+        // Act - parallel saves
+        Parallel.For(0, iterationCount, i => sut.SaveLineup(lineups[i]));
+
+        // Assert - all lineups should be retrievable
+        foreach (var lineup in lineups)
+        {
+            var retrieved = sut.GetLineupForTeam(lineup.TeamId);
+            retrieved.Should().NotBeNull();
+            retrieved.TeamId.Should().Be(lineup.TeamId);
+        }
+    }
+
+    [Fact]
+    public void ConcurrentReadsAndWrites_WhenRunInParallel_DoNotThrow()
+    {
+        // Arrange
+        const int iterationCount = 100;
+        var preloadedTeamIds = new List<Guid>();
+
+        var sut = CreateSut();
+
+        // Pre-load some lineups
+        const int preloadCount = 50;
+        for (var i = 0; i < preloadCount; i++)
+        {
+            var teamId = Guid.NewGuid();
+            sut.SaveLineup(new TeamLineup { TeamId = teamId, Formation = Formation.Formation442 });
+            preloadedTeamIds.Add(teamId);
+        }
+
+        // Act - concurrent reads (GetLineupForTeam) and writes (SaveLineup)
+        var act = () => Parallel.For(0, iterationCount, i =>
+        {
+            if (i % 2 == 0)
+            {
+                // Save new lineup
+                var lineup = new TeamLineup
+                {
+                    TeamId = Guid.NewGuid(),
+                    Formation = Formation.Formation433,
+                };
+                sut.SaveLineup(lineup);
+            }
+            else
+            {
+                // Read existing lineup
+                var idx = i % preloadedTeamIds.Count;
+                var _ = sut.GetLineupForTeam(preloadedTeamIds[idx]);
+            }
+        });
+
+        // Assert
+        act.Should().NotThrow();
+    }
+
+    [Fact]
+    public void ConcurrentUpdatesToSameTeam_WhenRunInParallel_DoNotCorruptState()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        const int iterationCount = 200;
+
+        var sut = CreateSut();
+        sut.SaveLineup(new TeamLineup { TeamId = teamId, Formation = Formation.Formation442 });
+
+        // Act - multiple threads updating the same team's lineup
+        var act = () => Parallel.For(0, iterationCount, i =>
+        {
+            var lineup = new TeamLineup
+            {
+                TeamId = teamId,
+                Formation = i % 2 == 0 ? Formation.Formation442 : Formation.Formation433,
+                Tactic = i % 2 == 0 ? Tactic.Normal : Tactic.CounterAttack,
+            };
+            sut.SaveLineup(lineup);
+        });
+
+        // Assert
+        act.Should().NotThrow();
+        var result = sut.GetLineupForTeam(teamId);
+        result.Should().NotBeNull();
+        result.TeamId.Should().Be(teamId);
+        // Formation should be one of the two used in the test
+        result.Formation.Should().BeOneOf(Formation.Formation442, Formation.Formation433);
+    }
+
+    [Fact]
+    public void ConcurrentGetAndSaveForSameTeam_WhenRunInParallel_DoNotThrow()
+    {
+        // Arrange - tests the check-then-act race condition in GetLineupForTeam
+        var teamId = Guid.NewGuid();
+        const int iterationCount = 200;
+
+        var sut = CreateSut();
+
+        // Act - concurrent gets and saves for the SAME team (exercises race condition)
+        var act = () => Parallel.For(0, iterationCount, i =>
+        {
+            if (i % 2 == 0)
+            {
+                // Get (which may create if not exists)
+                var _ = sut.GetLineupForTeam(teamId);
+            }
+            else
+            {
+                // Save (overwrites)
+                sut.SaveLineup(new TeamLineup
+                {
+                    TeamId = teamId,
+                    Formation = Formation.Formation352,
+                });
+            }
+        });
+
+        // Assert
+        act.Should().NotThrow();
+        var result = sut.GetLineupForTeam(teamId);
+        result.Should().NotBeNull();
+        result.TeamId.Should().Be(teamId);
+    }
+
+    [Fact]
+    public void ConcurrentGetAvailablePlayers_WhenRunInParallel_DoNotThrow()
+    {
+        // Arrange
+        const int iterationCount = 100;
+        var teamId = Guid.NewGuid();
+        var players = new List<Player>
+        {
+            CreatePlayer(teamId, "Player1"),
+            CreatePlayer(teamId, "Player2"),
+        }.AsReadOnly();
+
+        _playerRepository.GetByTeamId(teamId).Returns(players);
+
+        var sut = CreateSut();
+
+        // Act - concurrent reads
+        var act = () => Parallel.For(0, iterationCount, i =>
+        {
+            _ = sut.GetAvailablePlayers(teamId);
+        });
+
+        // Assert
+        act.Should().NotThrow();
     }
 }

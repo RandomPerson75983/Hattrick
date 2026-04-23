@@ -13,39 +13,43 @@ public sealed class LineupPageService : ILineupPageService
 
     private readonly ILineupService _lineupService;
     private readonly IPlayerRepository _playerRepository;
-    private readonly ITeamRepository _teamRepository;
-    private readonly IGameStateService _gameStateService;
+    private readonly Lock _lock = new();
     private readonly Dictionary<Guid, TeamLineup> _lineups = new();
 
     public LineupPageService(
         ILineupService lineupService,
-        IPlayerRepository playerRepository,
-        ITeamRepository teamRepository,
-        IGameStateService gameStateService)
+        IPlayerRepository playerRepository)
     {
         _lineupService = lineupService ?? throw new ArgumentNullException(nameof(lineupService));
         _playerRepository = playerRepository ?? throw new ArgumentNullException(nameof(playerRepository));
-        _teamRepository = teamRepository ?? throw new ArgumentNullException(nameof(teamRepository));
-        _gameStateService = gameStateService ?? throw new ArgumentNullException(nameof(gameStateService));
     }
 
     /// <inheritdoc />
     public TeamLineup GetLineupForTeam(Guid teamId)
     {
-        if (_lineups.TryGetValue(teamId, out var lineup))
-        {
-            return lineup;
-        }
+        if (teamId == Guid.Empty)
+            throw new ArgumentException("Team ID cannot be empty.", nameof(teamId));
 
-        // Create and return a new empty lineup for this team
-        var newLineup = new TeamLineup { TeamId = teamId };
-        _lineups[teamId] = newLineup;
-        return newLineup;
+        lock (_lock)
+        {
+            if (_lineups.TryGetValue(teamId, out var lineup))
+            {
+                return lineup;
+            }
+
+            // Create and return a new empty lineup for this team
+            var newLineup = new TeamLineup { TeamId = teamId };
+            _lineups[teamId] = newLineup;
+            return newLineup;
+        }
     }
 
     /// <inheritdoc />
     public IReadOnlyList<Player> GetAvailablePlayers(Guid teamId)
     {
+        if (teamId == Guid.Empty)
+            throw new ArgumentException("Team ID cannot be empty.", nameof(teamId));
+
         var players = _playerRepository.GetByTeamId(teamId);
 
         return players
@@ -60,12 +64,19 @@ public sealed class LineupPageService : ILineupPageService
     public void SaveLineup(TeamLineup lineup)
     {
         ArgumentNullException.ThrowIfNull(lineup);
-        _lineups[lineup.TeamId] = lineup;
+
+        lock (_lock)
+        {
+            _lineups[lineup.TeamId] = lineup;
+        }
     }
 
     /// <inheritdoc />
     public TeamLineup SuggestLineup(Guid teamId)
     {
+        if (teamId == Guid.Empty)
+            throw new ArgumentException("Team ID cannot be empty.", nameof(teamId));
+
         var availablePlayers = GetAvailablePlayers(teamId);
         return _lineupService.SuggestLineup(teamId, availablePlayers);
     }
@@ -73,6 +84,9 @@ public sealed class LineupPageService : ILineupPageService
     /// <inheritdoc />
     public IReadOnlyList<MatchLineupSlot> GetStarters(Guid teamId)
     {
+        if (teamId == Guid.Empty)
+            throw new ArgumentException("Team ID cannot be empty.", nameof(teamId));
+
         var lineup = GetLineupForTeam(teamId);
         return lineup.Slots.Where(s => s.IsStarter).ToList().AsReadOnly();
     }
@@ -80,6 +94,9 @@ public sealed class LineupPageService : ILineupPageService
     /// <inheritdoc />
     public IReadOnlyList<MatchLineupSlot> GetBenchPlayers(Guid teamId)
     {
+        if (teamId == Guid.Empty)
+            throw new ArgumentException("Team ID cannot be empty.", nameof(teamId));
+
         var lineup = GetLineupForTeam(teamId);
         return lineup.Slots.Where(s => !s.IsStarter).ToList().AsReadOnly();
     }

@@ -194,9 +194,11 @@ public class LineupService : ILineupService
             count: Formation442ForwardCount);
         slots.AddRange(forwards);
 
-        // Step 7: Add up to 3 substitutes from remaining players
+        // Step 7: Add up to 3 substitutes from remaining players, sorted by primary skill
         var remainingPlayers = availablePlayers
             .Where(p => !selectedPlayers.Contains(p.Id))
+            .OrderByDescending(p => GetSkillValue(p, GetPrimarySkillForPosition(p.BestPosition)))
+            .ThenBy(p => p.Id)
             .Take(MaxSubstituteCount)
             .ToList();
 
@@ -210,14 +212,22 @@ public class LineupService : ILineupService
             selectedPlayers.Add(sub.Id);
         }
 
-        // Step 8: Set Captain = starter with highest Leadership
+        // Step 8: Set Captain = starter with highest Leadership (deterministic tie-break by Id)
         var starterIds = slots.Where(s => s.IsStarter).Select(s => s.PlayerId).ToHashSet();
         var captain = availablePlayers
             .Where(p => starterIds.Contains(p.Id))
             .OrderByDescending(p => p.Leadership)
+            .ThenBy(p => p.Id)
             .FirstOrDefault();
 
-        // Step 9: Build and return TeamLineup
+        // Step 9: Set SetPiecesTaker = starter with highest SetPieces skill
+        var setPiecesTaker = availablePlayers
+            .Where(p => starterIds.Contains(p.Id))
+            .OrderByDescending(p => GetSkillValue(p, SkillType.SetPieces))
+            .ThenBy(p => p.Id)
+            .FirstOrDefault();
+
+        // Step 10: Build and return TeamLineup
         return new TeamLineup
         {
             TeamId = teamId,
@@ -226,7 +236,7 @@ public class LineupService : ILineupService
             Attitude = TeamAttitude.Normal,
             Slots = slots,
             CaptainId = captain?.Id,
-            SetPiecesTakerId = null
+            SetPiecesTakerId = setPiecesTaker?.Id
         };
     }
 
@@ -294,5 +304,22 @@ public class LineupService : ILineupService
     private static double GetSkillValue(Player player, SkillType skillType)
     {
         return player.Skills.TryGetValue(skillType, out var value) ? value : 0.0;
+    }
+
+    /// <summary>
+    /// Gets the primary skill type for a position.
+    /// </summary>
+    private static SkillType GetPrimarySkillForPosition(Position position)
+    {
+        return position switch
+        {
+            Position.Keeper => SkillType.Keeper,
+            Position.CentralDefender => SkillType.Defending,
+            Position.WingBack => SkillType.Defending,
+            Position.InnerMidfielder => SkillType.Playmaking,
+            Position.Winger => SkillType.Winger,
+            Position.Forward => SkillType.Scoring,
+            _ => SkillType.Stamina // Fallback for unknown positions
+        };
     }
 }

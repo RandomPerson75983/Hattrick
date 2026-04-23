@@ -1758,6 +1758,100 @@ public class LineupServiceTests
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+    // SuggestLineup — SetPiecesTaker Selection (Highest SetPieces Skill)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void SuggestLineup_SelectsSetPiecesTakerWithHighestSetPiecesSkill()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        // Add keeper
+        var keeper = CreatePlayerWithSkillAndSetPieces(Position.Keeper, SkillType.Keeper, 12.0, leadership: 3, setPieces: 3.0);
+        squad.Add(keeper);
+
+        // Add CDs - one with high SetPieces skill
+        var cdWithHighSetPieces = CreatePlayerWithSkillAndSetPieces(Position.CentralDefender, SkillType.Defending, 14.0, leadership: 3, setPieces: 15.0);
+        var cdNormal = CreatePlayerWithSkillAndSetPieces(Position.CentralDefender, SkillType.Defending, 13.0, leadership: 3, setPieces: 2.0);
+        squad.Add(cdWithHighSetPieces);
+        squad.Add(cdNormal);
+
+        // Add other players with lower SetPieces
+        squad.AddRange(CreatePlayersForPositionWithSetPieces(Position.WingBack, 2, SkillType.Defending, 10.0, leadership: 3, setPieces: 4.0));
+        squad.AddRange(CreatePlayersForPositionWithSetPieces(Position.InnerMidfielder, 2, SkillType.Playmaking, 10.0, leadership: 3, setPieces: 5.0));
+        squad.AddRange(CreatePlayersForPositionWithSetPieces(Position.Winger, 2, SkillType.Winger, 10.0, leadership: 3, setPieces: 3.0));
+        squad.AddRange(CreatePlayersForPositionWithSetPieces(Position.Forward, 3, SkillType.Scoring, 10.0, leadership: 3, setPieces: 6.0));
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        lineup.SetPiecesTakerId.Should().NotBeNull("SetPiecesTakerId should be selected");
+        lineup.SetPiecesTakerId.Should().Be(cdWithHighSetPieces.Id,
+            "player with highest SetPieces skill (15.0) among starters should be SetPiecesTaker");
+    }
+
+    [Fact]
+    public void SuggestLineup_SetPiecesTakerMustBeInStartingLineup()
+    {
+        // Arrange
+        var teamId = Guid.NewGuid();
+        var squad = CreateFullSquad(playerCount: 25);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        lineup.SetPiecesTakerId.Should().NotBeNull("SetPiecesTakerId should be selected");
+        var starterIds = lineup.Slots.Where(s => s.IsStarter).Select(s => s.PlayerId).ToHashSet();
+        starterIds.Should().Contain(lineup.SetPiecesTakerId!.Value,
+            "SetPiecesTaker must be among the starting 11, not a substitute");
+    }
+
+    [Fact]
+    public void SuggestLineup_SetPiecesTakerIsNotSubstitute()
+    {
+        // Arrange: Create squad where best SetPieces player might end up as substitute
+        var teamId = Guid.NewGuid();
+        var squad = new List<Player>();
+
+        // Add keeper
+        squad.Add(CreatePlayerWithSkillAndSetPieces(Position.Keeper, SkillType.Keeper, 12.0, leadership: 3, setPieces: 3.0));
+
+        // Add defenders
+        squad.AddRange(CreatePlayersForPositionWithSetPieces(Position.CentralDefender, 2, SkillType.Defending, 10.0, leadership: 3, setPieces: 4.0));
+        squad.AddRange(CreatePlayersForPositionWithSetPieces(Position.WingBack, 2, SkillType.Defending, 10.0, leadership: 3, setPieces: 4.0));
+
+        // Add midfielders
+        squad.AddRange(CreatePlayersForPositionWithSetPieces(Position.InnerMidfielder, 2, SkillType.Playmaking, 10.0, leadership: 3, setPieces: 5.0));
+        squad.AddRange(CreatePlayersForPositionWithSetPieces(Position.Winger, 2, SkillType.Winger, 10.0, leadership: 3, setPieces: 3.0));
+
+        // Add forwards - 2 starters + 3 potential subs, one sub has very high SetPieces
+        var starterFwd1 = CreatePlayerWithSkillAndSetPieces(Position.Forward, SkillType.Scoring, 15.0, leadership: 3, setPieces: 6.0);
+        var starterFwd2 = CreatePlayerWithSkillAndSetPieces(Position.Forward, SkillType.Scoring, 14.0, leadership: 3, setPieces: 5.0);
+        // This forward has lower Scoring (will be sub) but highest SetPieces - should NOT be SetPiecesTaker
+        var subFwdHighSetPieces = CreatePlayerWithSkillAndSetPieces(Position.Forward, SkillType.Scoring, 5.0, leadership: 3, setPieces: 20.0);
+        var subFwd2 = CreatePlayerWithSkillAndSetPieces(Position.Forward, SkillType.Scoring, 4.0, leadership: 3, setPieces: 2.0);
+        var subFwd3 = CreatePlayerWithSkillAndSetPieces(Position.Forward, SkillType.Scoring, 3.0, leadership: 3, setPieces: 1.0);
+        squad.Add(starterFwd1);
+        squad.Add(starterFwd2);
+        squad.Add(subFwdHighSetPieces);
+        squad.Add(subFwd2);
+        squad.Add(subFwd3);
+
+        // Act
+        var lineup = _sut.SuggestLineup(teamId, squad);
+
+        // Assert
+        var substituteIds = lineup.Slots.Where(s => !s.IsStarter).Select(s => s.PlayerId).ToHashSet();
+        lineup.SetPiecesTakerId.Should().NotBeNull();
+        substituteIds.Should().NotContain(lineup.SetPiecesTakerId!.Value,
+            "SetPiecesTaker must not be a substitute, even if substitute has highest SetPieces skill overall");
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
     // SuggestLineup — Edge Cases
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -2092,6 +2186,52 @@ public class LineupServiceTests
         for (var i = 0; i < count; i++)
         {
             players.Add(CreatePlayerWithSkill(position, primarySkill, skillValue, leadership));
+        }
+        return players;
+    }
+
+    /// <summary>
+    /// Creates a player with a specific skill value and SetPieces skill for testing SetPiecesTaker selection.
+    /// </summary>
+    private static Player CreatePlayerWithSkillAndSetPieces(Position position, SkillType primarySkill, double skillValue, int leadership, double setPieces)
+    {
+        var player = new Player
+        {
+            Id = Guid.NewGuid(),
+            Name = $"Test Player {Guid.NewGuid():N}",
+            Age = 25,
+            Form = 7,
+            Stamina = 7,
+            Experience = 3,
+            BestPosition = position,
+            InjuryWeeks = 0,
+            RedCard = false,
+            YellowCards = 0,
+            Leadership = leadership,
+            Skills = new Dictionary<SkillType, double>
+            {
+                { SkillType.Keeper, primarySkill == SkillType.Keeper ? skillValue : 1.0 },
+                { SkillType.Defending, primarySkill == SkillType.Defending ? skillValue : 1.0 },
+                { SkillType.Playmaking, primarySkill == SkillType.Playmaking ? skillValue : 1.0 },
+                { SkillType.Winger, primarySkill == SkillType.Winger ? skillValue : 1.0 },
+                { SkillType.Passing, 1.0 },
+                { SkillType.Scoring, primarySkill == SkillType.Scoring ? skillValue : 1.0 },
+                { SkillType.SetPieces, setPieces },
+                { SkillType.Stamina, 7.0 }
+            }
+        };
+        return player;
+    }
+
+    /// <summary>
+    /// Creates multiple players for a specific position with a specific SetPieces skill.
+    /// </summary>
+    private static List<Player> CreatePlayersForPositionWithSetPieces(Position position, int count, SkillType primarySkill, double skillValue, int leadership, double setPieces)
+    {
+        var players = new List<Player>();
+        for (var i = 0; i < count; i++)
+        {
+            players.Add(CreatePlayerWithSkillAndSetPieces(position, primarySkill, skillValue, leadership, setPieces));
         }
         return players;
     }

@@ -4,7 +4,7 @@
     @for (int i = 0; i < TabLabels.Length; i++)
     {
         var tabIndex = i;
-        <div class="tab-item @(CurrentTab == tabIndex ? "active" : "")" @onclick="() => OnTabClicked(tabIndex)">
+        <div @key="tabIndex" class="tab-item @(CurrentTab == tabIndex ? "active" : "")" @onclick="() => OnTabClicked(tabIndex)">
             @TabLabels[tabIndex]
         </div>
     }

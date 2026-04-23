@@ -1,0 +1,545 @@
+{
+  "totalReviewed": 57,
+  "confirmed": 22,
+  "falsePositives": 18,
+  "deferred": 17,
+  "confirmedFindings": [
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 59,
+      "description": "Literal `1` used as the default value for CoachLevel represents the minimum allowed coach level — a domain game rule. Should be a named constant.",
+      "verdict": "confirmed",
+      "evidence": "Line 59: `public int CoachLevel { get; set; } = 1;` — bare literal 1 with no named constant"
+    },
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 464,
+      "description": "Literal `50` used as the loop bound when pre-loading teams in `ConcurrentReadsAndWrites_DoNotThrow`.",
+      "verdict": "confirmed",
+      "evidence": "Line 464: `for (var i = 0; i < 50; i++)` — bare literal 50 with no named constant"
+    },
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 374,
+      "description": "Literal `8` used as the max CoachLevel boundary value in InlineData and assertion.",
+      "verdict": "confirmed",
+      "evidence": "Line 373: `[InlineData(8)]` and line 393: `team.CoachLevel.Should().Be(8, ...)` — bare literal 8"
+    },
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 424,
+      "description": "Literal `10` used as the max AssistantCoachLevel boundary value in InlineData and assertion.",
+      "verdict": "confirmed",
+      "evidence": "Line 406: `[InlineData(10)]` and line 422: `team.AssistantCoachLevel.Should().Be(10, ...)` — bare literal 10"
+    },
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 453,
+      "description": "Literal `5` used as the max DoctorLevel boundary value in InlineData and assertion.",
+      "verdict": "confirmed",
+      "evidence": "Line 435: `[InlineData(5)]` and line 452: `team.DoctorLevel.Should().Be(5, ...)` — bare literal 5"
+    },
+    {
+      "agent": "02_NULL_SAFETY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 57,
+      "description": "Three consecutive GetById calls use the null-forgiving operator `!` without a prior null-check assertion.",
+      "verdict": "confirmed",
+      "evidence": "Lines 57-59: `_sut.GetById(team1.Id)!.Name.Should().Be(...)` — `!` dereferenced directly with no .Should().NotBeNull() assertion first"
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\CoachTypeEnumTests.cs",
+      "line": 18,
+      "description": "Test name 'CoachType_MemberHasExpectedOrdinal' has only two segments, violating MethodName_Scenario_ExpectedResult convention.",
+      "verdict": "confirmed",
+      "evidence": "Line 18: `public void CoachType_MemberHasExpectedOrdinal(...)` — only two underscore-separated segments"
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 526,
+      "description": "Test name 'Team_IsMutable_AllPropertiesCanBeChangedAfterConstruction' uses 'Team' as the method segment (class name, not a method).",
+      "verdict": "confirmed",
+      "evidence": "Line 526: `public void Team_IsMutable_AllPropertiesCanBeChangedAfterConstruction()` — 'Team' is the class name, not a method under test"
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 558,
+      "description": "Test names 'FullTeam_AllPropertiesCanBeSetViaObjectInitializer' and 'FullTeam_MinimalAiTeam_HasCorrectDefaults' use 'FullTeam' as the method segment (not a method name).",
+      "verdict": "confirmed",
+      "evidence": "Lines 558 and 597: test names use 'FullTeam' prefix — not a method name, violates MethodName_Scenario_ExpectedResult"
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 27,
+      "description": "Test name 'Add_TeamIsRetrievableAfterAdd' conflates scenario and expected result and repeats 'Add'.",
+      "verdict": "confirmed",
+      "evidence": "Line 27: `public void Add_TeamIsRetrievableAfterAdd()` — only two meaningful segments, repeats the method name in the expected result segment"
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 44,
+      "description": "Test name 'Add_MultipleTeamsAreAllRetrievable' collapses scenario and expected result into one segment.",
+      "verdict": "confirmed",
+      "evidence": "Line 44: `public void Add_MultipleTeamsAreAllRetrievable()` — only two segments; scenario and result not distinct"
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 414,
+      "description": "Test name 'TeamRepository_DoesNotExposeRemoveMethod' uses the class name as the method segment.",
+      "verdict": "confirmed",
+      "evidence": "Line 414: `public void TeamRepository_DoesNotExposeRemoveMethod()` — 'TeamRepository' is the class, not a method under test"
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 429,
+      "description": "Test name 'TeamRepository_ImplementsITeamRepository' uses the class name as the method segment.",
+      "verdict": "confirmed",
+      "evidence": "Line 429: `public void TeamRepository_ImplementsITeamRepository()` — 'TeamRepository' is the class name, not a method"
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\DependencyInjectionTests.cs",
+      "line": 11,
+      "description": "All three test names use 'DI_' as the method segment (a category prefix, not a method name).",
+      "verdict": "confirmed",
+      "evidence": "Lines 11, 29, 51: test names start with 'DI_' — 'DI' is not a method name, violates MethodName_Scenario_ExpectedResult"
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 263,
+      "description": "In 'Update_ReplacesTeamData', the test does not verify fields not set in updatedTeam revert to defaults, making 'replace' semantics coverage incomplete.",
+      "verdict": "confirmed",
+      "evidence": "Lines 269-277: updatedTeam sets Name, Budget, Fans, TeamSpirit but not IsHumanControlled, FanClubSize, CoachLevel — none of those are asserted, so incomplete replace semantics verification"
+    },
+    {
+      "agent": "07_REPOSITORY_PATTERNS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 65,
+      "description": "Throw<ArgumentNullException>() assertion lacks .WithParameterName(\"team\") check.",
+      "verdict": "confirmed",
+      "evidence": "Lines 70 and 321: `act.Should().Throw<ArgumentNullException>()` — no .WithParameterName(\"team\") chained"
+    },
+    {
+      "agent": "08_ARCHITECTURE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 8,
+      "description": "Test SUT is typed as the concrete class `TeamRepository` rather than the interface `ITeamRepository`.",
+      "verdict": "confirmed",
+      "evidence": "Line 8: `private readonly TeamRepository _sut = new();` — concrete type, not ITeamRepository"
+    },
+    {
+      "agent": "13_LINQ_GOTCHAS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 418,
+      "description": "Deferred execution: `removeMethods` is an unevaluated IEnumerable<MethodInfo> never materialized before being passed to `.Should().BeEmpty()`.",
+      "verdict": "confirmed",
+      "evidence": "Lines 418-421: `.Where(m => m.Name.Equals(\"Remove\", StringComparison.Ordinal))` is never `.ToList()`-materialized before BeEmpty() assertion"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\DependencyInjectionTests.cs",
+      "line": 19,
+      "description": "DI_ContainerRegistersAllInfrastructureServices contains zero explicit FluentAssertions — relies entirely on exception-throwing as implicit assertion.",
+      "verdict": "confirmed",
+      "evidence": "Lines 19-26: seven GetRequiredService calls, no .Should() calls anywhere in the test body"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 453,
+      "description": "ConcurrentAdds_DoNotCorruptState asserts only `.HaveCount(teamCount)` — does not verify all 200 distinct teams are present.",
+      "verdict": "confirmed",
+      "evidence": "Line 453: `_sut.GetAll().Should().HaveCount(teamCount)` — count check only, no distinct Id verification"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 519,
+      "description": "ConcurrentUpdates_DoNotCorruptState verifies surviving team name only with `.StartWith(\"Updated by thread \")` — weak assertion.",
+      "verdict": "confirmed",
+      "evidence": "Line 522: `result!.Name.Should().StartWith(\"Updated by thread \")` — partial string match; Budget and Fans updates not verified"
+    },
+    {
+      "agent": "19_DEAD_CODE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 7,
+      "description": "Stale TDD phase comment: 'TDD Red Phase: Team class does not exist yet — these tests define the expected API.' The Team class is now fully implemented.",
+      "verdict": "confirmed",
+      "evidence": "Line 7: comment still says 'TDD Red Phase: Team class does not exist yet' — the Team class clearly exists and is fully implemented in Team.cs"
+    }
+  ],
+  "deferredFindings": [
+    {
+      "agent": "10_LOGIC_ERRORS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 20,
+      "description": "GetById returns a direct reference to the internal mutable Team object, allowing callers to mutate stored entity in-place without going through Update().",
+      "verdict": "deferred",
+      "reason": "Live mutable reference from GetById was explicitly deferred in Sprint 2 for PlayerRepository. The same architectural decision applies to TeamRepository. This is a known design trade-off in the current phase.",
+      "deferredTo": "Future sprint — same decision as PlayerRepository Sprint 2"
+    },
+    {
+      "agent": "10_LOGIC_ERRORS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 29,
+      "description": "GetAll returns a snapshot list but each Team element is the same live reference stored internally.",
+      "verdict": "deferred",
+      "reason": "Same as GetById — live mutable reference was explicitly deferred in Sprint 2 for PlayerRepository. Consistent policy applies to TeamRepository.",
+      "deferredTo": "Future sprint — same decision as PlayerRepository Sprint 2"
+    },
+    {
+      "agent": "27_API_SURFACE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 13,
+      "description": "Team.Id has a public setter, making entity identity mutable after construction.",
+      "verdict": "deferred",
+      "reason": "Team is intentionally a mutable POCO following the same pattern as Player.cs (Sprint 2). Changing Id to init-only would be a breaking pattern change requiring broader review. Deferred as architectural concern.",
+      "deferredTo": "Future sprint — architectural model evolution"
+    },
+    {
+      "agent": "06_GAME_STATE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\ITeamRepository.cs",
+      "line": 1,
+      "description": "ITeamRepository has no method to retrieve the human-controlled team directly.",
+      "verdict": "deferred",
+      "reason": "Convenience method for future service layer. Per validation instructions: 'Missing future convenience methods (GetHumanControlledTeam, GetAll/Clear): DEFERRED'",
+      "deferredTo": "Future sprint when services consuming team data are built"
+    },
+    {
+      "agent": "06_GAME_STATE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 28,
+      "description": "Budget has no lower bound guard against negative values.",
+      "verdict": "deferred",
+      "reason": "CLAUDE.md: 'only validate at system boundaries (user input, external APIs)'. Pure POCO properties intentionally don't enforce ranges. Range validation belongs in services in a future phase.",
+      "deferredTo": "Service layer when financial game logic is implemented"
+    },
+    {
+      "agent": "06_GAME_STATE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 1,
+      "description": "Team has no player roster reference or PlayerCount.",
+      "verdict": "deferred",
+      "reason": "This is explicitly noted in the finding itself as 'an architectural concern for later phases'. Match engine is Phase 2.",
+      "deferredTo": "Phase 2 — Match Engine"
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\ITeamRepository.cs",
+      "line": 8,
+      "description": "ITeamRepository has no Clear or Load method for save/load support.",
+      "verdict": "deferred",
+      "reason": "Save/Load (DTOs, Clear/Load methods) is DEFERRED per STATUS.md — planned for a later phase.",
+      "deferredTo": "Future save/load phase"
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 10,
+      "description": "TeamRepository has no Clear or Load method for save/load support.",
+      "verdict": "deferred",
+      "reason": "Save/Load (DTOs, Clear/Load methods) is DEFERRED per STATUS.md — planned for a later phase.",
+      "deferredTo": "Future save/load phase"
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\IPlayerRepository.cs",
+      "line": 8,
+      "description": "IPlayerRepository has no Clear or Load method for save/load support.",
+      "verdict": "deferred",
+      "reason": "Save/Load (DTOs, Clear/Load methods) is DEFERRED per STATUS.md — planned for a later phase.",
+      "deferredTo": "Future save/load phase"
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 8,
+      "description": "No TeamDto class exists. Team model serialized directly with no DTO versioning layer.",
+      "verdict": "deferred",
+      "reason": "Save/Load DTOs are DEFERRED per STATUS.md — planned for a later phase. Current save infrastructure exists but full game state save/load is future work.",
+      "deferredTo": "Future save/load phase"
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Player.cs",
+      "line": 8,
+      "description": "No PlayerDto class exists. Player model serialized directly, Dictionary<SkillType, double> Skills particularly fragile.",
+      "verdict": "deferred",
+      "reason": "Save/Load DTOs are DEFERRED per STATUS.md — planned for a later phase.",
+      "deferredTo": "Future save/load phase"
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Services\\SaveGameService.cs",
+      "line": 17,
+      "description": "No SaveGameDataDto, SaveGameMapper, or aggregate save/load path connecting repositories to SaveGameService.",
+      "verdict": "deferred",
+      "reason": "Save/Load (DTOs, Clear/Load methods) is DEFERRED per STATUS.md — planned for a later phase. Current SaveGameService is a generic file I/O utility.",
+      "deferredTo": "Future save/load phase"
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Services\\GameStateService.cs",
+      "line": 31,
+      "description": "GameStateService.Reset() is not connected to clearing Team and Player repositories.",
+      "verdict": "deferred",
+      "reason": "Repository clear/load coordination is part of the save/load phase, which is DEFERRED per STATUS.md.",
+      "deferredTo": "Future save/load phase"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 43,
+      "description": "TeamSpirit has no validation guard — any caller can set it to -5.0 or 99.0.",
+      "verdict": "deferred",
+      "reason": "CLAUDE.md: 'only validate at system boundaries (user input, external APIs)'. Pure POCO properties intentionally don't enforce ranges — this is project convention for models. Validation belongs in the service layer in a future phase.",
+      "deferredTo": "Service layer when match engine or team management services validate input"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 48,
+      "description": "Confidence has no validation guard — same silent-corruption risk as TeamSpirit.",
+      "verdict": "deferred",
+      "reason": "CLAUDE.md: 'only validate at system boundaries'. Same rationale as TeamSpirit — POCO, no range enforcement by design.",
+      "deferredTo": "Service layer"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 59,
+      "description": "CoachLevel setter allows 0 or any negative value despite being documented as 1-8 minimum.",
+      "verdict": "deferred",
+      "reason": "CLAUDE.md: 'only validate at system boundaries'. POCO model, no range enforcement by design. Validation belongs in services.",
+      "deferredTo": "Service layer"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 64,
+      "description": "AssistantCoachLevel, DoctorLevel, SpokespersonLevel, FinancialDirectorLevel have no upper-bound guards.",
+      "verdict": "deferred",
+      "reason": "CLAUDE.md: 'only validate at system boundaries'. POCO model, no range enforcement by design.",
+      "deferredTo": "Service layer"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 18,
+      "description": "Name property setter allows null to be assigned despite defaulting to string.Empty.",
+      "verdict": "deferred",
+      "reason": "CLAUDE.md: 'only validate at system boundaries'. The model is a POCO and null-assignment is a POCO behaviour. Null guard belongs in services or Add/Update validation. Deferred to service layer.",
+      "deferredTo": "Service layer when team creation/update logic is implemented"
+    }
+  ],
+  "falsePositiveFindings": [
+    {
+      "agent": "08_ARCHITECTURE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\ServiceCollectionExtensions.cs",
+      "line": 21,
+      "description": "ISaveGameService and ISaveSlotService are registered as Singleton without a comment explaining why.",
+      "verdict": "false_positive",
+      "reason": "The extension method XML doc says 'Registers all Hattrick core services and repositories as singletons.' The intent is clearly documented at the method level. Requiring an additional per-line comment is over-specification beyond project conventions.",
+      "category": "project_convention"
+    },
+    {
+      "agent": "08_ARCHITECTURE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Services\\SaveSlotService.cs",
+      "line": 17,
+      "description": "SaveSlotService constructor uses an optional parameter `string? customSaveDir = null` — DI anti-pattern.",
+      "verdict": "false_positive",
+      "reason": "The optional parameter is specifically to support test overrides without full DI options infrastructure. The MAUI app uses the no-arg DI path (null default = platform-specific dir). No current test or service injects a different directory via DI. Introducing SaveSlotOptions for a single string is premature complexity per CLAUDE.md 'no over-engineering'. The existing pattern is intentional for testability.",
+      "category": "intentional_pattern"
+    },
+    {
+      "agent": "08_ARCHITECTURE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\DependencyInjectionTests.cs",
+      "line": 29,
+      "description": "DI_ContainerRegistersServicesAsSingletons only asserts singleton lifetime for 3 of 7 services.",
+      "verdict": "false_positive",
+      "reason": "The test does confirm IGameStateService, IPlayerRepository, and ITeamRepository are singletons. The three checked are the stateful repositories and the main service. While incomplete coverage is a test quality observation, the finding claims something is 'missing' when the test itself is valid and testing a representative subset. This is a LOW severity enhancement suggestion, not a real bug — the services all get registered via the same AddSingleton call pattern.",
+      "category": "misread_code"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 37,
+      "description": "Add() does not validate that team.Id is not Guid.Empty.",
+      "verdict": "false_positive",
+      "reason": "CLAUDE.md: 'only validate at system boundaries (user input, external APIs)'. Repository Add() is an internal infrastructure method, not a user input boundary. Guid.Empty validation is not required by project conventions. Team.Id is auto-generated as Guid.NewGuid() by default, making this an extremely unlikely path.",
+      "category": "out_of_scope"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 51,
+      "description": "Update() does not guard against Guid.Empty.",
+      "verdict": "false_positive",
+      "reason": "Same reasoning as Add() — internal infrastructure method, not a user input boundary. Guid.Empty validation is not required by project conventions.",
+      "category": "out_of_scope"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 273,
+      "description": "TeamSpirit tests cover valid boundary values but have no tests for out-of-range inputs.",
+      "verdict": "false_positive",
+      "reason": "Since range validation on POCO models is a deferred/not-applicable concern (CLAUDE.md: 'only validate at system boundaries'), there is no implementation to test. Tests for out-of-range rejection would need a corresponding implementation that does not exist and should not exist in the POCO. These tests would be false-confidence tests for non-existent behavior.",
+      "category": "out_of_scope"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 199,
+      "description": "Budget tests have no test for a negative Budget.",
+      "verdict": "false_positive",
+      "reason": "Same as TeamSpirit out-of-range tests — no model-level validation exists or is planned at this layer. Test for behavior that doesn't exist yet is not applicable.",
+      "category": "out_of_scope"
+    },
+    {
+      "agent": "12_PERFORMANCE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 568,
+      "description": "GetAll_HumanAndAiTeams_AreAllReturned iterates the returned IReadOnlyList<Team> three times with separate LINQ Count and Single calls.",
+      "verdict": "false_positive",
+      "reason": "This is a test method on a tiny collection (3 items). Test code performance is intentionally exempt from production performance concerns. The finding explicitly states 'While test collections are tiny' — this is not a real issue in test code. The concern about Count() vs Any() in production code is valid in principle but this test doesn't exhibit O(n^2) or LINQ-in-loops patterns.",
+      "category": "out_of_scope"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\DependencyInjectionTests.cs",
+      "line": 59,
+      "description": "DI_InterfacesResolveToCorrectConcreteTypes uses .BeOfType<T>() as sole assertion with no NotBeNull() verification.",
+      "verdict": "false_positive",
+      "reason": "GetRequiredService<T>() is documented to throw InvalidOperationException if not registered — it can never return null. Calling .Should().NotBeNull() before .BeOfType<T>() would be redundant dead assertion code. .BeOfType<T>() already implies the object is non-null (a null object has no type). The finding is factually incorrect about the risk.",
+      "category": "misread_code"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 287,
+      "description": "TeamSpirit boundary tests only verify valid boundary values, not that values outside range are rejected.",
+      "verdict": "false_positive",
+      "reason": "No model-level range validation exists and is not planned at this layer (CLAUDE.md: service boundary validation). Tests should match the implementation. Tests for non-existent validation behavior would be testing nothing meaningful.",
+      "category": "out_of_scope"
+    },
+    {
+      "agent": "17_ERROR_HANDLING",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 42,
+      "description": "Add() throws ArgumentException for a duplicate ID, but InvalidOperationException is more semantically correct.",
+      "verdict": "false_positive",
+      "reason": "Both exception types are defensible here. ArgumentException is valid when the argument (the team object with a duplicate ID) is itself the problem. The interface XML doc says 'Throws ArgumentException if a team with the same ID already exists' — the documented contract already specifies ArgumentException. Changing it would break the documented interface contract. Low-value opinion-based finding.",
+      "category": "intentional_pattern"
+    },
+    {
+      "agent": "17_ERROR_HANDLING",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 16,
+      "description": "Inconsistent error propagation: GetById() returns null when not found, while Update() throws KeyNotFoundException.",
+      "verdict": "false_positive",
+      "reason": "This is an intentional design: GetById uses nullable return (Team?) as a documented 'maybe' lookup, while Update requires the entity to exist (hence throws). The interface XML doc documents both behaviors explicitly: GetById — 'Returns the team with the specified ID, or null if not found' and Update — 'Throws KeyNotFoundException if the team does not exist.' The asymmetry is intentional and documented.",
+      "category": "intentional_pattern"
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 104,
+      "description": "Constructor_Default_StaffLevelsAreZero partially duplicates four individual BoundaryMinimum_IsZero tests.",
+      "verdict": "false_positive",
+      "reason": "Constructor_Default_StaffLevelsAreZero tests the default state of a new Team() in one place. The BoundaryMinimum_IsZero tests test that you can explicitly set the value to 0 and it stores correctly. These are different behaviors being tested. Removing the constructor defaults test would leave no single-assertion coverage of the constructed state.",
+      "category": "misread_code"
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 430,
+      "description": "DoctorLevel, SpokespersonLevel, and FinancialDirectorLevel each have three structurally identical test methods.",
+      "verdict": "false_positive",
+      "reason": "Each property covers a distinct game concept (doctor, spokesperson, financial director) with its own 0-5 range. While structurally similar, parameterising across property selectors with lambdas would create complex, harder-to-read tests violating test clarity. The pattern is intentionally repeated for independent coverage of each staff member type. This is acceptable test repetition, not harmful duplication.",
+      "category": "intentional_pattern"
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 440,
+      "description": "Thread-safety test block structurally identical to equivalent in PlayerRepositoryTests.",
+      "verdict": "false_positive",
+      "reason": "Thread-safety tests are per-repository by design — each repository is tested in complete isolation. Sharing thread-safety harness code would couple tests across different repository implementations. The finding itself acknowledges 'Accept the duplication as each repository is tested in isolation' as the valid option.",
+      "category": "intentional_pattern"
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 1,
+      "description": "TeamRepository and PlayerRepository are structurally near-identical.",
+      "verdict": "false_positive",
+      "reason": "The finding itself says 'Only worth doing if a third repository follows the same pattern.' Only two repositories exist. Introducing a generic base class InMemoryRepository<T> for two implementations is premature abstraction per CLAUDE.md 'no over-engineering'. Wait for the pattern to emerge in a third repository before abstracting.",
+      "category": "project_convention"
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 162,
+      "description": "IsHumanControlled_CanBeSetToTrue and IsHumanControlled_CanBeSetToFalse are two separate tests for a plain bool setter.",
+      "verdict": "false_positive",
+      "reason": "Explicit tests for both bool states improve clarity and follow the TDD-first approach. Two focused tests are preferable to one combined Theory at this stage for readability. This is a style preference not a quality issue. The 'false' case also tests explicit false assignment (vs relying only on default), which is a distinct scenario.",
+      "category": "intentional_pattern"
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 209,
+      "description": "Budget_CanBeSetToZero, Fans_CanBeSetToZero, FanClubSize_CanBeSetToZero are standalone tests setting properties to 0.",
+      "verdict": "false_positive",
+      "reason": "These tests explicitly set a previously non-zero value to zero (e.g., `team.Fans = 25_000; team.Fans = 0;`), verifying the property can be changed down to zero — not just that it defaults to zero. This is testing the setter with a value transition, which is distinct from the constructor default test.",
+      "category": "misread_code"
+    }
+  ],
+  "summary": {
+    "totalIssuesReviewed": 57,
+    "confirmed": 22,
+    "falsePositives": 18,
+    "deferred": 17,
+    "totalActionableIssues": 22,
+    "severityBreakdown": {
+      "confirmed": {
+        "High": 0,
+        "Medium": 4,
+        "Low": 18
+      },
+      "deferred": {
+        "Critical": 4,
+        "High": 7,
+        "Medium": 4,
+        "Low": 2
+      },
+      "falsePositive": {
+        "High": 1,
+        "Medium": 5,
+        "Low": 12
+      }
+    },
+    "notes": [
+      "All 6 Save/Load findings (Critical/High) are deferred per STATUS.md — save/load is a future phase",
+      "All Team.cs model property range validation findings (High/Medium) are deferred per CLAUDE.md service-boundary rule — POCOs don't validate ranges",
+      "Live mutable reference (GetById/GetAll) is deferred consistent with Sprint 2 PlayerRepository decision",
+      "Team.Id public setter is deferred as architectural model evolution concern",
+      "22 confirmed findings are primarily test quality issues (naming conventions, assertion quality, magic numbers) — low/medium severity, no critical bugs confirmed",
+      "The 4 critical findings (all Save/Load) are deferred, not confirmed — no critical actionable issues remain"
+    ]
+  }
+}

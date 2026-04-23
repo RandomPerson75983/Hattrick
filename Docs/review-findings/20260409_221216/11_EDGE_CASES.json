@@ -1,0 +1,50 @@
+[
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick/Components/Pages/Players.razor",
+    "line": 105,
+    "description": "GetByTeamId always called with Guid.Empty instead of the actual logged-in team ID. If no players have TeamId == Guid.Empty, the player list is permanently empty and the page always shows '0 players' with all-zero stats. This is a functional edge case where an incorrect constant produces a silently empty roster.",
+    "severity": "High",
+    "suggestedFix": "Inject the current game/team context (e.g., IGameStateService or ITeamRepository) and pass the actual team's Guid instead of Guid.Empty. For example: _players = PlayerRepository.GetByTeamId(_gameState.CurrentTeamId);"
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+    "line": 29,
+    "description": "GetSkillBarPercent returns a negative integer when skill is negative (e.g., skill=-0.3 → (-0.3 % 1) = -0.3 → rounds to 0, but skill=-1.3 → (-1.3 % 1) = -0.3 → -30%). This negative value is used directly as a CSS width percentage in Players.razor (style=\"width: @DisplayService.GetSkillBarPercent(skillValue)%\"), which would produce an invalid CSS value like 'width: -30%'.",
+    "severity": "Medium",
+    "suggestedFix": "Add a guard: return (int)Math.Round(Math.Abs(skill % 1) * SkillBarPercentMultiplier); or clamp the result to [0, 100]: return Math.Clamp((int)Math.Round((skill % 1) * SkillBarPercentMultiplier), 0, 100);"
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+    "line": 22,
+    "description": "TotalEstimatedValue computes p.TSI * EstimatedValueMultiplier as int * int before assigning to decimal. For extreme TSI values (>= ~85.9 million) this would silently overflow. While normal Hattrick TSI values are well below this, there is no guard or cast protecting against it.",
+    "severity": "Medium",
+    "suggestedFix": "Cast TSI to long or decimal before multiplying: players.Sum(p => (decimal)p.TSI * EstimatedValueMultiplier). Similarly for AvgEstimatedValue in GetTeamAverages: players.Average(p => (double)p.TSI * EstimatedValueMultiplier)."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+    "line": 21,
+    "description": "FormatAge does not handle singular vs. plural for 'days'. FormatAge(20, 1) returns '20 years and 1 days' which is grammatically incorrect. The test at PlayerDisplayServiceTests.cs line 55-59 even asserts the incorrect string '20 years and 1 days', accepting the bug as expected behavior.",
+    "severity": "Low",
+    "suggestedFix": "Use conditional pluralization: $\"{age} years and {ageDays} {(ageDays == 1 ? \"day\" : \"days\")}\". Update the corresponding test to assert the corrected string."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+    "line": 16,
+    "description": "GetTeamTotals and GetTeamAverages accept IReadOnlyList<Player> but neither method null-guards the parameter. Passing null throws a NullReferenceException with no helpful error message. GetTeamAverages has an empty-collection guard (players.Count == 0) but no null guard preceding it.",
+    "severity": "Low",
+    "suggestedFix": "Add ArgumentNullException.ThrowIfNull(players) at the top of both GetTeamTotals and GetTeamAverages, or rely on caller guarantees and add an XML doc note. At minimum add a test to document the expected behavior."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Tests/Services/PlayerDisplayServiceTests.cs",
+    "line": 55,
+    "description": "The test FormatAge_OneDayIn_ReturnsCorrectString asserts '20 years and 1 days' (plural), which is incorrect English but matches the current implementation. The test is encoding a known bug as expected behavior rather than specifying the correct output, making it a false-positive safety net.",
+    "severity": "Low",
+    "suggestedFix": "Fix the FormatAge implementation to handle singular ('day' vs 'days'), then update this test to assert '20 years and 1 day'."
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 496,
+    "description": "Magic number 50 used as loop bound for preloading players in ConcurrentReadsAndWrites test. Should be a named constant like the other iteration counts in this file.",
+    "severity": "Low",
+    "suggestedFix": "Extract to a named constant: const int preloadCount = 50; (similar to the existing iterationCount pattern used elsewhere in the file)"
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 506,
+    "description": "Magic number 3 used as modulo divisor to branch between Add/Read-by-team/Read-by-id operations in ConcurrentReadsAndWrites test.",
+    "severity": "Low",
+    "suggestedFix": "Extract to a named constant: const int operationTypeCount = 3; and add a comment explaining the three operation branches"
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 579,
+    "description": "Magic numbers 20 and 15 in expression '20 + (i % 15)' for generating player ages in ConcurrentUpdates test.",
+    "severity": "Low",
+    "suggestedFix": "Extract to named constants: const int baseAge = 20; const int ageRange = 15;"
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 17,
+    "description": "Magic numbers 22 (Age), 50 (AgeDays), 6 (Form), 7 (Stamina), 5 (Experience) in the CreatePlayer helper method used across all tests.",
+    "severity": "Low",
+    "suggestedFix": "Extract to named constants at the top of the test class: const int DefaultTestAge = 22; const int DefaultTestAgeDays = 50; const int DefaultTestForm = 6; const int DefaultTestStamina = 7; const int DefaultTestExperience = 5;"
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+    "line": 256,
+    "description": "Magic numbers 5.0 and 0.5 in formula '5.0 + (int)skillType * 0.5' used to generate skill values in Skills_CanSetAllEightSkillTypes test.",
+    "severity": "Low",
+    "suggestedFix": "Extract to named constants: const double baseSkillValue = 5.0; const double skillIncrement = 0.5;"
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+    "line": 259,
+    "description": "Magic number 8 in HaveCount(8) assertion for skill type count. While the comment explains it, it should reference the enum to avoid drift.",
+    "severity": "Low",
+    "suggestedFix": "Replace with: player.Skills.Should().HaveCount(Enum.GetValues(typeof(SkillType)).Length); or extract const int ExpectedSkillTypeCount = 8;"
+  }
+]

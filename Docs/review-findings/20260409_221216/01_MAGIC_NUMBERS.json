@@ -1,0 +1,18 @@
+[
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+    "line": 477,
+    "description": "Magic number `7` in `Enumerable.Repeat(SkillCell(), 7)` — represents the count of displayed skill columns (Kp, Def, Pm, Wi, Sc, Ps, Sp). This literal duplicates knowledge that already lives in the `DisplayedSkills` array in Players.razor and will silently go stale if a skill column is added or removed.",
+    "severity": "Low",
+    "suggestedFix": "Extract a private const: `private const int SkillColumnCount = 7;` and use `Enumerable.Repeat(SkillCell(), SkillColumnCount)`. Ideally this constant is shared with or derived from the same source that defines `DisplayedSkills`."
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "hattrick/Components/Pages/Players.razor",
+    "line": 105,
+    "description": "`Guid.Empty` is used as a hardcoded team identifier in `PlayerRepository.GetByTeamId(Guid.Empty)`. This is a magic value embedded in UI logic — it silently assumes the player's team always has the empty GUID, which is a placeholder that was never replaced with a real team-resolution call.",
+    "severity": "Medium",
+    "suggestedFix": "Inject `IGameStateService` (or equivalent) and resolve the current team's ID at runtime rather than hard-coding `Guid.Empty`. If a temporary stub is intentional, define `private static readonly Guid StubTeamId = Guid.Empty;` with a TODO comment, or replace with the proper service call."
+  }
+]

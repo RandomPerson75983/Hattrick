@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 38,
+    "description": "GetDisplayName throws KeyNotFoundException for invalid SkillLevel values. Since C# allows casting any int to an enum (e.g., (SkillLevel)99 or (SkillLevel)0), callers passing an out-of-range SkillLevel will get an unhandled KeyNotFoundException from the Dictionary indexer.",
+    "severity": "High",
+    "suggestedFix": "Use Dictionary.TryGetValue and throw ArgumentOutOfRangeException with a clear message if the key is not found."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/SkillLevel.cs",
+    "line": 7,
+    "description": "SkillLevel enum starts at value 1 (Level1 = 1), meaning default(SkillLevel) is 0, which does not correspond to any defined member. Any uninitialized SkillLevel field will silently hold an invalid value.",
+    "severity": "High",
+    "suggestedFix": "Add a sentinel value like None = 0 or Unknown = 0 to handle the default case explicitly, or ensure all consuming code guards against default(SkillLevel)."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/SkillType.cs",
+    "line": 7,
+    "description": "SkillType enum does not have explicit integer values assigned to its members. All other enums in this codebase use explicit values. If a member is inserted or reordered, implicit values silently shift, breaking serialized JSON save data.",
+    "severity": "Medium",
+    "suggestedFix": "Assign explicit integer values: Keeper = 0, Defending = 1, Playmaking = 2, Winger = 3, Scoring = 4, Passing = 5, SetPieces = 6, Stamina = 7."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 199,
+    "description": "No test covers GetDisplayName with an invalid/out-of-range SkillLevel value. The most likely runtime edge case -- default(SkillLevel) which equals 0 -- is untested.",
+    "severity": "Medium",
+    "suggestedFix": "Add tests verifying behavior for (SkillLevel)0, (SkillLevel)(-1), and (SkillLevel)21."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 9,
+    "description": "DisplayNames dictionary uses mutable Dictionary<K,V> type. While private static readonly, using IReadOnlyDictionary or FrozenDictionary for the field type would make immutability intent explicit.",
+    "severity": "Low",
+    "suggestedFix": "Change field type to IReadOnlyDictionary<SkillLevel, string> or use FrozenDictionary (.NET 8+)."
+  }
+]

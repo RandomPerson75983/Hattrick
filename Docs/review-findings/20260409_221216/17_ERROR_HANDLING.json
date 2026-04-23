@@ -1,0 +1,26 @@
+[
+  {
+    "agent": "17_ERROR_HANDLING",
+    "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+    "line": 16,
+    "description": "GetTeamTotals lacks a null guard on the 'players' parameter. Passing null causes a NullReferenceException deep inside LINQ with no clear message. GetTeamAverages at least checks players.Count == 0, but neither method checks for null.",
+    "severity": "Medium",
+    "suggestedFix": "Add ArgumentNullException.ThrowIfNull(players); as the first line of both GetTeamTotals and GetTeamAverages."
+  },
+  {
+    "agent": "17_ERROR_HANDLING",
+    "file": "Hattrick/Components/Pages/Players.razor",
+    "line": 103,
+    "description": "OnInitialized calls PlayerRepository.GetByTeamId and two StatsService methods with no try-catch. If any of these throw (e.g., uninitialized repository state), the exception propagates unhandled through the Blazor component lifecycle with no user-facing error message or fallback state.",
+    "severity": "Medium",
+    "suggestedFix": "Wrap the body of OnInitialized in a try-catch block. On exception, set _players to an empty list and surface an error message to the user via a bound error string rendered in the template."
+  },
+  {
+    "agent": "17_ERROR_HANDLING",
+    "file": "Hattrick/Components/Pages/Players.razor",
+    "line": 105,
+    "description": "GetByTeamId is called with Guid.Empty as a hardcoded team ID. If the active team's ID is not yet resolved (e.g., no save loaded), this silently returns an empty list rather than indicating an invalid application state. There is no guard or log indicating this degenerate case.",
+    "severity": "Low",
+    "suggestedFix": "Inject IGameStateService (or equivalent) to obtain the current team's actual Guid. Add a guard to detect Guid.Empty and surface an appropriate error or redirect rather than silently showing zero players."
+  }
+]

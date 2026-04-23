@@ -1,0 +1,65 @@
+[
+  {
+    "id": "AQ-001",
+    "severity": "Medium",
+    "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+    "line": "55-77",
+    "title": "Tautological BeAssignableTo assertions on interface-resolved services",
+    "description": "DI_InterfacesAreProperlyImplemented uses .BeAssignableTo<IInterface>() on objects already resolved via GetRequiredService<IInterface>(). This is always true by definition and tests nothing. Should use .BeOfType<ConcreteImplementation>() to verify the correct implementation type is wired up (e.g., randomProvider.Should().BeOfType<RandomProvider>()).",
+    "suggestion": "Replace .BeAssignableTo<IRandomProvider>() with .BeOfType<RandomProvider>() (and similarly for all six services) to actually verify the DI registrations map to the expected concrete types."
+  },
+  {
+    "id": "AQ-002",
+    "severity": "Low",
+    "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+    "line": "26-32",
+    "title": "Redundant NotBeNull assertions after GetRequiredService",
+    "description": "DI_ContainerRegistersAllInfrastructureServices calls GetRequiredService<T>() which already throws InvalidOperationException if the service is not registered. The subsequent .NotBeNull() assertions are redundant and add no verification value beyond what the method call already guarantees.",
+    "suggestion": "Either remove the .NotBeNull() assertions (the test already fails via exception if service is missing) or add more meaningful assertions like .BeOfType<ConcreteType>() to verify correct implementation binding."
+  },
+  {
+    "id": "AQ-003",
+    "severity": "Medium",
+    "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+    "line": "251-261",
+    "title": "HaveCount without content verification on Skills_CanSetAllEightSkillTypes",
+    "description": "Skills_CanSetAllEightSkillTypes only asserts .HaveCount(8) without verifying that each SkillType key is present or that the calculated values are correct. The formula '5.0 + (int)skillType * 0.5' is used to set values but never verified. If the loop silently overwrote keys or produced wrong values, this test would still pass.",
+    "suggestion": "Add assertions to verify specific skill values, e.g., player.Skills.Should().ContainKey(SkillType.Keeper).WhoseValue.Should().Be(5.0 + (int)SkillType.Keeper * 0.5); or use .BeEquivalentTo() with expected dictionary."
+  },
+  {
+    "id": "AQ-004",
+    "severity": "Medium",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": "58-60",
+    "title": "NotBeNull as only assertion for individual player lookups in Add_MultiplePlayersAreAllRetrievable",
+    "description": "Lines 58-60 use .NotBeNull() as the sole assertion for each player retrieved by GetById. This does not verify that the correct player was retrieved (e.g., names, team IDs). The .HaveCount(3) on line 61 also only checks count, not contents.",
+    "suggestion": "Replace .NotBeNull() with assertions that verify player identity, e.g., _sut.GetById(player1.Id)!.Name.Should().Be(\"Player One\"); and use .BeEquivalentTo() or .Contain() with name checks on the team query."
+  },
+  {
+    "id": "AQ-005",
+    "severity": "Low",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": "186-198",
+    "title": "BeAssignableTo without content verification in GetByTeamId_ReturnsIReadOnlyList",
+    "description": "GetByTeamId_ReturnsIReadOnlyList only verifies the return type with .BeAssignableTo<IReadOnlyList<Player>>() but does not verify the list contains the expected player. While the test name focuses on return type, adding a content assertion would strengthen it.",
+    "suggestion": "Add result.Should().HaveCount(1) and result[0].Id.Should().Be(player.Id) to verify both type and content."
+  },
+  {
+    "id": "AQ-006",
+    "severity": "Medium",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": "488-527",
+    "title": "ConcurrentReadsAndWrites_DoNotThrow only asserts no exception without state verification",
+    "description": "This thread-safety test only asserts .NotThrow() without verifying post-operation state integrity. It doesn't check that all added players are present or that reads returned valid data. Concurrent corruption that doesn't throw exceptions would go undetected.",
+    "suggestion": "After the parallel operations, verify state: count the total players in the repository and confirm all preloaded players that weren't removed are still retrievable with correct data."
+  },
+  {
+    "id": "AQ-007",
+    "severity": "Medium",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": "565-591",
+    "title": "Weak assertion in ConcurrentUpdates_DoNotCorruptState - only checks name prefix",
+    "description": "ConcurrentUpdates_DoNotCorruptState uses .StartWith(\"Updated by thread \") which only verifies the name property has the right prefix. It does not verify that other fields (TeamId, Age) are consistent with the same thread's write. A torn/partial update (TeamId from thread X, Name from thread Y) would pass this test despite data corruption.",
+    "suggestion": "Parse the thread number from result.Name and verify result.Age matches the expected value for that thread (20 + threadNum % 15), and result.TeamId matches the expected teamId. This proves the update was atomic."
+  }
+]

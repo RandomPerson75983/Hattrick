@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+    "line": 36,
+    "description": "Tests verify a locally constructed HTML string against itself — not the actual Players.razor component. BuildExpectedMarkup() builds a hardcoded string and all tests check substrings of that same string, meaning every test passes by construction. No real Blazor rendering occurs, so regressions in Players.razor would never be caught by this suite. The Players.razor component should be rendered with bUnit (BunitContext + Render<T>()) with mocked services to test actual output.",
+    "severity": "High",
+    "suggestedFix": "Rewrite using bUnit v2 API (BunitContext + Render<Players>()). Register mock IPlayerRepository, IPlayerDisplayService, IPlayerStatsService, then assert on cut.Find() / cut.FindAll() results. This ensures any change to Players.razor is validated against the tests."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Components/PlayersSidebarTests.cs",
+    "line": 33,
+    "description": "PlayersSidebar is not a standalone .razor component — the sidebar is inlined inside Players.razor. Tests check BuildExpectedSidebarMarkup() (a locally constructed string) against itself. No actual component exists named PlayersSidebar, so these tests provide zero coverage of the real rendered HTML. Every test trivially passes because it queries the same string it just built.",
+    "severity": "High",
+    "suggestedFix": "Either: (a) extract a PlayersSidebar.razor child component and test it with bUnit, or (b) merge the sidebar tests into PlayersPageTests.cs and test the inlined sidebar via a bUnit render of Players.razor with appropriate mocked service data."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+    "line": 121,
+    "description": "Test method name is PlayersPage_Title_ShowsCorrectCountForSinglePlayer but the assertion checks for 'Your 1 players' (grammatically incorrect plural). The test name claims it validates the correct count, but it actually locks in a known-incorrect string. If the component is ever fixed to output 'Your 1 player', this test will fail with a confusing mismatch between name and assertion.",
+    "severity": "Low",
+    "suggestedFix": "Either rename to PlayersPage_Title_SinglePlayerUsesGrammaticallyIncorrectPlural to document the known limitation, or fix Players.razor to emit the singular form and update the assertion to 'Your 1 player'."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Services/PlayerStatsServiceTests.cs",
+    "line": 66,
+    "description": "Test data is constructed as new List<Player>() (mutable concrete type) when the service signature is IReadOnlyList<Player>. While List<T> implements IReadOnlyList<T> and this compiles correctly, using IReadOnlyList<Player> in the test (or at minimum an immutable wrapper) better documents the contract and avoids accidentally depending on mutability in tests.",
+    "severity": "Low",
+    "suggestedFix": "Declare test list variables as IReadOnlyList<Player> players = new List<Player> { ... }; or use List<Player> players = [...]; and let implicit coercion handle the rest. This is a minor style issue — the tests are functionally correct."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+    "line": 92,
+    "description": "All tests in PlayersPageTests use bUnit v1 pattern avoidance by not using bUnit at all — they just check strings. The correct approach for Blazor component tests per project standards is bUnit v2 (BunitContext + Render<T>()). The current approach also violates the file placement rule: component tests should actually render the component.",
+    "severity": "Medium",
+    "suggestedFix": "Convert to bUnit v2: inherit from BunitContext, use Render<Players>() with mocked dependencies injected via Services.AddSingleton(). This validates the component's actual rendered output."
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "agent": "07_REPOSITORY_PATTERNS",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 29,
+    "description": "GetById returns a direct mutable reference to the stored Player object. Callers can mutate the repository's internal state without going through Update(), bypassing the lock and breaking encapsulation. Since Player is a mutable class with public setters, any caller can do `repo.GetById(id).Name = \"hacked\"` and the change silently persists in the dictionary without locking.",
+    "severity": "High",
+    "suggestedFix": "Either (a) return a defensive copy/clone of the Player object, or (b) document this as intentional and ensure all callers use Update() for mutations. Option (b) is pragmatic for a single-player game but should be explicitly documented in the interface contract. A Clone() or copy-constructor on Player would enable option (a)."
+  },
+  {
+    "agent": "07_REPOSITORY_PATTERNS",
+    "file": "Hattrick.Core/Repositories/IPlayerRepository.cs",
+    "line": 1,
+    "description": "Missing GetAll(), Clear(), and Load(IEnumerable<Player>) methods. The ISaveGameService needs to serialize/deserialize all players for save/load, but there is no way to retrieve all players regardless of team, no way to clear the repository for a fresh load, and no way to bulk-load players. These are essential for the save/load architecture described in CLAUDE.md.",
+    "severity": "Medium",
+    "suggestedFix": "Add three methods to IPlayerRepository: `IReadOnlyList<Player> GetAll()` to return all players, `void Clear()` to remove all players, and `void Load(IEnumerable<Player> players)` that materializes the input (players.ToList()) before clearing and re-adding. Implement all three with proper locking in PlayerRepository."
+  },
+  {
+    "agent": "07_REPOSITORY_PATTERNS",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 15,
+    "description": "GetByTeamId contains filtering logic (Where clause on TeamId) inside the repository. The review agent guidelines recommend keeping repositories as simple data access with filtering in services. However, this is a borderline case since filtering by a foreign key is a common repository query pattern rather than business logic.",
+    "severity": "Low",
+    "suggestedFix": "Consider adding a GetAll() method and letting services handle the TeamId filtering. Alternatively, keep GetByTeamId as a convenience query but ensure more complex filtering (e.g., eligible players, non-injured players) stays in service layer. Current implementation is acceptable if the team keeps this boundary clear."
+  },
+  {
+    "agent": "07_REPOSITORY_PATTERNS",
+    "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+    "line": 79,
+    "description": "RegisterServices helper method duplicates DI registrations from MauiProgram.cs. If a new service or repository is added to MauiProgram but not to this test helper, the DI tests will silently pass while the actual app registration could be incorrect or incomplete. The test is supposed to validate that all services are registered but it tests a separate copy of the registrations instead.",
+    "severity": "Medium",
+    "suggestedFix": "Extract the service registration logic from MauiProgram into a shared static method (e.g., `ServiceRegistration.RegisterAll(IServiceCollection)`) that both MauiProgram and the test use. This way the test validates the actual production registrations rather than a manually-maintained copy."
+  }
+]

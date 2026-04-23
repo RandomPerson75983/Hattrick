@@ -1,0 +1,74 @@
+[
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\CoachTypeEnumTests.cs",
+    "line": 18,
+    "description": "Test name 'CoachType_MemberHasExpectedOrdinal' has only two segments. The convention requires three: MethodName_Scenario_ExpectedResult. The name lacks the expected result segment.",
+    "severity": "Medium",
+    "suggestedFix": "Rename to 'CoachType_CastToInt_ReturnsExpectedOrdinal' to include the expected result segment."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 526,
+    "description": "Test name 'Team_IsMutable_AllPropertiesCanBeChangedAfterConstruction' uses 'Team' as the method segment, which is the class name rather than a specific method or property under test. This reduces clarity about what is actually being exercised.",
+    "severity": "Low",
+    "suggestedFix": "Rename to something like 'Properties_AfterConstruction_CanBeReassigned' to better reflect the MethodName_Scenario_ExpectedResult pattern."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 558,
+    "description": "Test names 'FullTeam_AllPropertiesCanBeSetViaObjectInitializer' and 'FullTeam_MinimalAiTeam_HasCorrectDefaults' use 'FullTeam' as the method segment, which is not a method or property name — it's a conceptual category. These don't follow MethodName_Scenario_ExpectedResult.",
+    "severity": "Low",
+    "suggestedFix": "Rename to e.g. 'ObjectInitializer_AllProperties_AreStoredCorrectly' and 'Constructor_AiTeamWithMinimalConfig_DefaultsAreZeroExceptCoachLevel'."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 27,
+    "description": "Test name 'Add_TeamIsRetrievableAfterAdd' does not follow MethodName_Scenario_ExpectedResult — it conflates scenario and expected result into one phrase and repeats 'Add'. The expected result is implicit, not explicit.",
+    "severity": "Medium",
+    "suggestedFix": "Rename to 'Add_NewTeam_IsRetrievableViaGetById' to separate scenario from expected result clearly."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 44,
+    "description": "Test name 'Add_MultipleTeamsAreAllRetrievable' collapses scenario and expected result into one segment. Missing distinct Scenario and ExpectedResult parts.",
+    "severity": "Medium",
+    "suggestedFix": "Rename to 'Add_MultipleDistinctTeams_AllAreRetrievableIndividually'."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 414,
+    "description": "Test name 'TeamRepository_DoesNotExposeRemoveMethod' uses the class name as the method segment, not a method name. It also reads as a structural/reflection test that could become stale if the interface changes semantics. The naming does not follow MethodName_Scenario_ExpectedResult.",
+    "severity": "Medium",
+    "suggestedFix": "Rename to 'ITeamRepository_Interface_DoesNotDeclareRemoveMethod' to better identify the subject (the interface) and the expected result."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 429,
+    "description": "Test name 'TeamRepository_ImplementsITeamRepository' uses the class name as the method segment rather than a method under test. This doesn't follow MethodName_Scenario_ExpectedResult.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'TeamRepository_WhenResolved_ImplementsITeamRepository' or simply rely on compile-time type safety (this test has little value if the code compiles)."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\DependencyInjectionTests.cs",
+    "line": 11,
+    "description": "All three test names use 'DI_' as the method segment, which is a category prefix, not a method name. 'DI_ContainerRegistersAllInfrastructureServices', 'DI_ContainerRegistersServicesAsSingletons', and 'DI_InterfacesResolveToCorrectConcreteTypes' do not follow MethodName_Scenario_ExpectedResult.",
+    "severity": "Medium",
+    "suggestedFix": "Rename to follow the pattern, e.g. 'AddHattrickCoreServices_Called_RegistersAllRequiredInterfaces', 'AddHattrickCoreServices_Called_RegistersServicesAsSingletons', 'AddHattrickCoreServices_Called_InterfacesMapToExpectedConcreteTypes'."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 263,
+    "description": "In 'Update_ReplacesTeamData', the test passes a new Team object to Update() and then calls GetById() for a fresh fetch — this is correct. However, the result variable is re-used to verify multiple fields without re-fetching, which is fine since GetById already returned a new reference. No actual mutation issue here, but worth noting that the test does not verify fields that were NOT set in updatedTeam (e.g., IsHumanControlled, FanClubSize) revert to defaults, making coverage of the 'replace' semantics incomplete.",
+    "severity": "Low",
+    "suggestedFix": "Add assertions for fields not set in updatedTeam to confirm they revert to default values after a full replacement, proving the repository replaces rather than patches the record."
+  }
+]

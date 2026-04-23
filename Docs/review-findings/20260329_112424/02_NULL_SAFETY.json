@@ -1,0 +1,10 @@
+[
+  {
+    "agent": "02_NULL_SAFETY",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 40,
+    "description": "GetDisplayName performs a raw dictionary lookup (DisplayNames[level]) without validating that the SkillLevel enum value is defined via Enum.IsDefined. If an invalid/undefined SkillLevel is passed (e.g., (SkillLevel)99 from a bad DTO cast or deserialization), this throws a raw KeyNotFoundException with no useful context.",
+    "severity": "Medium",
+    "suggestedFix": "Add enum validation at the start of GetDisplayName: if (!Enum.IsDefined(typeof(SkillLevel), level)) throw new ArgumentOutOfRangeException(nameof(level), level, $\"Invalid skill level: {level}\"); before the dictionary access."
+  }
+]

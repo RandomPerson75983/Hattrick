@@ -13,7 +13,7 @@ Execute a multi-agent code review, then fix issues using sequential TDD agents w
 
 ## Recovery Check
 
-If `.claude/review-state.json` exists → Resume from `currentChunk` and `currentPhase`
+If `Docs/review-state.json` exists → Resume from `currentChunk` and `currentPhase`
 
 ## Phase 1 — Chunk the Codebase
 
@@ -38,16 +38,16 @@ After all chunks: produce summary, delete state file.
 
 ## State Files
 
-- `.claude/review-findings/{timestamp}/` — Timestamped directory per review run (e.g., `20260228_143052/`)
-- `.claude/review-findings/{timestamp}/XX_NAME.json` — Each review agent writes its findings here (survives compaction)
-- `.claude/review-findings/{timestamp}/dedup-report.json` — Deduplication agent output
-- `.claude/review-findings/{timestamp}/validation-report.json` — Validation agent output
-- `.claude/review-handoff.json` — Context for fix agents (deleted after each fix group)
+- `Docs/review-findings/{timestamp}/` — Timestamped directory per review run (e.g., `20260228_143052/`)
+- `Docs/review-findings/{timestamp}/XX_NAME.json` — Each review agent writes its findings here (survives compaction)
+- `Docs/review-findings/{timestamp}/dedup-report.json` — Deduplication agent output
+- `Docs/review-findings/{timestamp}/validation-report.json` — Validation agent output
+- `Docs/review-handoff.json` — Context for fix agents (deleted after each fix group)
 
 **At the start of each review run**, generate the timestamp directory:
 ```
 timestamp=$(date +%Y%m%d_%H%M%S)
-mkdir -p .claude/review-findings/$timestamp
+mkdir -p Docs/review-findings/$timestamp
 ```
 Pass this path to all agents in the run.
 
@@ -55,7 +55,7 @@ Pass this path to all agents in the run.
 
 If resuming after compaction:
 1. Re-read this file
-2. Find the latest timestamped directory in `.claude/review-findings/`
+2. Find the latest timestamped directory in `Docs/review-findings/`
 3. Check for existing agent output — skip agents that already have findings files
 4. Run `TaskList` to see tracked issues
 5. Continue from current phase
@@ -82,7 +82,7 @@ If resuming after compaction:
    Review these files for issues in your specialty: [file list]
    Report: File, line, description, severity (Critical/High/Medium/Low), suggested fix
 
-   IMPORTANT: Write your findings to .claude/review-findings/{timestamp}/{XX_NAME}.json as an array:
+   IMPORTANT: Write your findings to Docs/review-findings/{timestamp}/{XX_NAME}.json as an array:
    [
      {
        "agent": "{XX_NAME}",
@@ -97,7 +97,7 @@ If resuming after compaction:
    ```
 
 3. **After each batch:** Create `TaskCreate` for every issue found
-4. **Recovery:** If `.claude/review-findings/{timestamp}/{XX_NAME}.json` already exists, skip that agent
+4. **Recovery:** If `Docs/review-findings/{timestamp}/{XX_NAME}.json` already exists, skip that agent
 
 ---
 
@@ -109,9 +109,9 @@ After all 22 review agents complete, spawn two post-review agents **sequentially
 ```
 Spawn agent (subagent_type: "general-purpose", name: "deduplicator")
 Prompt: Read C:\Projects\hattrick\Docs\CODE_REVIEW_AGENTS\22_DEDUPLICATION.md
-        Read all JSON files in .claude/review-findings/{timestamp}/
+        Read all JSON files in Docs/review-findings/{timestamp}/
         Identify and remove duplicate findings
-        Write output to .claude/review-findings/{timestamp}/dedup-report.json
+        Write output to Docs/review-findings/{timestamp}/dedup-report.json
         Mark duplicate TaskCreate entries as deleted
 ```
 
@@ -120,10 +120,10 @@ Prompt: Read C:\Projects\hattrick\Docs\CODE_REVIEW_AGENTS\22_DEDUPLICATION.md
 Spawn agent (subagent_type: "general-purpose", name: "validator")
 Prompt: Read C:\Projects\hattrick\Docs\CODE_REVIEW_AGENTS\23_VALIDATION.md
         Read C:\Projects\hattrick\CLAUDE.md for project conventions
-        Read .claude/review-findings/{timestamp}/dedup-report.json
-        Read all remaining findings in .claude/review-findings/{timestamp}/
+        Read Docs/review-findings/{timestamp}/dedup-report.json
+        Read all remaining findings in Docs/review-findings/{timestamp}/
         Validate each issue against actual source code
-        Write output to .claude/review-findings/{timestamp}/validation-report.json
+        Write output to Docs/review-findings/{timestamp}/validation-report.json
         Mark false positive TaskCreate entries as deleted
 ```
 
@@ -140,7 +140,7 @@ Prompt: Read C:\Projects\hattrick\Docs\CODE_REVIEW_AGENTS\23_VALIDATION.md
 
 ### Create handoff file
 ```json
-// .claude/review-handoff.json
+// Docs/review-handoff.json
 {
   "issueGroup": "Thread safety in FooService",
   "issues": [
@@ -156,7 +156,7 @@ Prompt: Read C:\Projects\hattrick\Docs\CODE_REVIEW_AGENTS\23_VALIDATION.md
 ```
 Spawn agent (subagent_type: "general-purpose", name: "test-writer")
 Prompt: Read .claude/skills/sprint/test-writer.md
-        Read .claude/review-handoff.json for issues
+        Read Docs/review-handoff.json for issues
         Write tests exposing these issues
         Update handoff.testFiles and handoff.notes
 ```
@@ -165,7 +165,7 @@ Prompt: Read .claude/skills/sprint/test-writer.md
 ```
 Spawn agent (subagent_type: "general-purpose", name: "test-verifier")
 Prompt: Read .claude/skills/sprint/test-verifier.md
-        Read .claude/review-handoff.json for issue context
+        Read Docs/review-handoff.json for issue context
         Review the tests written by @test-writer for quality and coverage
         Report PASS or FAIL with specific issues
 ```
@@ -180,7 +180,7 @@ Prompt: Read .claude/skills/sprint/test-verifier.md
 ```
 Spawn agent (subagent_type: "general-purpose", name: "coder")
 Prompt: Read .claude/skills/sprint/coder.md
-        Read .claude/review-handoff.json for context
+        Read Docs/review-handoff.json for context
         Fix issues to make tests pass
         Update handoff.implFiles and handoff.notes
 ```
@@ -189,7 +189,7 @@ Prompt: Read .claude/skills/sprint/coder.md
 ```
 Spawn agent (subagent_type: "general-purpose", name: "verifier")
 Prompt: Read .claude/skills/sprint/verifier.md
-        Read .claude/review-handoff.json for file paths
+        Read Docs/review-handoff.json for file paths
         Verify fixes
 ```
 

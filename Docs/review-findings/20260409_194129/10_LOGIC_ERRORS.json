@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 87,
+    "description": "YellowCards comment says '(0-2). At 2, player is suspended next match.' but per the official Hattrick manual, suspension occurs after accumulating 3 bookings, not 2. The comment and the implied valid range are wrong. This will mislead any future match engine or suspension logic built on this assumption.",
+    "severity": "High",
+    "suggestedFix": "Change the comment to '/// Number of yellow cards (0-3). At 3, player is suspended next match.' to match the official Hattrick rules (manual: 'A player who has accumulated 3 bookings... will have a red card symbol')."
+  },
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+    "line": 512,
+    "description": "Test region header says 'YellowCards (0-2)' and the boundary test YellowCards_BoundaryMaximum_IsTwo asserts the maximum is 2 with message 'maximum YellowCards is 2 before suspension'. Per the official Hattrick manual, 3 bookings triggers suspension, so the maximum should be 3. The YellowCards_AcceptsValidValues theory data also omits 3 as a valid value. These tests encode an incorrect game rule.",
+    "severity": "High",
+    "suggestedFix": "Change the region header to '(0-3)', add InlineData(3) to the theory test, and update YellowCards_BoundaryMaximum to assert 3 with the message 'maximum YellowCards is 3 before suspension'."
+  },
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 54,
+    "description": "Player has both an 'int Stamina' property (line 54) and SkillType.Stamina (value 7) available as a key in the Skills dictionary. In Hattrick, Stamina is a trainable skill with sub-level precision just like other skills. Having a separate integer property creates ambiguity about which is the source of truth and risks logic errors where one is updated but the other is not. Future training or match engine code could easily use the wrong one.",
+    "severity": "Medium",
+    "suggestedFix": "Remove the standalone 'int Stamina' property and use only Skills[SkillType.Stamina] for consistency, or clearly document which property is authoritative and add a computed property that derives from the other. The same concern applies to 'int Form' and 'int Experience' if those become sub-level skills later."
+  },
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 216,
+    "description": "Update_ReplacesPlayerData test mutates the same Player object reference that was passed to Add, then calls Update. Because PlayerRepository stores references (not clones), the internal dictionary already reflects the mutations before Update is called. The test passes trivially and does not actually verify that Update replaces the stored reference. It would pass even if Update were a no-op.",
+    "severity": "Medium",
+    "suggestedFix": "Create a NEW Player object with the same Id but different field values, then pass that new object to Update. This way the test actually verifies that Update replaces the stored reference. Example: var updatedPlayer = new Player { Id = player.Id, TeamId = player.TeamId, Name = \"Updated Name\", Age = 30, Form = 8 }; _sut.Update(updatedPlayer);"
+  },
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 27,
+    "description": "GetById returns the actual Player object stored in the dictionary, not a copy. This means callers can mutate the internal repository state without calling Update, bypassing thread-safety locks and any future validation. Combined with the GetByTeamId method which also returns live references inside the list, external code can silently corrupt repository state.",
+    "severity": "Medium",
+    "suggestedFix": "This is a known trade-off in the current architecture (mutable model + reference semantics). If defensive copies are desired, return a cloned Player from GetById and GetByTeamId. At minimum, document this behavior explicitly so callers know Update must be called to 'commit' changes under the lock."
+  }
+]

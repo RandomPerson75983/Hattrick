@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 20,
+    "description": "Non-monotonic display name progression: Level 9 maps to 'excellent' but Level 10 maps to 'mediocre'. Quality names go UP from 1-9, then DROP sharply at 10 before climbing again 11-20. A player training from Level 9 to Level 10 would appear to get worse.",
+    "severity": "Critical",
+    "suggestedFix": "Reorder the display names so they form a strictly monotonic progression from weakest (Level 1) to strongest (Level 20) using official Hattrick terminology."
+  },
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 38,
+    "description": "GetDisplayName performs a direct dictionary lookup with DisplayNames[level]. If called with a SkillLevel value not in the dictionary (e.g., (SkillLevel)0), it throws an unhandled KeyNotFoundException.",
+    "severity": "High",
+    "suggestedFix": "Use TryGetValue with a guard clause, or throw a descriptive ArgumentOutOfRangeException."
+  },
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick.Core/Models/SkillLevel.cs",
+    "line": 8,
+    "description": "SkillLevel default value (0) is not a valid enum member. default(SkillLevel) is 0, which does not correspond to any defined member. Uninitialized fields silently hold an undefined value.",
+    "severity": "High",
+    "suggestedFix": "Add a sentinel value like None = 0 or Undefined = 0, or start the enum at 0."
+  },
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 228,
+    "description": "Test name GetDisplayName_Progression_IsMonotonic claims monotonicity but only checks string equality against hardcoded values. The test passes despite the non-monotonic semantic progression.",
+    "severity": "Medium",
+    "suggestedFix": "Rename to GetDisplayName_Progression_MatchesExpectedMapping."
+  },
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick.Core/Models/SkillType.cs",
+    "line": 7,
+    "description": "SkillType enum lacks explicit integer values, unlike every other enum in this codebase. If serialized to JSON save files, adding/removing/reordering members later will silently break deserialization.",
+    "severity": "Low",
+    "suggestedFix": "Add explicit values: Keeper = 0, Defending = 1, Playmaking = 2, etc."
+  }
+]

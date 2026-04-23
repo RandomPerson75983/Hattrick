@@ -1,0 +1,672 @@
+{
+  "totalRawFindings": 69,
+  "duplicatesRemoved": 18,
+  "uniqueFindings": 51,
+  "duplicateGroups": [
+    {
+      "groupName": "Mutable reference leak from GetById/GetByTeamId",
+      "reason": "Same file (PlayerRepository.cs), same methods (GetById/GetByTeamId), same underlying issue: returning direct mutable references to stored Player objects, bypassing thread-safety and encapsulation",
+      "kept": {
+        "agent": "06_PLAYER_STATE",
+        "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+        "line": 29,
+        "description": "GetById returns a direct mutable reference to the stored Player object. Since Player is fully mutable, callers can modify player state (e.g., TeamId, InjuryWeeks, Skills) without calling Update(), bypassing the repository's lock and any future change-tracking or validation. This breaks the repository's thread-safety guarantees because concurrent threads can read and mutate the same Player instance without synchronization."
+      },
+      "removed": [
+        {
+          "agent": "06_PLAYER_STATE",
+          "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+          "line": 19,
+          "description": "GetByTeamId returns a read-only list, but the Player objects inside are direct mutable references. (Merged into the kept finding which covers both methods.)"
+        },
+        {
+          "agent": "07_REPOSITORY_PATTERNS",
+          "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+          "line": 29,
+          "description": "GetById returns a direct mutable reference to the stored Player object."
+        },
+        {
+          "agent": "08_ARCHITECTURE",
+          "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+          "line": 27,
+          "description": "GetById returns a direct mutable reference. Same issue applies to GetByTeamId (line 15)."
+        },
+        {
+          "agent": "10_LOGIC_ERRORS",
+          "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+          "line": 27,
+          "description": "GetById returns the actual Player object stored in the dictionary, not a copy."
+        },
+        {
+          "agent": "11_EDGE_CASES",
+          "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+          "line": 28,
+          "description": "GetById() returns a direct mutable reference to the stored Player object."
+        }
+      ]
+    },
+    {
+      "groupName": "Missing null guards on Add/Update in PlayerRepository",
+      "reason": "Same file (PlayerRepository.cs), same methods (Add line ~36-37, Update line ~50), same issue: no null guard on player parameter",
+      "kept": {
+        "agent": "11_EDGE_CASES",
+        "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+        "line": 37,
+        "description": "Add() does not guard against a null player argument. Passing null will throw a NullReferenceException on player.Id instead of a clear ArgumentNullException. The same applies to Update()."
+      },
+      "removed": [
+        {
+          "agent": "02_NULL_SAFETY",
+          "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+          "line": 36,
+          "description": "Add(Player player) does not validate that 'player' is not null before accessing player.Id."
+        },
+        {
+          "agent": "02_NULL_SAFETY",
+          "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+          "line": 50,
+          "description": "Update(Player player) does not validate that 'player' is not null before accessing player.Id."
+        },
+        {
+          "agent": "17_ERROR_HANDLING",
+          "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+          "line": 37,
+          "description": "Add() method has no null guard for the 'player' parameter (ERR-001)."
+        },
+        {
+          "agent": "17_ERROR_HANDLING",
+          "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+          "line": 50,
+          "description": "Update() method has no null guard for the 'player' parameter (ERR-002)."
+        }
+      ]
+    },
+    {
+      "groupName": "DI registration duplication between MauiProgram.cs and DependencyInjectionTests.cs",
+      "reason": "Same file (DependencyInjectionTests.cs line 79), same issue: RegisterServices helper duplicates production DI registrations from MauiProgram.cs. All four agents recommend extracting a shared registration method.",
+      "kept": {
+        "agent": "05_TEST_QUALITY",
+        "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+        "line": 79,
+        "description": "The RegisterServices method duplicates the application's actual DI registration. If the real app adds or changes registrations, this test's private method won't reflect that, making the tests pass even though the real container is misconfigured."
+      },
+      "removed": [
+        {
+          "agent": "07_REPOSITORY_PATTERNS",
+          "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+          "line": 79,
+          "description": "RegisterServices helper method duplicates DI registrations from MauiProgram.cs."
+        },
+        {
+          "agent": "08_ARCHITECTURE",
+          "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+          "line": 79,
+          "description": "The DI test has its own RegisterServices method that duplicates the registrations from MauiProgram.cs."
+        },
+        {
+          "agent": "18_DUPLICATE_CODE",
+          "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+          "line": 79,
+          "description": "DI registration duplicated between MauiProgram.cs and DependencyInjectionTests.cs (DUP-001)."
+        }
+      ]
+    },
+    {
+      "groupName": "Tautological DI test (BeAssignableTo on interface-resolved services)",
+      "reason": "Same file (DependencyInjectionTests.cs line 55), same issue: DI_InterfacesAreProperlyImplemented uses BeAssignableTo on services already resolved via GetRequiredService<IInterface>, which is always true by definition.",
+      "kept": {
+        "agent": "16_ASSERTION_QUALITY",
+        "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+        "line": 55,
+        "description": "DI_InterfacesAreProperlyImplemented uses .BeAssignableTo<IInterface>() on objects already resolved via GetRequiredService<IInterface>(). This is always true by definition and tests nothing. Should use .BeOfType<ConcreteImplementation>() to verify the correct implementation type is wired up."
+      },
+      "removed": [
+        {
+          "agent": "05_TEST_QUALITY",
+          "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+          "line": 55,
+          "description": "Test DI_InterfacesAreProperlyImplemented is a tautology."
+        },
+        {
+          "agent": "18_DUPLICATE_CODE",
+          "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+          "line": 63,
+          "description": "Service resolution code duplicated across DI test methods; DI_InterfacesAreProperlyImplemented is a duplicate of DI_ContainerRegistersAllInfrastructureServices with weaker assertions (DUP-002)."
+        }
+      ]
+    },
+    {
+      "groupName": "Test reference mutation in Update_AllPlayerFields_ArePersisted",
+      "reason": "Same file (PlayerRepositoryTests.cs), same test (Update_AllPlayerFields_ArePersisted around line 662-669), same issue: test mutates the same Player reference that was added, making Update a no-op.",
+      "kept": {
+        "agent": "05_TEST_QUALITY",
+        "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+        "line": 662,
+        "description": "Reference mutation in Update_AllPlayerFields_ArePersisted: The test mutates the same Player object reference that was added, calls Update, then fetches via GetById. Since the repository stores the same reference, GetById returns the mutated object. All assertions verify the object against itself, so they would pass even if Update() did nothing."
+      },
+      "removed": [
+        {
+          "agent": "06_PLAYER_STATE",
+          "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+          "line": 669,
+          "description": "Test Update_AllPlayerFields_ArePersisted mutates the same Player object that was added to the repository, then calls Update. The 'update' is a no-op."
+        }
+      ]
+    },
+    {
+      "groupName": "Test reference mutation in Update_ReplacesPlayerData",
+      "reason": "Same file (PlayerRepositoryTests.cs), same test (Update_ReplacesPlayerData line 216), same issue: test mutates the same Player reference that was added.",
+      "kept": {
+        "agent": "05_TEST_QUALITY",
+        "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+        "line": 216,
+        "description": "Reference mutation in Update_ReplacesPlayerData: The test mutates the same Player object reference that was added to the repository, then calls Update, then calls GetById. Because PlayerRepository stores references (not copies), GetById returns the exact same object. The assertions verify the mutated object against itself, so the test would pass even if Update() were a no-op."
+      },
+      "removed": [
+        {
+          "agent": "10_LOGIC_ERRORS",
+          "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+          "line": 216,
+          "description": "Update_ReplacesPlayerData test mutates the same Player object reference that was passed to Add, then calls Update. The test passes trivially and does not actually verify that Update replaces the stored reference."
+        }
+      ]
+    },
+    {
+      "groupName": "Default property values outside documented valid range (Form=0, Stamina=0, etc.) + test codifying invalid defaults",
+      "reason": "Same file (Player.cs and PlayerModelTests.cs), same underlying issue: numeric properties default to 0 but documented minimums are 1. Agent 06 reported the test side, agent 11 reported both the model and test sides. The 11_EDGE_CASES individual property findings are kept as they provide specific actionable items per property, while the 06_PLAYER_STATE test-side finding is a duplicate of 11_EDGE_CASES test-side finding.",
+      "kept": {
+        "agent": "06_PLAYER_STATE",
+        "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+        "line": 74,
+        "description": "Test Constructor_Default_NumericPropertiesAreZero asserts that Form, Stamina, Experience, and Leadership default to 0, but the documented valid minimum for all four is 1. A newly constructed Player with these defaults is in an invalid game state."
+      },
+      "removed": [
+        {
+          "agent": "11_EDGE_CASES",
+          "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+          "line": 74,
+          "description": "Test Constructor_Default_NumericPropertiesAreZero asserts Form, Stamina, Experience, Leadership all default to 0, but the model documents these as having minimum values of 1."
+        }
+      ]
+    },
+    {
+      "groupName": "Missing GetAll/Clear/Load methods on IPlayerRepository for save/load",
+      "reason": "Same file (IPlayerRepository.cs), same issue: repository lacks GetAll, Clear, and Load methods needed for save/load functionality.",
+      "kept": {
+        "agent": "14_SAVE_LOAD",
+        "file": "Hattrick.Core/Repositories/IPlayerRepository.cs",
+        "line": 8,
+        "description": "IPlayerRepository has no GetAll(), ClearAsync(), or LoadAsync() methods. When save/load is wired up, the repository needs these to extract all players for serialization, wipe state before loading, and bulk-insert players to restore state."
+      },
+      "removed": [
+        {
+          "agent": "07_REPOSITORY_PATTERNS",
+          "file": "Hattrick.Core/Repositories/IPlayerRepository.cs",
+          "line": 1,
+          "description": "Missing GetAll(), Clear(), and Load(IEnumerable<Player>) methods on IPlayerRepository."
+        }
+      ]
+    }
+  ],
+  "survivingFindings": [
+    {
+      "id": 1,
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 496,
+      "description": "Magic number 50 used as loop bound for preloading players in ConcurrentReadsAndWrites test.",
+      "severity": "Low",
+      "suggestedFix": "Extract to a named constant: const int preloadCount = 50;"
+    },
+    {
+      "id": 2,
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 506,
+      "description": "Magic number 3 used as modulo divisor to branch between Add/Read-by-team/Read-by-id operations in ConcurrentReadsAndWrites test.",
+      "severity": "Low",
+      "suggestedFix": "Extract to a named constant: const int operationTypeCount = 3;"
+    },
+    {
+      "id": 3,
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 579,
+      "description": "Magic numbers 20 and 15 in expression '20 + (i % 15)' for generating player ages in ConcurrentUpdates test.",
+      "severity": "Low",
+      "suggestedFix": "Extract to named constants: const int baseAge = 20; const int ageRange = 15;"
+    },
+    {
+      "id": 4,
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 17,
+      "description": "Magic numbers 22 (Age), 50 (AgeDays), 6 (Form), 7 (Stamina), 5 (Experience) in the CreatePlayer helper method.",
+      "severity": "Low",
+      "suggestedFix": "Extract to named constants at the top of the test class."
+    },
+    {
+      "id": 5,
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+      "line": 256,
+      "description": "Magic numbers 5.0 and 0.5 in formula '5.0 + (int)skillType * 0.5' used to generate skill values.",
+      "severity": "Low",
+      "suggestedFix": "Extract to named constants: const double baseSkillValue = 5.0; const double skillIncrement = 0.5;"
+    },
+    {
+      "id": 6,
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+      "line": 259,
+      "description": "Magic number 8 in HaveCount(8) assertion for skill type count. Should reference the enum to avoid drift.",
+      "severity": "Low",
+      "suggestedFix": "Replace with: player.Skills.Should().HaveCount(Enum.GetValues(typeof(SkillType)).Length);"
+    },
+    {
+      "id": 7,
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+      "line": 29,
+      "description": "GetById and GetByTeamId return direct mutable references to stored Player objects. Callers can modify player state without calling Update(), bypassing the repository's lock and any future change-tracking or validation. This breaks thread-safety guarantees.",
+      "severity": "High",
+      "suggestedFix": "Return defensive copies (clones) of Player from GetById and GetByTeamId, or make Player immutable. Alternatively, document that callers MUST call Update() after mutation."
+    },
+    {
+      "id": 8,
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 18,
+      "description": "TeamId is a non-nullable Guid using Guid.Empty as sentinel for 'unassigned'. Prevents null-safety checks and risks accidental equality between unassigned players.",
+      "severity": "Medium",
+      "suggestedFix": "Change TeamId to Guid? (nullable). Update GetByTeamId and all references to use .HasValue / .Value patterns."
+    },
+    {
+      "id": 9,
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 1,
+      "description": "Player model has no validation on any property. Documented ranges can all be violated by setting invalid values.",
+      "severity": "Low",
+      "suggestedFix": "Add validation via property setters with range checks, or via a Validate() method, or add XML doc comments stating the caller is responsible for validation."
+    },
+    {
+      "id": 10,
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+      "line": 74,
+      "description": "Test Constructor_Default_NumericPropertiesAreZero asserts that Form, Stamina, Experience, and Leadership default to 0, but the documented valid minimum for all four is 1. A newly constructed Player is in an invalid game state.",
+      "severity": "Medium",
+      "suggestedFix": "Change the Player model to default Form=1, Stamina=1, Experience=1, Leadership=1, or add validation that catches zero values before gameplay."
+    },
+    {
+      "id": 11,
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+      "line": 37,
+      "description": "Add() and Update() do not guard against null player arguments. Passing null will throw NullReferenceException instead of ArgumentNullException.",
+      "severity": "High",
+      "suggestedFix": "Add ArgumentNullException.ThrowIfNull(player); as the first line in both Add() and Update() methods."
+    },
+    {
+      "id": 12,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 216,
+      "description": "Reference mutation in Update_ReplacesPlayerData: The test mutates the same Player object reference that was added to the repository, then calls Update. The assertions verify the mutated object against itself, so the test would pass even if Update() were a no-op.",
+      "severity": "Medium",
+      "suggestedFix": "Create a separate Player object with the same Id and updated fields for the Update call."
+    },
+    {
+      "id": 13,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 238,
+      "description": "Reference mutation in Update_PreservesPlayerId: Same issue as Update_ReplacesPlayerData. The assertion is trivially true because result IS player.",
+      "severity": "Medium",
+      "suggestedFix": "Create a new Player object with the same Id for the update, then verify that GetById returns an object with that Id."
+    },
+    {
+      "id": 14,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 662,
+      "description": "Reference mutation in Update_AllPlayerFields_ArePersisted: All assertions verify the object against itself, so they would pass even if Update() did nothing.",
+      "severity": "Medium",
+      "suggestedFix": "Create a new Player object with the same Id and all updated fields. Pass that to Update(), then fetch via GetById and assert against expected values."
+    },
+    {
+      "id": 15,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 270,
+      "description": "Reference mutation in Update_DoesNotAffectOtherPlayers: The test mutates player1.Name directly then calls Update. If the repository were later refactored to clone on Add, this test's Update call would not actually update the stored copy.",
+      "severity": "Low",
+      "suggestedFix": "Create a new Player object with player1's Id and the updated Name."
+    },
+    {
+      "id": 16,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+      "line": 79,
+      "description": "The RegisterServices method duplicates the application's actual DI registration. If the real app adds or changes registrations, this test's private method won't reflect that.",
+      "severity": "High",
+      "suggestedFix": "Extract the application's DI registration into a shared extension method (e.g., IServiceCollection.AddHattrickServices()) and call that method both in the app startup and in these tests."
+    },
+    {
+      "id": 17,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 27,
+      "description": "Reference mutation in Add_PlayerIsRetrievableAfterAdd: Since the repository stores the reference directly, result IS player. The assertion is trivially true.",
+      "severity": "Low",
+      "suggestedFix": "Assert against the literal expected values rather than comparing result properties to the same object's properties."
+    },
+    {
+      "id": 18,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 290,
+      "description": "Reference mutation in Update_CanChangeTeamId: The test mutates player.TeamId directly on the same reference stored in the repository, then calls Update. The test would pass even if Update() were a no-op.",
+      "severity": "Medium",
+      "suggestedFix": "Create a new Player object with the same Id but a different TeamId."
+    },
+    {
+      "id": 19,
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+      "line": 55,
+      "description": "DI_InterfacesAreProperlyImplemented uses .BeAssignableTo<IInterface>() on objects already resolved via GetRequiredService<IInterface>(). This is always true by definition and tests nothing.",
+      "severity": "Medium",
+      "suggestedFix": "Replace .BeAssignableTo<IRandomProvider>() with .BeOfType<RandomProvider>() (and similarly for all six services)."
+    },
+    {
+      "id": 20,
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+      "line": 26,
+      "description": "Redundant NotBeNull assertions after GetRequiredService. GetRequiredService<T>() already throws InvalidOperationException if the service is not registered.",
+      "severity": "Low",
+      "suggestedFix": "Remove the .NotBeNull() assertions or add .BeOfType<ConcreteType>() to verify correct implementation binding."
+    },
+    {
+      "id": 21,
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+      "line": 251,
+      "description": "Skills_CanSetAllEightSkillTypes only asserts .HaveCount(8) without verifying that each SkillType key is present or that the calculated values are correct.",
+      "severity": "Medium",
+      "suggestedFix": "Add assertions to verify specific skill values using .ContainKey().WhoseValue.Should().Be() or .BeEquivalentTo()."
+    },
+    {
+      "id": 22,
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 58,
+      "description": "NotBeNull as only assertion for individual player lookups in Add_MultiplePlayersAreAllRetrievable. Does not verify the correct player was retrieved.",
+      "severity": "Medium",
+      "suggestedFix": "Replace .NotBeNull() with assertions that verify player identity."
+    },
+    {
+      "id": 23,
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 186,
+      "description": "GetByTeamId_ReturnsIReadOnlyList only verifies the return type with .BeAssignableTo without content verification.",
+      "severity": "Low",
+      "suggestedFix": "Add result.Should().HaveCount(1) and result[0].Id.Should().Be(player.Id)."
+    },
+    {
+      "id": 24,
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 488,
+      "description": "ConcurrentReadsAndWrites_DoNotThrow only asserts no exception without state verification. Concurrent corruption that doesn't throw would go undetected.",
+      "severity": "Medium",
+      "suggestedFix": "After the parallel operations, verify state: count total players and confirm preloaded players are still retrievable."
+    },
+    {
+      "id": 25,
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 565,
+      "description": "ConcurrentUpdates_DoNotCorruptState only checks name prefix. A torn/partial update would pass this test despite data corruption.",
+      "severity": "Medium",
+      "suggestedFix": "Parse the thread number from result.Name and verify result.Age and result.TeamId match expected values for that thread."
+    },
+    {
+      "id": 26,
+      "agent": "07_REPOSITORY_PATTERNS",
+      "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+      "line": 15,
+      "description": "GetByTeamId contains filtering logic (Where clause on TeamId) inside the repository. Consider keeping complex filtering in services.",
+      "severity": "Low",
+      "suggestedFix": "Consider adding a GetAll() method and letting services handle the TeamId filtering, or keep GetByTeamId as a convenience query."
+    },
+    {
+      "id": 27,
+      "agent": "08_ARCHITECTURE",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 13,
+      "description": "Player.Id has a public setter, allowing the ID to be changed after construction. This breaks the repository's internal dictionary consistency.",
+      "severity": "Medium",
+      "suggestedFix": "Make the Id setter init-only (use 'init' instead of 'set')."
+    },
+    {
+      "id": 28,
+      "agent": "08_ARCHITECTURE",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 8,
+      "description": "The test instantiates the concrete PlayerRepository directly rather than using the IPlayerRepository interface.",
+      "severity": "Low",
+      "suggestedFix": "Declare the SUT as IPlayerRepository: 'private readonly IPlayerRepository _sut = new PlayerRepository()'."
+    },
+    {
+      "id": 29,
+      "agent": "08_ARCHITECTURE",
+      "file": "Hattrick/MauiProgram.cs",
+      "line": 24,
+      "description": "SaveGameService and SaveSlotService are registered as Singletons but are stateless services. Architecture guide specifies services as Scoped.",
+      "severity": "Low",
+      "suggestedFix": "Consider whether these should be AddScoped per the architecture guide. For MAUI desktop apps this is a minor consistency issue."
+    },
+    {
+      "id": 30,
+      "agent": "10_LOGIC_ERRORS",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 87,
+      "description": "YellowCards comment says '(0-2). At 2, player is suspended next match.' but per the official Hattrick manual, suspension occurs after accumulating 3 bookings, not 2.",
+      "severity": "High",
+      "suggestedFix": "Change the comment to '(0-3). At 3, player is suspended next match.'"
+    },
+    {
+      "id": 31,
+      "agent": "10_LOGIC_ERRORS",
+      "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+      "line": 512,
+      "description": "Test region header says 'YellowCards (0-2)' and boundary test asserts maximum is 2. Per official manual, 3 bookings triggers suspension. Tests encode an incorrect game rule.",
+      "severity": "High",
+      "suggestedFix": "Change region header to '(0-3)', add InlineData(3) to theory test, update boundary test to assert 3."
+    },
+    {
+      "id": 32,
+      "agent": "10_LOGIC_ERRORS",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 54,
+      "description": "Player has both an 'int Stamina' property and SkillType.Stamina available as a key in the Skills dictionary. Creates ambiguity about source of truth and risks logic errors.",
+      "severity": "Medium",
+      "suggestedFix": "Remove standalone 'int Stamina' property and use only Skills[SkillType.Stamina], or document which is authoritative."
+    },
+    {
+      "id": 33,
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 29,
+      "description": "No validation on Age property. Comment says minimum is 17, but nothing prevents negative values. Default is 0.",
+      "severity": "Medium",
+      "suggestedFix": "Add a property setter guard or service-layer validation. Consider making default Age = 17."
+    },
+    {
+      "id": 34,
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 33,
+      "description": "No validation on AgeDays property. Comment says 0-111, but nothing prevents out-of-range values.",
+      "severity": "Medium",
+      "suggestedFix": "Add validation to enforce 0 <= AgeDays <= 111."
+    },
+    {
+      "id": 35,
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 49,
+      "description": "Form property documented as 1-8 but defaults to 0 (outside valid range) and has no range validation.",
+      "severity": "Medium",
+      "suggestedFix": "Set default to 1 and/or add validation to enforce 1 <= Form <= 8."
+    },
+    {
+      "id": 36,
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 54,
+      "description": "Stamina property documented as 1-9 but defaults to 0 (outside valid range).",
+      "severity": "Medium",
+      "suggestedFix": "Set default to 1 and/or add validation to enforce 1 <= Stamina <= 9."
+    },
+    {
+      "id": 37,
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 59,
+      "description": "Experience property documented as 1-20 but defaults to 0 (outside valid range).",
+      "severity": "Medium",
+      "suggestedFix": "Set default to 1 and/or add validation to enforce 1 <= Experience <= 20."
+    },
+    {
+      "id": 38,
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 109,
+      "description": "Leadership property documented as 1-8 but defaults to 0 (outside valid range).",
+      "severity": "Medium",
+      "suggestedFix": "Set default to 1 and/or add validation to enforce 1 <= Leadership <= 8."
+    },
+    {
+      "id": 39,
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 89,
+      "description": "YellowCards property documented as 0-2 but nothing prevents values like 3 or -1. InjuryWeeks has no guard against negative values.",
+      "severity": "Low",
+      "suggestedFix": "Add validation to enforce 0 <= YellowCards <= 2 and InjuryWeeks >= 0."
+    },
+    {
+      "id": 40,
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 64,
+      "description": "Loyalty documented as 0.0-1.0 but no validation prevents out-of-range values.",
+      "severity": "Low",
+      "suggestedFix": "Add validation to enforce 0.0 <= Loyalty <= 1.0."
+    },
+    {
+      "id": 41,
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 39,
+      "description": "Skills dictionary property has a public setter that allows replacement with null, which would cause NullReferenceException.",
+      "severity": "Medium",
+      "suggestedFix": "Make the Skills setter private or init-only, or add a null guard."
+    },
+    {
+      "id": 42,
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+      "line": 460,
+      "description": "Test Remove_FromOneTeam_DoesNotAffectOtherTeam uses .First() on GetByTeamId() result without guarding against empty collection.",
+      "severity": "Low",
+      "suggestedFix": "Use .Should().ContainSingle().Which.Name.Should().Be() instead of .First().Name."
+    },
+    {
+      "id": 43,
+      "agent": "12_PERFORMANCE",
+      "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+      "line": 19,
+      "description": "GetByTeamId scans all players with .Where() on every call. At scale this is O(n) per call. A secondary index would make lookups O(1).",
+      "severity": "Medium",
+      "suggestedFix": "Add a secondary Dictionary<Guid, List<Player>> index keyed by TeamId. Maintain it in Add/Update/Remove."
+    },
+    {
+      "id": 44,
+      "agent": "12_PERFORMANCE",
+      "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+      "line": 40,
+      "description": "Add method does two dictionary operations: ContainsKey + indexer set. Dictionary.TryAdd performs both in a single lookup.",
+      "severity": "Low",
+      "suggestedFix": "Replace with: if (!_players.TryAdd(player.Id, player)) throw new ArgumentException(...);"
+    },
+    {
+      "id": 45,
+      "agent": "12_PERFORMANCE",
+      "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+      "line": 55,
+      "description": "Update method does two dictionary operations: ContainsKey + indexer set. Two hash lookups when one would suffice.",
+      "severity": "Low",
+      "suggestedFix": "Use TryGetValue if the existing value is needed, otherwise current pattern is acceptable for clarity at this scale."
+    },
+    {
+      "id": 46,
+      "agent": "14_SAVE_LOAD",
+      "file": "Hattrick.Core/Repositories/IPlayerRepository.cs",
+      "line": 8,
+      "description": "IPlayerRepository has no GetAll(), ClearAsync(), or LoadAsync() methods needed for save/load functionality.",
+      "severity": "High",
+      "suggestedFix": "Add GetAll(), ClearAsync(), LoadAsync() methods to IPlayerRepository and implement in PlayerRepository."
+    },
+    {
+      "id": 47,
+      "agent": "14_SAVE_LOAD",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 39,
+      "description": "Player.Skills is Dictionary<SkillType, double> with enum keys. System.Text.Json cannot round-trip Dictionary<TEnum, TValue> by default. Serialization will throw or produce unusable JSON keys.",
+      "severity": "Critical",
+      "suggestedFix": "Add a custom JsonConverter for Dictionary<SkillType, double>, use a DTO, or verify with a round-trip test."
+    },
+    {
+      "id": 48,
+      "agent": "14_SAVE_LOAD",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 13,
+      "description": "Player.Id defaults to Guid.NewGuid() on construction. When deserializing, if the DTO pattern is used later or serialization settings skip default values, auto-generated Id could mask a missing Id in save file.",
+      "severity": "Low",
+      "suggestedFix": "Add a round-trip save/load test that verifies Player.Id survives serialization."
+    },
+    {
+      "id": 49,
+      "agent": "14_SAVE_LOAD",
+      "file": "Hattrick.Core/Services/SaveGameService.cs",
+      "line": 20,
+      "description": "SaveGameService uses DefaultIgnoreCondition = WhenWritingNull. If any property is changed to nullable, null values will be silently omitted from JSON, causing data loss on load.",
+      "severity": "Medium",
+      "suggestedFix": "Consider using JsonIgnoreCondition.Never for save game data, or document this behavior prominently."
+    },
+    {
+      "id": 50,
+      "agent": "14_SAVE_LOAD",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 1,
+      "description": "No PlayerDto class exists yet. When the DTO layer is introduced, every Player property must be replicated. With 24 properties this is high-risk for missing a property.",
+      "severity": "Low",
+      "suggestedFix": "When implementing the DTO layer, write a unit test using reflection to verify every public property on Player has a corresponding property on PlayerDto."
+    },
+    {
+      "id": 51,
+      "agent": "14_SAVE_LOAD",
+      "file": "Hattrick.Core/Models/Player.cs",
+      "line": 99,
+      "description": "Player.Wage is decimal type. System.Text.Json may lose precision for edge-case values during round-tripping.",
+      "severity": "Low",
+      "suggestedFix": "Add a round-trip test for Player.Wage with precise decimal values."
+    }
+  ]
+}

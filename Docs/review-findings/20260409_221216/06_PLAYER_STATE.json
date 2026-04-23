@@ -1,0 +1,34 @@
+[
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "hattrick/Components/Pages/Players.razor",
+    "line": 105,
+    "description": "Players page calls GetByTeamId(Guid.Empty) which always queries for unassigned players (default TeamId), not the human player's team. IGameStateService.HumanPlayerTeamId holds the correct team ID but is never injected or used. This means the players roster page will always be empty once real teams are created.",
+    "severity": "Critical",
+    "suggestedFix": "Inject IGameStateService into the component and use the HumanPlayerTeamId: `_players = PlayerRepository.GetByTeamId(_gameState.HumanPlayerTeamId ?? Guid.Empty);` Add a guard to show a 'no game loaded' message when HumanPlayerTeamId is null."
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "hattrick/Components/Pages/Players.razor",
+    "line": 103,
+    "description": "OnInitialized() is synchronous and loads player data once at component initialization. If the user loads a new save or starts a new game while the component is mounted, the roster will not refresh. The component has no mechanism to react to game state changes (e.g., IGameStateService changes or NavigationManager re-navigation).",
+    "severity": "Medium",
+    "suggestedFix": "Override OnInitializedAsync() instead of OnInitialized() to allow future async data loading. Consider subscribing to a game-state-changed event or using OnParametersSetAsync() to refresh data when the page is revisited."
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+    "line": 22,
+    "description": "TotalEstimatedValue is computed as `players.Sum(p => p.TSI * EstimatedValueMultiplier)` where both TSI (int) and EstimatedValueMultiplier (int = 25) are int. The multiplication and Sum are performed in int arithmetic before being implicitly widened to decimal. For extreme TSI values across large rosters this is safe today, but the intent (financial precision) warrants an explicit cast to decimal before multiplication to make the precision contract clear and avoid future bugs if TSI values scale up.",
+    "severity": "Low",
+    "suggestedFix": "Cast explicitly: `players.Sum(p => (decimal)p.TSI * EstimatedValueMultiplier)` to ensure the multiplication occurs in decimal arithmetic, matching the TotalEstimatedValue property type and the financial precision intent."
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Core/Models/TeamAverages.cs",
+    "line": 19,
+    "description": "AvgEstimatedValue is typed as double while TeamTotals.TotalEstimatedValue is decimal. The same conceptual value (estimated market value) uses different numeric types across the two related model classes. This inconsistency means the averages silently lose decimal precision compared to totals, and callers must be aware of the type mismatch when combining the two.",
+    "severity": "Low",
+    "suggestedFix": "Change AvgEstimatedValue to decimal in TeamAverages to match TotalEstimatedValue in TeamTotals, and update the corresponding computation in PlayerStatsService.GetTeamAverages() to use decimal arithmetic."
+  }
+]

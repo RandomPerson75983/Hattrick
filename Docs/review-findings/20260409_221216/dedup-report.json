@@ -1,0 +1,501 @@
+{
+  "duplicatesRemoved": [
+    {
+      "kept": {
+        "agent": "10_LOGIC_ERRORS",
+        "file": "Hattrick/Components/Pages/Players.razor",
+        "line": 105,
+        "description": "Hardcoded Guid.Empty passed to GetByTeamId() instead of the human player's actual team ID from IGameStateService.HumanPlayerTeamId. This means the players list will always query for players belonging to no team (empty GUID), which will always return an empty list (or wrong players) once a real game is loaded.",
+        "severity": "Critical"
+      },
+      "removed": [
+        {
+          "agent": "06_PLAYER_STATE",
+          "file": "hattrick/Components/Pages/Players.razor",
+          "line": 105,
+          "description": "Players page calls GetByTeamId(Guid.Empty) which always queries for unassigned players (default TeamId), not the human player's team.",
+          "severity": "Critical",
+          "reason": "Same root cause: hardcoded Guid.Empty in GetByTeamId. 10_LOGIC_ERRORS rated Critical with clearest description."
+        },
+        {
+          "agent": "07_REPOSITORY_PATTERNS",
+          "file": "Hattrick/Components/Pages/Players.razor",
+          "line": 105,
+          "description": "Guid.Empty is hardcoded as the teamId argument in GetByTeamId(Guid.Empty).",
+          "severity": "Medium",
+          "reason": "Same root cause. 10_LOGIC_ERRORS has higher severity (Critical) and more detailed description."
+        },
+        {
+          "agent": "08_ARCHITECTURE",
+          "file": "hattrick/Components/Pages/Players.razor",
+          "line": 105,
+          "description": "Component hardcodes Guid.Empty as the team ID when calling PlayerRepository.GetByTeamId(Guid.Empty).",
+          "severity": "High",
+          "reason": "Same root cause. 10_LOGIC_ERRORS has higher severity (Critical)."
+        },
+        {
+          "agent": "09_PLAN_COMPLIANCE",
+          "file": "Hattrick/Components/Pages/Players.razor",
+          "line": 105,
+          "description": "Players page loads players via GetByTeamId(Guid.Empty) instead of using IGameStateService.HumanPlayerTeamId.",
+          "severity": "High",
+          "reason": "Same root cause. 10_LOGIC_ERRORS has higher severity (Critical)."
+        },
+        {
+          "agent": "11_EDGE_CASES",
+          "file": "Hattrick/Components/Pages/Players.razor",
+          "line": 105,
+          "description": "GetByTeamId always called with Guid.Empty instead of the actual logged-in team ID.",
+          "severity": "High",
+          "reason": "Same root cause. 10_LOGIC_ERRORS has higher severity (Critical)."
+        },
+        {
+          "agent": "17_ERROR_HANDLING",
+          "file": "Hattrick/Components/Pages/Players.razor",
+          "line": 105,
+          "description": "GetByTeamId is called with Guid.Empty as a hardcoded team ID. If the active team's ID is not yet resolved, this silently returns an empty list.",
+          "severity": "Low",
+          "reason": "Same root cause. 10_LOGIC_ERRORS has higher severity (Critical) and broader description."
+        },
+        {
+          "agent": "27_API_SURFACE",
+          "file": "Hattrick/Components/Pages/Players.razor",
+          "line": 105,
+          "description": "Players.razor calls PlayerRepository.GetByTeamId(Guid.Empty) with a hardcoded empty GUID instead of using IGameStateService.HumanPlayerTeamId.",
+          "severity": "High",
+          "reason": "Same root cause. 10_LOGIC_ERRORS has higher severity (Critical)."
+        },
+        {
+          "agent": "01_MAGIC_NUMBERS",
+          "file": "hattrick/Components/Pages/Players.razor",
+          "line": 105,
+          "description": "Guid.Empty is used as a hardcoded team identifier in PlayerRepository.GetByTeamId(Guid.Empty). This is a magic value embedded in UI logic.",
+          "severity": "Medium",
+          "reason": "Same root cause. 10_LOGIC_ERRORS has higher severity (Critical)."
+        }
+      ],
+      "reason": "Eight agents all flagged hardcoded Guid.Empty in Players.razor line 105. Kept 10_LOGIC_ERRORS as it has the highest severity (Critical) and clearest description. 06_PLAYER_STATE's note about IGameStateService.HumanPlayerTeamId is also captured in the kept version."
+    },
+    {
+      "kept": {
+        "agent": "07_REPOSITORY_PATTERNS",
+        "file": "Hattrick/Components/Pages/Players.razor",
+        "line": 6,
+        "description": "Blazor component directly injects IPlayerRepository and calls it in OnInitialized. Architecture rules require components to call services only; repositories should be accessed exclusively by services.",
+        "severity": "High"
+      },
+      "removed": [
+        {
+          "agent": "08_ARCHITECTURE",
+          "file": "hattrick/Components/Pages/Players.razor",
+          "line": 6,
+          "description": "Blazor component directly injects IPlayerRepository. Architecture rules require components to call services, and services to call repositories.",
+          "severity": "High",
+          "reason": "Same issue: direct injection of IPlayerRepository in Players.razor. Both agents rated High. 07_REPOSITORY_PATTERNS kept as primary agent for this concern."
+        }
+      ],
+      "reason": "Two agents flagged the same direct IPlayerRepository injection in Players.razor line 6. Same severity (High). Kept 07_REPOSITORY_PATTERNS as the dedicated repository patterns agent."
+    },
+    {
+      "kept": {
+        "agent": "04_BLAZOR_PATTERNS",
+        "file": "hattrick/Components/Pages/Players.razor",
+        "line": 103,
+        "description": "Loading logic is placed directly in OnInitialized with no error handling, no _isLoading guard, and no retry capability. If PlayerRepository.GetByTeamId or the stats services throw, the exception will propagate unhandled and crash the component render.",
+        "severity": "Medium"
+      },
+      "removed": [
+        {
+          "agent": "17_ERROR_HANDLING",
+          "file": "Hattrick/Components/Pages/Players.razor",
+          "line": 103,
+          "description": "OnInitialized calls PlayerRepository.GetByTeamId and two StatsService methods with no try-catch. If any of these throw, the exception propagates unhandled through the Blazor component lifecycle.",
+          "severity": "Medium",
+          "reason": "Same root cause: missing error handling in OnInitialized. 04_BLAZOR_PATTERNS kept as it provides the more complete suggested fix including _isLoading guard."
+        }
+      ],
+      "reason": "Two agents flagged missing error handling in OnInitialized (Players.razor line 103). Same severity. Kept 04_BLAZOR_PATTERNS as it has the most complete suggested fix."
+    },
+    {
+      "kept": {
+        "agent": "06_PLAYER_STATE",
+        "file": "hattrick/Components/Pages/Players.razor",
+        "line": 103,
+        "description": "OnInitialized() is synchronous and loads player data once at component initialization. Consider subscribing to a game-state-changed event or using OnParametersSetAsync() to refresh data when the page is revisited.",
+        "severity": "Medium"
+      },
+      "removed": [
+        {
+          "agent": "08_ARCHITECTURE",
+          "file": "hattrick/Components/Pages/Players.razor",
+          "line": 103,
+          "description": "OnInitialized() is used instead of OnInitializedAsync(). Blazor components should use the async lifecycle method.",
+          "severity": "Low",
+          "reason": "Same root cause: synchronous OnInitialized instead of async. 06_PLAYER_STATE has higher severity (Medium) and broader context about refresh on navigation."
+        },
+        {
+          "agent": "09_PLAN_COMPLIANCE",
+          "file": "Hattrick/Components/Pages/Players.razor",
+          "line": 103,
+          "description": "The OnInitialized lifecycle method is synchronous. Best practice is OnInitializedAsync returning a Task.",
+          "severity": "Low",
+          "reason": "Same root cause. 06_PLAYER_STATE has higher severity (Medium)."
+        }
+      ],
+      "reason": "Three agents flagged synchronous OnInitialized in Players.razor line 103. Kept 06_PLAYER_STATE (Medium severity, most complete context). Note: the missing try-catch aspect is a separate issue kept from 04_BLAZOR_PATTERNS."
+    },
+    {
+      "kept": {
+        "agent": "02_NULL_SAFETY",
+        "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+        "line": 16,
+        "description": "GetTeamTotals does not guard against a null 'players' argument. If a caller passes null, the method throws NullReferenceException at the LINQ call rather than a descriptive ArgumentNullException.",
+        "severity": "Medium"
+      },
+      "removed": [
+        {
+          "agent": "11_EDGE_CASES",
+          "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+          "line": 16,
+          "description": "GetTeamTotals and GetTeamAverages accept IReadOnlyList<Player> but neither method null-guards the parameter.",
+          "severity": "Low",
+          "reason": "Same null-guard issue on PlayerStatsService. 02_NULL_SAFETY has higher severity (Medium) and covers both methods individually."
+        },
+        {
+          "agent": "17_ERROR_HANDLING",
+          "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+          "line": 16,
+          "description": "GetTeamTotals lacks a null guard on the 'players' parameter. Passing null causes a NullReferenceException deep inside LINQ with no clear message.",
+          "severity": "Medium",
+          "reason": "Same null-guard issue. 02_NULL_SAFETY covers both GetTeamTotals and GetTeamAverages explicitly."
+        }
+      ],
+      "reason": "Three agents flagged missing null guard in PlayerStatsService.GetTeamTotals (line 16). Kept 02_NULL_SAFETY as the dedicated null safety agent with Medium severity. Note: 02_NULL_SAFETY also has a separate entry for GetTeamAverages (line 31) which is a distinct finding."
+    },
+    {
+      "kept": {
+        "agent": "16_ASSERTION_QUALITY",
+        "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+        "line": 36,
+        "description": "All tests in PlayersPageTests assert against the output of BuildExpectedMarkup(), which is a helper defined in the test class itself. The tests never render an actual Players.razor component — they assert that a locally-constructed string contains substrings of itself. Every test is permanently green regardless of what the real component does. This is a circular self-referential test with zero coverage of the production component.",
+        "severity": "Critical"
+      },
+      "removed": [
+        {
+          "agent": "05_TEST_QUALITY",
+          "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+          "line": 36,
+          "description": "Tests verify a locally constructed HTML string against itself — not the actual Players.razor component. No real Blazor rendering occurs, so regressions in Players.razor would never be caught by this suite.",
+          "severity": "High",
+          "reason": "Same root cause: circular self-referential tests in PlayersPageTests. 16_ASSERTION_QUALITY has higher severity (Critical)."
+        },
+        {
+          "agent": "05_TEST_QUALITY",
+          "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+          "line": 92,
+          "description": "All tests in PlayersPageTests use bUnit v1 pattern avoidance by not using bUnit at all — they just check strings.",
+          "severity": "Medium",
+          "reason": "Same root cause as line 36 above: same file, same fundamental issue of not using bUnit. Consolidated into the line 36 entry."
+        },
+        {
+          "agent": "09_PLAN_COMPLIANCE",
+          "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+          "line": 1,
+          "description": "The Players page tests do not use bUnit to render the actual Blazor component. They construct expected HTML strings manually and assert against that static markup.",
+          "severity": "High",
+          "reason": "Same root cause. 16_ASSERTION_QUALITY has higher severity (Critical) and more precise description."
+        }
+      ],
+      "reason": "Three agents flagged self-referential non-bUnit tests in PlayersPageTests. Kept 16_ASSERTION_QUALITY (Critical) as it has the highest severity and most specific analysis."
+    },
+    {
+      "kept": {
+        "agent": "16_ASSERTION_QUALITY",
+        "file": "Hattrick.Tests/Components/PlayersSidebarTests.cs",
+        "line": 33,
+        "description": "All tests in PlayersSidebarTests assert against BuildExpectedSidebarMarkup(), a helper defined in the test class itself. No actual PlayersSidebar component is rendered. The tests verify that a locally-built string contains substrings from that same string — they will always pass regardless of the real component's behavior.",
+        "severity": "Critical"
+      },
+      "removed": [
+        {
+          "agent": "05_TEST_QUALITY",
+          "file": "Hattrick.Tests/Components/PlayersSidebarTests.cs",
+          "line": 33,
+          "description": "PlayersSidebar is not a standalone .razor component — the sidebar is inlined inside Players.razor. Tests check BuildExpectedSidebarMarkup() (a locally constructed string) against itself.",
+          "severity": "High",
+          "reason": "Same root cause: circular self-referential tests in PlayersSidebarTests. 16_ASSERTION_QUALITY has higher severity (Critical)."
+        }
+      ],
+      "reason": "Two agents flagged self-referential non-bUnit tests in PlayersSidebarTests. Kept 16_ASSERTION_QUALITY (Critical) as it has the highest severity."
+    },
+    {
+      "kept": {
+        "agent": "19_DEAD_CODE",
+        "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+        "line": 13,
+        "description": "Private constant SkillGoodFloor = 7 is defined but never referenced anywhere in the file or codebase. The switch expression in GetSkillColorClass uses <= SkillGoodCeiling (line 41) to cover the good-skill range, making this constant dead code.",
+        "severity": "Medium"
+      },
+      "removed": [
+        {
+          "agent": "10_LOGIC_ERRORS",
+          "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+          "line": 12,
+          "description": "Constants SkillGoodFloor (= 7) and SkillExcellentFloor (= 9) are declared but never used in GetSkillColorClass.",
+          "severity": "Low",
+          "reason": "Same dead constant issue. 19_DEAD_CODE has higher severity (Medium) and treats each constant separately."
+        },
+        {
+          "agent": "20_OVER_ENGINEERING",
+          "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+          "line": 13,
+          "description": "Constants SkillGoodFloor (= 7) and SkillOutstandingFloor (= 11) are declared but never referenced anywhere in the implementation.",
+          "severity": "Low",
+          "reason": "Same dead constant issue. 19_DEAD_CODE has higher severity (Medium)."
+        },
+        {
+          "agent": "27_API_SURFACE",
+          "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+          "line": 14,
+          "description": "The constant SkillGoodFloor = 7 is defined but never referenced in GetSkillColorClass.",
+          "severity": "Low",
+          "reason": "Same dead constant issue. 19_DEAD_CODE has higher severity (Medium)."
+        }
+      ],
+      "reason": "Four agents flagged unused SkillGoodFloor constant. Kept 19_DEAD_CODE (Medium) as the dedicated dead code agent."
+    },
+    {
+      "kept": {
+        "agent": "19_DEAD_CODE",
+        "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+        "line": 17,
+        "description": "Private constant SkillOutstandingFloor = 11 is defined but never referenced anywhere in the file or codebase. The switch expression in GetSkillColorClass uses the _ discard arm (line 43) to handle the outstanding-skill case, making this constant dead code.",
+        "severity": "Medium"
+      },
+      "removed": [],
+      "reason": "19_DEAD_CODE treats SkillGoodFloor and SkillOutstandingFloor as separate findings. 10_LOGIC_ERRORS and 20_OVER_ENGINEERING group both together and were already removed against the SkillGoodFloor entry above. This entry is kept as unique for SkillOutstandingFloor specifically."
+    },
+    {
+      "kept": {
+        "agent": "10_LOGIC_ERRORS",
+        "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+        "line": 28,
+        "description": "GetSkillBarPercent uses Math.Round but the interface contract (IPlayerDisplayService line 27) explicitly documents 'Truncates; does not round'. For values like skill=7.995, Math.Round returns 100 (clamping to full-bar width) even though the player has not reached the next skill level. This makes the skill bar appear 100% full incorrectly.",
+        "severity": "Medium"
+      },
+      "removed": [
+        {
+          "agent": "11_EDGE_CASES",
+          "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+          "line": 29,
+          "description": "GetSkillBarPercent returns a negative integer when skill is negative (e.g., skill=-1.3 → -30%). This negative value is used directly as a CSS width percentage, producing invalid CSS.",
+          "severity": "Medium",
+          "reason": "RELATED but distinct issue (negative value edge case vs round-vs-truncate contract violation). However both arise from the same GetSkillBarPercent implementation. The negative-value issue is a separate edge case — see relatedGroups."
+        },
+        {
+          "agent": "20_OVER_ENGINEERING",
+          "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+          "line": 28,
+          "description": "The XML doc comment for GetSkillBarPercent states 'Truncates; does not round' but the implementation uses Math.Round, which rounds. This is a documentation–implementation contract mismatch.",
+          "severity": "Medium",
+          "reason": "Same root cause: Math.Round vs documented truncation in GetSkillBarPercent. 10_LOGIC_ERRORS kept as it focuses on the logic error (the incorrect result), 20_OVER_ENGINEERING kept as relatedGroups (focuses on the doc mismatch angle)."
+        },
+        {
+          "agent": "27_API_SURFACE",
+          "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+          "line": 29,
+          "description": "GetSkillBarPercent uses Math.Round((skill % 1) * 100) but the IPlayerDisplayService XML contract explicitly states 'Truncates; does not round'.",
+          "severity": "Medium",
+          "reason": "Same root cause as 10_LOGIC_ERRORS and 20_OVER_ENGINEERING. 10_LOGIC_ERRORS kept as highest-specificity description of the logical error."
+        }
+      ],
+      "reason": "Three agents (10, 20, 27) flagged the same Math.Round vs truncation contract violation in GetSkillBarPercent. Kept 10_LOGIC_ERRORS. Note: 11_EDGE_CASES raises the distinct issue of negative skill values producing invalid CSS — kept as a related group entry."
+    },
+    {
+      "kept": {
+        "agent": "11_EDGE_CASES",
+        "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+        "line": 22,
+        "description": "TotalEstimatedValue computes p.TSI * EstimatedValueMultiplier as int * int before assigning to decimal. For extreme TSI values (>= ~85.9 million) this would silently overflow.",
+        "severity": "Medium"
+      },
+      "removed": [
+        {
+          "agent": "06_PLAYER_STATE",
+          "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+          "line": 22,
+          "description": "TotalEstimatedValue is computed as players.Sum(p => p.TSI * EstimatedValueMultiplier) where both TSI (int) and EstimatedValueMultiplier (int = 25) are int. The multiplication and Sum are performed in int arithmetic before being implicitly widened to decimal.",
+          "severity": "Low",
+          "reason": "Same root cause: int arithmetic in TSI * EstimatedValueMultiplier. 11_EDGE_CASES has higher severity (Medium) highlighting the overflow risk."
+        }
+      ],
+      "reason": "Two agents flagged int*int arithmetic for TSI * EstimatedValueMultiplier in PlayerStatsService line 22. Kept 11_EDGE_CASES (Medium) as it highlights the overflow risk more clearly."
+    },
+    {
+      "kept": {
+        "agent": "03_THREAD_SAFETY",
+        "file": "Hattrick/Components/Pages/Players.razor",
+        "line": 88,
+        "description": "DisplayedSkills is declared as 'private static readonly SkillType[]' (a plain array). Arrays are mutable in C# — any code can write to elements even through a readonly reference. If any future code accidentally assigns to an index, it would silently affect all concurrent renders sharing this static field.",
+        "severity": "Low"
+      },
+      "removed": [
+        {
+          "agent": "08_ARCHITECTURE",
+          "file": "hattrick/Components/Pages/Players.razor",
+          "line": 88,
+          "description": "DisplayedSkills is a static array of domain-relevant SkillType values defined inside the Blazor component. This is domain/configuration knowledge that belongs in a service or constants class, not in a UI component.",
+          "severity": "Medium",
+          "reason": "OVERLAPPING but distinct angle: 08_ARCHITECTURE argues the array should be moved to a service (architectural concern), 03_THREAD_SAFETY argues it should be IReadOnlyList<T> (mutability concern). Both target the same field at the same line. 08_ARCHITECTURE's architectural relocation concern is kept as a related group."
+        }
+      ],
+      "reason": "Two agents flagged Players.razor DisplayedSkills static array at line 88 — 03_THREAD_SAFETY on mutability, 08_ARCHITECTURE on placement. 03_THREAD_SAFETY kept for the specific mutability fix (IReadOnlyList). 08_ARCHITECTURE's 'move to service' angle is captured in relatedGroups as a distinct architectural concern."
+    }
+  ],
+  "relatedGroups": [
+    {
+      "rootCause": "GetSkillBarPercent math logic and contract issues in PlayerDisplayService.cs",
+      "issues": [
+        {
+          "agent": "10_LOGIC_ERRORS",
+          "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+          "line": 28,
+          "note": "Math.Round violates documented 'Truncates' contract — KEPT as primary"
+        },
+        {
+          "agent": "11_EDGE_CASES",
+          "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+          "line": 29,
+          "note": "Negative skill values produce negative CSS width — KEPT as distinct edge case"
+        },
+        {
+          "agent": "20_OVER_ENGINEERING",
+          "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+          "line": 28,
+          "note": "Doc-implementation mismatch angle — REMOVED as duplicate of 10_LOGIC_ERRORS"
+        }
+      ]
+    },
+    {
+      "rootCause": "DisplayedSkills static array in Players.razor should be both immutable and moved to a service",
+      "issues": [
+        {
+          "agent": "03_THREAD_SAFETY",
+          "file": "Hattrick/Components/Pages/Players.razor",
+          "line": 88,
+          "note": "Should be IReadOnlyList<SkillType> for immutability — KEPT"
+        },
+        {
+          "agent": "08_ARCHITECTURE",
+          "file": "hattrick/Components/Pages/Players.razor",
+          "line": 88,
+          "note": "Should be moved to IPlayerDisplayService or constants class — KEPT as distinct architectural concern, not removed"
+        }
+      ]
+    },
+    {
+      "rootCause": "OnInitialized in Players.razor needs to be async AND have error handling",
+      "issues": [
+        {
+          "agent": "06_PLAYER_STATE",
+          "file": "hattrick/Components/Pages/Players.razor",
+          "line": 103,
+          "note": "Should be OnInitializedAsync, needs refresh mechanism — KEPT as primary for async concern"
+        },
+        {
+          "agent": "04_BLAZOR_PATTERNS",
+          "file": "hattrick/Components/Pages/Players.razor",
+          "line": 103,
+          "note": "No error handling, no _isLoading guard — KEPT as primary for error handling concern"
+        }
+      ]
+    },
+    {
+      "rootCause": "Null guard missing in PlayerStatsService for both GetTeamTotals and GetTeamAverages",
+      "issues": [
+        {
+          "agent": "02_NULL_SAFETY",
+          "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+          "line": 16,
+          "note": "GetTeamTotals null guard — KEPT"
+        },
+        {
+          "agent": "02_NULL_SAFETY",
+          "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+          "line": 31,
+          "note": "GetTeamAverages null guard — KEPT as distinct finding (different method)"
+        }
+      ]
+    },
+    {
+      "rootCause": "FormatAge singular/plural bug in PlayerDisplayService with matching test encoding the bug",
+      "issues": [
+        {
+          "agent": "11_EDGE_CASES",
+          "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+          "line": 21,
+          "note": "FormatAge does not handle singular 'day' — KEPT"
+        },
+        {
+          "agent": "11_EDGE_CASES",
+          "file": "Hattrick.Tests/Services/PlayerDisplayServiceTests.cs",
+          "line": 55,
+          "note": "Test asserts incorrect '1 days' output, encoding the bug — KEPT as distinct test quality finding"
+        }
+      ]
+    }
+  ],
+  "uniqueFindings": [
+    { "agent": "01_MAGIC_NUMBERS", "file": "Hattrick.Tests/Components/PlayersPageTests.cs", "line": 477, "description": "Magic number 7 in Enumerable.Repeat(SkillCell(), 7) representing skill column count.", "severity": "Low" },
+    { "agent": "02_NULL_SAFETY", "file": "Hattrick.Core/Services/PlayerStatsService.cs", "line": 16, "description": "GetTeamTotals missing null guard on 'players' parameter.", "severity": "Medium" },
+    { "agent": "02_NULL_SAFETY", "file": "Hattrick.Core/Services/PlayerStatsService.cs", "line": 31, "description": "GetTeamAverages missing null guard on 'players' parameter (separate method from line 16).", "severity": "Medium" },
+    { "agent": "03_THREAD_SAFETY", "file": "Hattrick/Components/Pages/Players.razor", "line": 88, "description": "DisplayedSkills declared as plain mutable static array; should be IReadOnlyList<SkillType>.", "severity": "Low" },
+    { "agent": "04_BLAZOR_PATTERNS", "file": "hattrick/Components/Pages/Players.razor", "line": 33, "description": "@foreach over _players does not use @key.", "severity": "Low" },
+    { "agent": "04_BLAZOR_PATTERNS", "file": "hattrick/Components/Pages/Players.razor", "line": 33, "description": "@foreach over _players does not use <Virtualize> for potentially large lists.", "severity": "Medium" },
+    { "agent": "04_BLAZOR_PATTERNS", "file": "hattrick/Components/Pages/Players.razor", "line": 45, "description": "Inner @foreach over DisplayedSkills does not use @key.", "severity": "Low" },
+    { "agent": "04_BLAZOR_PATTERNS", "file": "hattrick/Components/Pages/Players.razor", "line": 103, "description": "OnInitialized has no error handling, no _isLoading guard; exceptions propagate unhandled.", "severity": "Medium" },
+    { "agent": "06_PLAYER_STATE", "file": "hattrick/Components/Pages/Players.razor", "line": 103, "description": "OnInitialized is synchronous; should be OnInitializedAsync with refresh mechanism.", "severity": "Medium" },
+    { "agent": "06_PLAYER_STATE", "file": "Hattrick.Core/Models/TeamAverages.cs", "line": 19, "description": "AvgEstimatedValue typed as double while TotalEstimatedValue in TeamTotals is decimal — type inconsistency.", "severity": "Low" },
+    { "agent": "07_REPOSITORY_PATTERNS", "file": "Hattrick/Components/Pages/Players.razor", "line": 6, "description": "Component directly injects IPlayerRepository; should inject a service instead.", "severity": "High" },
+    { "agent": "07_REPOSITORY_PATTERNS", "file": "Hattrick.Core/Repositories/PlayerRepository.cs", "line": 15, "description": "GetByTeamId performs filtering inside the repository; filtering should live in the service layer.", "severity": "Low" },
+    { "agent": "08_ARCHITECTURE", "file": "hattrick/Components/Pages/Players.razor", "line": 88, "description": "DisplayedSkills domain knowledge belongs in IPlayerDisplayService or constants class, not the UI component.", "severity": "Medium" },
+    { "agent": "08_ARCHITECTURE", "file": "Hattrick.Core/ServiceCollectionExtensions.cs", "line": 22, "description": "Stateful services ISaveGameService, ISaveSlotService, IGameStateService registered as Singleton; should be Scoped.", "severity": "Medium" },
+    { "agent": "09_PLAN_COMPLIANCE", "file": "Hattrick/Components/Pages/Players.razor", "line": 35, "description": "Plan requires player avatar/portrait and nationality flag per row; neither is present.", "severity": "Medium" },
+    { "agent": "09_PLAN_COMPLIANCE", "file": "Hattrick/Components/Pages/Players.razor", "line": 54, "description": "Plan requires 'Last rating date' column; completely absent.", "severity": "Medium" },
+    { "agent": "10_LOGIC_ERRORS", "file": "Hattrick/Components/Pages/Players.razor", "line": 105, "description": "Hardcoded Guid.Empty in GetByTeamId — always returns empty roster.", "severity": "Critical" },
+    { "agent": "10_LOGIC_ERRORS", "file": "Hattrick.Core/Services/PlayerDisplayService.cs", "line": 28, "description": "GetSkillBarPercent uses Math.Round but documented contract says 'Truncates; does not round'.", "severity": "Medium" },
+    { "agent": "11_EDGE_CASES", "file": "Hattrick.Core/Services/PlayerDisplayService.cs", "line": 29, "description": "GetSkillBarPercent returns negative int for negative skill values, producing invalid CSS width.", "severity": "Medium" },
+    { "agent": "11_EDGE_CASES", "file": "Hattrick.Core/Services/PlayerStatsService.cs", "line": 22, "description": "TSI * EstimatedValueMultiplier as int*int before decimal assignment risks silent overflow.", "severity": "Medium" },
+    { "agent": "11_EDGE_CASES", "file": "Hattrick.Core/Services/PlayerDisplayService.cs", "line": 21, "description": "FormatAge does not handle singular 'day' — returns '1 days' instead of '1 day'.", "severity": "Low" },
+    { "agent": "11_EDGE_CASES", "file": "Hattrick.Tests/Services/PlayerDisplayServiceTests.cs", "line": 55, "description": "Test FormatAge_OneDayIn_ReturnsCorrectString asserts '1 days' (incorrect), encoding the bug as expected behavior.", "severity": "Low" },
+    { "agent": "12_PERFORMANCE", "file": "Hattrick.Core/Services/PlayerStatsService.cs", "line": 16, "description": "GetTeamTotals iterates player list 7 times; should collapse to single pass.", "severity": "Medium" },
+    { "agent": "12_PERFORMANCE", "file": "Hattrick.Core/Services/PlayerStatsService.cs", "line": 31, "description": "GetTeamAverages iterates player list 7 times; should collapse to single pass.", "severity": "Medium" },
+    { "agent": "12_PERFORMANCE", "file": "Hattrick.Core/Services/PlayerDisplayService.cs", "line": 28, "description": "GetSkillColorClass and GetSkillBarPercent each compute Math.Floor per skill cell; minor double-computation per cell.", "severity": "Low" },
+    { "agent": "16_ASSERTION_QUALITY", "file": "Hattrick.Tests/Components/PlayersPageTests.cs", "line": 36, "description": "Circular self-referential tests in PlayersPageTests — never render actual Players.razor component.", "severity": "Critical" },
+    { "agent": "16_ASSERTION_QUALITY", "file": "Hattrick.Tests/Components/PlayersSidebarTests.cs", "line": 33, "description": "Circular self-referential tests in PlayersSidebarTests — no actual component rendered.", "severity": "Critical" },
+    { "agent": "16_ASSERTION_QUALITY", "file": "Hattrick.Tests/DependencyInjectionTests.cs", "line": 19, "description": "Redundant .NotBeNull() after GetRequiredService<T>() which already throws on missing registration.", "severity": "Low" },
+    { "agent": "16_ASSERTION_QUALITY", "file": "Hattrick.Tests/Components/PlayersPageTests.cs", "line": 184, "description": "Test uses string index comparisons to verify DOM nesting — fragile with self-constructed strings.", "severity": "Medium" },
+    { "agent": "16_ASSERTION_QUALITY", "file": "Hattrick.Tests/Services/PlayerStatsServiceTests.cs", "line": 64, "description": "No test verifies per-player vs collapsed formula for EstimatedValue computation.", "severity": "Medium" },
+    { "agent": "16_ASSERTION_QUALITY", "file": "Hattrick.Tests/Services/PlayerDisplayServiceTests.cs", "line": 249, "description": "Missing boundary test for GetSkillColorClass(8.0) — exact value at boundary not covered.", "severity": "Medium" },
+    { "agent": "18_DUPLICATE_CODE", "file": "Hattrick.Core/Services/PlayerStatsService.cs", "line": 22, "description": "p.TSI * EstimatedValueMultiplier lambda duplicated in GetTeamTotals and GetTeamAverages; should be extracted to private method.", "severity": "Medium" },
+    { "agent": "18_DUPLICATE_CODE", "file": "Hattrick.Tests/Services/PlayerStatsServiceTests.cs", "line": 178, "description": "Identical three-player test list copy-pasted verbatim across three consecutive test methods.", "severity": "Medium" },
+    { "agent": "19_DEAD_CODE", "file": "Hattrick.Core/Services/PlayerDisplayService.cs", "line": 13, "description": "Private constant SkillGoodFloor = 7 defined but never referenced.", "severity": "Medium" },
+    { "agent": "19_DEAD_CODE", "file": "Hattrick.Core/Services/PlayerDisplayService.cs", "line": 17, "description": "Private constant SkillOutstandingFloor = 11 defined but never referenced.", "severity": "Medium" },
+    { "agent": "05_TEST_QUALITY", "file": "Hattrick.Tests/Components/PlayersPageTests.cs", "line": 121, "description": "Test name claims 'correct count for single player' but assertion locks in grammatically incorrect '1 players'.", "severity": "Low" },
+    { "agent": "05_TEST_QUALITY", "file": "Hattrick.Tests/Services/PlayerStatsServiceTests.cs", "line": 66, "description": "Test data declared as new List<Player>() instead of IReadOnlyList<Player> for contract accuracy.", "severity": "Low" }
+  ],
+  "summary": {
+    "totalIssuesBefore": 55,
+    "duplicatesRemoved": 19,
+    "relatedGroupsFound": 5,
+    "totalIssuesAfter": 36,
+    "agentsWithNoFindings": ["13_LINQ_GOTCHAS", "14_SAVE_LOAD", "15_RESOURCE_MANAGEMENT", "21_SECURITY_BASICS"],
+    "notes": [
+      "The Guid.Empty / GetByTeamId issue was the most duplicated finding, reported by 9 different agents (01, 06, 07, 08, 09, 10, 11, 17, 27).",
+      "Circular self-referential test issues in PlayersPageTests were flagged by 3 agents (05, 09, 16); 16_ASSERTION_QUALITY kept as Critical severity.",
+      "08_ARCHITECTURE finding on DisplayedSkills (line 88) was kept as a separate unique finding (architectural relocation) distinct from 03_THREAD_SAFETY (mutability) despite targeting the same line.",
+      "11_EDGE_CASES negative-skill CSS issue was kept separately from 10_LOGIC_ERRORS round-vs-truncate issue as they describe distinct failure modes of GetSkillBarPercent.",
+      "04_BLAZOR_PATTERNS (line 103 error handling) and 06_PLAYER_STATE (line 103 async) were both kept as they address genuinely different aspects of the same method."
+    ]
+  }
+}

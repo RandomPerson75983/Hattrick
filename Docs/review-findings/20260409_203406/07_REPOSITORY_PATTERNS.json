@@ -1,0 +1,10 @@
+[
+  {
+    "agent": "07_REPOSITORY_PATTERNS",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 65,
+    "description": "Test Add_NullTeam_ThrowsArgumentNullException uses a bare .Throw<ArgumentNullException>() assertion without checking the parameter name. If the implementation ever accidentally throws on a different null check, the test still passes. More importantly, the same pattern repeats at line 315 for Update_NullTeam_ThrowsArgumentNullException. Both should verify the parameter name via .WithParameterName(\"team\") to confirm the right argument was checked.",
+    "severity": "Low",
+    "suggestedFix": "Add .WithParameterName(\"team\") to the FluentAssertions Throw chain: act.Should().Throw<ArgumentNullException>().WithParameterName(\"team\");"
+  }
+]

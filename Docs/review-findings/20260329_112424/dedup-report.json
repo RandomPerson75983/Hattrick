@@ -1,0 +1,602 @@
+{
+  "totalRawFindings": 82,
+  "duplicatesRemoved": 39,
+  "uniqueFindings": 43,
+  "summary": "82 raw findings from 14 agents (8 agents had zero findings). Removed 39 duplicates across 21 deduplication groups. The most heavily duplicated issue was GetDisplayName KeyNotFoundException (7 agents). Two critical issues: wrong display names and wrong test expectations. Two related groups identified linking findings to shared root causes.",
+  "removedDuplicates": [
+    {
+      "kept": "06_PLAYER_STATE: SkillLevelDisplayNames.cs:38 - GetDisplayName uses dictionary indexer which throws KeyNotFoundException for invalid SkillLevel values (Medium)",
+      "removed": [
+        "02_NULL_SAFETY: SkillLevelDisplayNames.cs:40 - GetDisplayName raw dictionary lookup without Enum.IsDefined validation (Medium)",
+        "08_ARCHITECTURE: SkillLevelDisplayNames.cs:38 - GetDisplayName throws KeyNotFoundException with no TryGetValue (Low)",
+        "10_LOGIC_ERRORS: SkillLevelDisplayNames.cs:38 - GetDisplayName direct dictionary lookup throws unhandled KeyNotFoundException (High)",
+        "11_EDGE_CASES: SkillLevelDisplayNames.cs:38 - GetDisplayName throws KeyNotFoundException for invalid SkillLevel values (High)",
+        "14_SAVE_LOAD: SkillLevelDisplayNames.cs:40 - GetDisplayName throws KeyNotFoundException for invalid SkillLevel from save files (Medium)",
+        "17_ERROR_HANDLING: SkillLevelDisplayNames.cs:40 - GetDisplayName uses dictionary indexer with unhelpful KeyNotFoundException (Medium)"
+      ],
+      "reason": "All 7 agents report the same issue: GetDisplayName lacks validation and throws KeyNotFoundException for invalid SkillLevel. Kept 06_PLAYER_STATE as it provides the most comprehensive context within game domain."
+    },
+    {
+      "kept": "06_PLAYER_STATE: SkillLevelDisplayNames.cs:9 - Display names are completely wrong, 18 of 20 levels have incorrect names vs official Hattrick denominations (Critical)",
+      "removed": [
+        "09_PLAN_COMPLIANCE: SkillLevelDisplayNames.cs:9 - 17 of 20 display names do not match plan's official Hattrick terminology (Critical)",
+        "10_LOGIC_ERRORS: SkillLevelDisplayNames.cs:20 - Non-monotonic display name progression, Level 9 excellent then Level 10 mediocre (Critical)"
+      ],
+      "reason": "All three describe the same root cause: display names are wrong. 06_PLAYER_STATE provides the most detailed listing of all incorrect names and their corrections. 10_LOGIC_ERRORS describes a symptom (non-monotonic progression) caused by the same underlying data error."
+    },
+    {
+      "kept": "08_ARCHITECTURE: SkillLevelDisplayNames.cs:9 - Mutable Dictionary used for immutable lookup table, should use FrozenDictionary or IReadOnlyDictionary (Medium)",
+      "removed": [
+        "06_PLAYER_STATE: SkillLevelDisplayNames.cs:9 - DisplayNames dictionary is mutable, should use FrozenDictionary or ReadOnlyDictionary (Low)",
+        "11_EDGE_CASES: SkillLevelDisplayNames.cs:9 - DisplayNames uses mutable Dictionary type, should use IReadOnlyDictionary or FrozenDictionary (Low)"
+      ],
+      "reason": "All three report the same issue: DisplayNames dictionary should be immutable. Kept 08_ARCHITECTURE as highest severity and most specific about the architectural concern."
+    },
+    {
+      "kept": "14_SAVE_LOAD: SkillType.cs:7 - SkillType enum members have no explicit integer values, breaking saved data if reordered (High)",
+      "removed": [
+        "08_ARCHITECTURE: SkillType.cs:7 - SkillType enum members lack explicit integer values unlike every other enum, fragile for serialization (Medium)",
+        "10_LOGIC_ERRORS: SkillType.cs:7 - SkillType enum lacks explicit integer values, will silently break deserialization (Low)",
+        "11_EDGE_CASES: SkillType.cs:7 - SkillType enum does not have explicit integer values, implicit values silently shift on reorder (Medium)"
+      ],
+      "reason": "All 4 agents report the same issue: SkillType needs explicit integer values. Kept 14_SAVE_LOAD as highest severity and most focused on the serialization impact. Note: 06_PLAYER_STATE also reported this but its finding was split -- explicit values portion deduped here, ordering portion kept as separate finding."
+    },
+    {
+      "kept": "09_PLAN_COMPLIANCE: SkillEnumTests.cs:229 - GetDisplayName_Progression_IsMonotonic test encodes wrong display names matching buggy implementation (Critical)",
+      "removed": [
+        "06_PLAYER_STATE: SkillEnumTests.cs:229 - GetDisplayName_Progression_IsMonotonic test validates wrong display names (High)"
+      ],
+      "reason": "Both report the same issue: progression test has wrong expected values. Kept 09_PLAN_COMPLIANCE as higher severity (Critical vs High)."
+    },
+    {
+      "kept": "06_PLAYER_STATE: SkillEnumTests.cs:159 - Multiple individual GetDisplayName tests validate wrong expected values, includes typo 'Mediacore' at line 289 (High)",
+      "removed": [
+        "05_TEST_QUALITY: SkillEnumTests.cs:289 - Test name typo 'Mediacore' should be 'Mediocre' (Medium)",
+        "09_PLAN_COMPLIANCE: SkillEnumTests.cs:289 - Test name has typo and asserts wrong Level 10 name (High)",
+        "09_PLAN_COMPLIANCE: SkillEnumTests.cs:170 - Test asserts Level 2 = 'very poor' but plan says 'disastrous' (Critical)",
+        "09_PLAN_COMPLIANCE: SkillEnumTests.cs:179 - Test asserts Level 10 = 'mediocre' but plan says 'formidable' (Critical)"
+      ],
+      "reason": "All describe incorrect individual display name test assertions. 06_PLAYER_STATE covers the broadest scope (multiple tests including the typo). The wrong values in tests are a direct consequence of the wrong DisplayNames dictionary."
+    },
+    {
+      "kept": "09_PLAN_COMPLIANCE: SkillLevel.cs:45 - Comment incorrectly calls Level 10 'mediocre' and 'pivot/midpoint of the scale' (Medium)",
+      "removed": [
+        "06_PLAYER_STATE: SkillLevel.cs:5 - XML comment says Level 10 is 'mediocre' pivot/midpoint which is doubly wrong (Low)"
+      ],
+      "reason": "Same issue: misleading comment on SkillLevel. Kept 09_PLAN_COMPLIANCE as higher severity."
+    },
+    {
+      "kept": "10_LOGIC_ERRORS: SkillLevel.cs:8 - default(SkillLevel) is 0 which does not correspond to any defined member, uninitialized fields hold undefined value (High)",
+      "removed": [
+        "11_EDGE_CASES: SkillLevel.cs:7 - SkillLevel starts at Level1=1, default(SkillLevel) is 0 which is invalid (High)"
+      ],
+      "reason": "Same issue: default(SkillLevel) = 0 is not a valid member. Kept 10_LOGIC_ERRORS as it suggests the sentinel value fix."
+    },
+    {
+      "kept": "11_EDGE_CASES: SkillEnumTests.cs:199 - No test covers GetDisplayName with invalid/out-of-range SkillLevel, default(SkillLevel)=0 is untested (Medium)",
+      "removed": [
+        "05_TEST_QUALITY: SkillLevelDisplayNames.cs:38 - Missing test coverage for GetDisplayName with invalid SkillLevel values (High)",
+        "16_ASSERTION_QUALITY: SkillEnumTests.cs:199 - Missing boundary test for GetDisplayName with invalid SkillLevel (Medium)"
+      ],
+      "reason": "All three report missing test coverage for invalid SkillLevel input. Kept 11_EDGE_CASES as it specifies the most important case (default=0)."
+    },
+    {
+      "kept": "05_TEST_QUALITY: SkillEnumTests.cs:228 - Test name GetDisplayName_Progression_IsMonotonic is misleading, test verifies exact values not monotonicity (Medium)",
+      "removed": [
+        "10_LOGIC_ERRORS: SkillEnumTests.cs:228 - Test name claims monotonicity but only checks string equality against hardcoded values (Medium)"
+      ],
+      "reason": "Same issue: misleading test name. Kept 05_TEST_QUALITY as it provides a better rename suggestion."
+    },
+    {
+      "kept": "05_TEST_QUALITY: SkillEnumTests.cs:265 - GetDisplayName_LowerLevels_SuggestWeakness uses vague assertions, duplicates coverage from progression test (Medium)",
+      "removed": [
+        "16_ASSERTION_QUALITY: SkillEnumTests.cs:271 - GetDisplayName_LowerLevels_SuggestWeakness uses vague substring assertions (Low)"
+      ],
+      "reason": "Same issue: vague assertions in LowerLevels test. Kept 05_TEST_QUALITY as higher severity and notes the redundancy."
+    },
+    {
+      "kept": "05_TEST_QUALITY: SkillEnumTests.cs:277 - GetDisplayName_UpperLevels_SuggestExcellence uses vague assertions, duplicated by progression test (Medium)",
+      "removed": [
+        "16_ASSERTION_QUALITY: SkillEnumTests.cs:283 - GetDisplayName_UpperLevels_SuggestExcellence asserts .NotContain('poor') which is vague (Low)"
+      ],
+      "reason": "Same issue: vague assertions in UpperLevels test. Kept 05_TEST_QUALITY as higher severity."
+    },
+    {
+      "kept": "18_DUPLICATE_CODE: PositionOrderEnumTests.cs:16 - Repeated enum test pattern, individual Has*Member tests fully redundant with AllMembersAreExpected (Medium)",
+      "removed": [
+        "05_TEST_QUALITY: PositionOrderEnumTests.cs:13 - Excessive test duplication, 12 individual HasXMember tests redundant with AllMembersAreExpected (Low)",
+        "16_ASSERTION_QUALITY: PositionOrderEnumTests.cs:29 - Individual Has*Member tests use .BeTrue() losing failure context, redundant with AllMembersAreExpected (Low)",
+        "20_OVER_ENGINEERING: PositionOrderEnumTests.cs:16 - Redundant individual-member existence tests subsumed by AllMembersAreExpected (Medium)"
+      ],
+      "reason": "All four agents report redundant individual member existence tests in PositionOrderEnumTests. Kept 18_DUPLICATE_CODE as it describes the code pattern most specifically."
+    },
+    {
+      "kept": "18_DUPLICATE_CODE: SpecialtyPersonalityEnumTests.cs:14 - Individual member existence and AllMembers_CanBeEnumerated tests duplicate MembersHaveCorrectNames (Medium)",
+      "removed": [
+        "05_TEST_QUALITY: SpecialtyPersonalityEnumTests.cs:14 - Individual member existence tests duplicate MembersHaveCorrectNames (Low)",
+        "20_OVER_ENGINEERING: SpecialtyPersonalityEnumTests.cs:14 - 8+6+3 individual Has*Member tests subsumed by MembersHaveCorrectNames (Medium)",
+        "20_OVER_ENGINEERING: SpecialtyPersonalityEnumTests.cs:94 - 3 AllMembers_CanBeEnumerated tests duplicate MembersHaveCorrectNames (Low)"
+      ],
+      "reason": "All describe redundant individual member tests and CanBeEnumerated tests in SpecialtyPersonality. Kept 18_DUPLICATE_CODE as most comprehensive."
+    },
+    {
+      "kept": "20_OVER_ENGINEERING: TacticsFormationEnumTests.cs:26 - 10+7+3 individual Has*Member tests subsumed by AllMembersAreExpected (Medium)",
+      "removed": [
+        "05_TEST_QUALITY: TacticsFormationEnumTests.cs:27 - 20 individual member existence tests redundant with AllMembersAreExpected (Low)",
+        "16_ASSERTION_QUALITY: TacticsFormationEnumTests.cs:29 - Same redundant .BeTrue() pattern on individual Has*Member tests (Low)"
+      ],
+      "reason": "All three report redundant individual member tests in TacticsFormation. Kept 20_OVER_ENGINEERING as highest severity with specific counts."
+    },
+    {
+      "kept": "20_OVER_ENGINEERING: SkillEnumTests.cs:14 - 8 individual SkillType_Has*Member tests subsumed by MembersHaveCorrectNames (Medium)",
+      "removed": [
+        "05_TEST_QUALITY: SkillEnumTests.cs:14 - Individual HasXMember tests for SkillType and SkillLevel redundant with comprehensive counterparts (Low)"
+      ],
+      "reason": "Same issue: redundant individual member tests in SkillEnumTests. Kept 20_OVER_ENGINEERING as higher severity."
+    },
+    {
+      "kept": "18_DUPLICATE_CODE: SpecialtyPersonalityEnumTests.cs:279 - 17 individual numeric value tests should be consolidated (Medium)",
+      "removed": [
+        "20_OVER_ENGINEERING: SpecialtyPersonalityEnumTests.cs:278 - 19 individual numeric value tests should be 3 comprehensive tests (Medium)"
+      ],
+      "reason": "Same issue about consolidating individual numeric value tests. Kept 18_DUPLICATE_CODE as it references the existing pattern to follow."
+    },
+    {
+      "kept": "18_DUPLICATE_CODE: SpecialtyPersonalityEnumTests.cs:487 - 3 AllMembersAreDistinct tests using HashSets, enum values guaranteed unique by compiler (Low)",
+      "removed": [
+        "20_OVER_ENGINEERING: SpecialtyPersonalityEnumTests.cs:487 - 3 distinctness tests using HashSet that cannot catch actual concern (Low)"
+      ],
+      "reason": "Same issue about redundant distinctness tests. Kept 18_DUPLICATE_CODE for clearer explanation."
+    },
+    {
+      "kept": "18_DUPLICATE_CODE: SpecialtyPersonalityEnumTests.cs:401 - 3 identical invalid parsing tests verifying Enum.Parse throws for InvalidMember, tests CLR behavior (Low)",
+      "removed": [
+        "20_OVER_ENGINEERING: SpecialtyPersonalityEnumTests.cs:401 - 3 tests for Enum.Parse throwing on invalid input (Low)"
+      ],
+      "reason": "Same issue about tests that verify CLR behavior. Kept 18_DUPLICATE_CODE for more detail."
+    },
+    {
+      "kept": "18_DUPLICATE_CODE: PositionOrderEnumTests.cs:228 - Duplicate CanBeConvertedToString and CanBeCastFromInt tests repeated for 5 enums, tests basic CLR behavior (Low)",
+      "removed": [
+        "20_OVER_ENGINEERING: PositionOrderEnumTests.cs:228 - 4 tests for CLR enum ToString/cast behavior (Low)"
+      ],
+      "reason": "Same issue about redundant CLR behavior tests in PositionOrderEnumTests. Kept 18_DUPLICATE_CODE."
+    },
+    {
+      "kept": "18_DUPLICATE_CODE: TacticsFormationEnumTests.cs:461 - 3 CanBeIterated and 3 ValuesAreUniqueAndSequential tests, redundant with AllMembersAreExpected (Low)",
+      "removed": [
+        "20_OVER_ENGINEERING: TacticsFormationEnumTests.cs:176 - 6 tests for CLR enum ToString/cast behavior (Low)"
+      ],
+      "reason": "Both about redundant CLR behavior tests in TacticsFormationEnumTests. Kept 18_DUPLICATE_CODE as more specific."
+    }
+  ],
+  "relatedGroups": [
+    {
+      "rootCause": "Display names in SkillLevelDisplayNames.cs are wrong, causing cascading failures in tests",
+      "issues": [
+        { "agent": "06_PLAYER_STATE", "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs", "line": 9, "description": "Wrong display names (finding #2)" },
+        { "agent": "06_PLAYER_STATE", "file": "Hattrick.Tests/Models/SkillEnumTests.cs", "line": 159, "description": "Tests validate wrong expected values (finding #6)" },
+        { "agent": "09_PLAN_COMPLIANCE", "file": "Hattrick.Tests/Models/SkillEnumTests.cs", "line": 229, "description": "Progression test encodes wrong names (finding #5)" }
+      ]
+    },
+    {
+      "rootCause": "Redundant individual enum member tests across all test files",
+      "issues": [
+        { "agent": "18_DUPLICATE_CODE", "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs", "line": 16, "description": "Redundant Has*Member tests (finding #20)" },
+        { "agent": "20_OVER_ENGINEERING", "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs", "line": 26, "description": "Redundant Has*Member tests (finding #22)" },
+        { "agent": "18_DUPLICATE_CODE", "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs", "line": 14, "description": "Redundant Has*Member tests (finding #21)" },
+        { "agent": "20_OVER_ENGINEERING", "file": "Hattrick.Tests/Models/SkillEnumTests.cs", "line": 14, "description": "Redundant Has*Member tests (finding #23)" }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": 1,
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 98,
+      "description": "Hardcoded loop bounds 'for (int level = 1; level <= 20; level++)' -- the 1 and 20 represent SkillLevel min/max range boundaries",
+      "severity": "Low",
+      "suggestedFix": "Use (int)SkillLevel.Level1 and (int)SkillLevel.Level20"
+    },
+    {
+      "id": 2,
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 202,
+      "description": "Same hardcoded 1 to 20 loop bounds in GetDisplayName_AllLevels_ReturnNonEmptyString",
+      "severity": "Low",
+      "suggestedFix": "Use (int)SkillLevel.Level1 and (int)SkillLevel.Level20"
+    },
+    {
+      "id": 3,
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 215,
+      "description": "Same hardcoded 1 to 20 loop bounds in GetDisplayName_AllLevels_ReturnUniqueNames",
+      "severity": "Low",
+      "suggestedFix": "Use (int)SkillLevel.Level1 and (int)SkillLevel.Level20"
+    },
+    {
+      "id": 4,
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 255,
+      "description": "Same hardcoded 1 to 20 loop bounds in GetDisplayName_Progression_IsMonotonic",
+      "severity": "Low",
+      "suggestedFix": "Use (int)SkillLevel.Level1 and (int)SkillLevel.Level20"
+    },
+    {
+      "id": 5,
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+      "line": 38,
+      "description": "GetDisplayName uses dictionary indexer (DisplayNames[level]) which throws KeyNotFoundException for invalid SkillLevel values. Since SkillLevel is an enum, a caller could cast any int to SkillLevel and pass it in, causing an unhandled exception.",
+      "severity": "Medium",
+      "suggestedFix": "Use TryGetValue and throw a descriptive ArgumentOutOfRangeException, or return a fallback string. Example: if (!DisplayNames.TryGetValue(level, out var name)) throw new ArgumentOutOfRangeException(nameof(level), level, 'Unknown skill level'); return name;",
+      "deduplicatedFrom": ["02_NULL_SAFETY", "08_ARCHITECTURE", "10_LOGIC_ERRORS", "11_EDGE_CASES", "14_SAVE_LOAD", "17_ERROR_HANDLING"]
+    },
+    {
+      "id": 6,
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+      "line": 9,
+      "description": "Display names are completely wrong - they use fabricated names instead of official Hattrick denominations from GAME_DATA_REFERENCE.md and PHASE_1_PLAN.md. 18 of 20 levels have incorrect names. Level 2 should be 'disastrous' not 'very poor', Level 3 should be 'wretched' not 'poor', Level 4 should be 'poor' not 'below average', Level 5 should be 'weak' not 'average', Level 6 should be 'inadequate' not 'above average', Level 7 should be 'passable' not 'good', Level 8 should be 'solid' not 'very good', Level 10 should be 'formidable' not 'mediocre', Level 11 should be 'outstanding' not 'decent', Level 12 should be 'brilliant' not 'competent', Level 13 should be 'magnificent' not 'proficient', Level 14 should be 'world class' not 'accomplished', Level 15 should be 'supernatural' not 'formidable', Level 16 should be 'titanic' not 'exceptional', Level 17 should be 'extra-terrestrial' not 'outstanding', Level 18 should be 'mythical' not 'remarkable', Level 19 should be 'magical' not 'extraordinary'. Only Level 1 ('non-existent'), Level 9 ('excellent'), and Level 20 ('utopian') are correct.",
+      "severity": "Critical",
+      "suggestedFix": "Replace the entire DisplayNames dictionary with the official Hattrick denominations from PHASE_1_PLAN.md.",
+      "deduplicatedFrom": ["09_PLAN_COMPLIANCE", "10_LOGIC_ERRORS"]
+    },
+    {
+      "id": 7,
+      "agent": "08_ARCHITECTURE",
+      "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+      "line": 9,
+      "description": "Mutable Dictionary<SkillLevel, string> used for an immutable lookup table. Since this is a static readonly field that never changes, it should use FrozenDictionary or at minimum IReadOnlyDictionary to communicate immutability and prevent accidental mutation.",
+      "severity": "Medium",
+      "suggestedFix": "Change the field type to FrozenDictionary<SkillLevel, string> (from System.Collections.Frozen) or IReadOnlyDictionary<SkillLevel, string>.",
+      "deduplicatedFrom": ["06_PLAYER_STATE", "11_EDGE_CASES"]
+    },
+    {
+      "id": 8,
+      "agent": "14_SAVE_LOAD",
+      "file": "Hattrick.Core/Models/SkillType.cs",
+      "line": 7,
+      "description": "SkillType enum members have no explicit integer values assigned. All other enums in this set use explicit values. If a member is ever inserted or reordered, implicit values will shift, breaking saved data that serialized old integer values.",
+      "severity": "High",
+      "suggestedFix": "Add explicit integer values: Keeper = 0, Defending = 1, Playmaking = 2, Winger = 3, Scoring = 4, Passing = 5, SetPieces = 6, Stamina = 7.",
+      "deduplicatedFrom": ["06_PLAYER_STATE", "08_ARCHITECTURE", "10_LOGIC_ERRORS", "11_EDGE_CASES"]
+    },
+    {
+      "id": 9,
+      "agent": "09_PLAN_COMPLIANCE",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 229,
+      "description": "GetDisplayName_Progression_IsMonotonic test encodes wrong display names that match the buggy implementation rather than the plan.",
+      "severity": "Critical",
+      "suggestedFix": "Update expectedProgression array to use official Hattrick terminology.",
+      "deduplicatedFrom": ["06_PLAYER_STATE"]
+    },
+    {
+      "id": 10,
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 159,
+      "description": "Multiple individual GetDisplayName tests validate wrong expected values. GetDisplayName_Level2_ReturnsVeryPoor expects 'very poor' but should expect 'disastrous'. GetDisplayName_Level10_ReturnsMediocre expects 'mediocre' but should expect 'formidable'. Method name at line 289 has typo: 'GetDisplayName_MidpointLevel_ReturnsMediacore' should be 'ReturnsMediocre' (and the expected value itself is wrong per the plan).",
+      "severity": "High",
+      "suggestedFix": "Fix all individual display name tests to expect official Hattrick denominations. Fix the typo in method name.",
+      "deduplicatedFrom": ["05_TEST_QUALITY (line 289)", "09_PLAN_COMPLIANCE (lines 170, 179, 289)"]
+    },
+    {
+      "id": 11,
+      "agent": "09_PLAN_COMPLIANCE",
+      "file": "Hattrick.Core/Models/SkillLevel.cs",
+      "line": 45,
+      "description": "Comment incorrectly calls Level 10 'mediocre' and 'pivot/midpoint of the scale'.",
+      "severity": "Medium",
+      "suggestedFix": "Update comment to reflect official terminology.",
+      "deduplicatedFrom": ["06_PLAYER_STATE"]
+    },
+    {
+      "id": 12,
+      "agent": "10_LOGIC_ERRORS",
+      "file": "Hattrick.Core/Models/SkillLevel.cs",
+      "line": 8,
+      "description": "SkillLevel default value (0) is not a valid enum member. default(SkillLevel) is 0, which does not correspond to any defined member. Uninitialized fields silently hold an undefined value.",
+      "severity": "High",
+      "suggestedFix": "Add a sentinel value like None = 0 or Undefined = 0, or start the enum at 0.",
+      "deduplicatedFrom": ["11_EDGE_CASES"]
+    },
+    {
+      "id": 13,
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 199,
+      "description": "No test covers GetDisplayName with an invalid/out-of-range SkillLevel value. The most likely runtime edge case -- default(SkillLevel) which equals 0 -- is untested.",
+      "severity": "Medium",
+      "suggestedFix": "Add tests verifying behavior for (SkillLevel)0, (SkillLevel)(-1), and (SkillLevel)21.",
+      "deduplicatedFrom": ["05_TEST_QUALITY", "16_ASSERTION_QUALITY"]
+    },
+    {
+      "id": 14,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 228,
+      "description": "Test name GetDisplayName_Progression_IsMonotonic is misleading. The Hattrick skill scale is NOT monotonically increasing in perceived quality. The test actually verifies exact display name values, not monotonicity.",
+      "severity": "Medium",
+      "suggestedFix": "Rename to GetDisplayName_AllLevels_MatchExpectedProgression to accurately describe the assertion.",
+      "deduplicatedFrom": ["10_LOGIC_ERRORS"]
+    },
+    {
+      "id": 15,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 265,
+      "description": "Test GetDisplayName_LowerLevels_SuggestWeakness uses vague assertions (checking that level 1 contains 'non' and level 3 does not contain 'excellent'). Duplicates coverage already provided by the full progression test at line 228.",
+      "severity": "Medium",
+      "suggestedFix": "Remove this test since the full progression test already verifies exact display names for all 20 levels.",
+      "deduplicatedFrom": ["16_ASSERTION_QUALITY"]
+    },
+    {
+      "id": 16,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 277,
+      "description": "Test GetDisplayName_UpperLevels_SuggestExcellence uses vague assertions. Duplicated by the full progression test at line 228.",
+      "severity": "Medium",
+      "suggestedFix": "Remove this test.",
+      "deduplicatedFrom": ["16_ASSERTION_QUALITY"]
+    },
+    {
+      "id": 17,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 447,
+      "description": "Test naming convention violation: All_Enums_Can_Be_Converted_To_String_And_Back uses underscores within word boundaries instead of PascalCase segments per MethodName_Scenario_ExpectedResult.",
+      "severity": "Medium",
+      "suggestedFix": "Rename to AllEnums_ConvertedToStringAndParsedBack_RoundTripSuccessfully."
+    },
+    {
+      "id": 18,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 428,
+      "description": "Test naming convention violation: Specialty_And_PlayerPersonality_CanBeUsedTogether uses underscores within word boundaries.",
+      "severity": "Medium",
+      "suggestedFix": "Rename to SpecialtyAndPlayerPersonality_UsedTogether_BothRetainValues."
+    },
+    {
+      "id": 19,
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+      "line": 512,
+      "description": "Test naming convention violation: Formation_And_Tactic_AndTeamAttitude_CanCoexist has inconsistent underscore usage.",
+      "severity": "Medium",
+      "suggestedFix": "Rename to FormationTacticAndTeamAttitude_UsedTogether_AllRetainValues."
+    },
+    {
+      "id": 20,
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+      "line": 16,
+      "description": "Repeated enum test pattern using GetEnumNames().Contains(). The identical 4-step template is copy-pasted for Position, IndividualOrder, Formation, Tactic, and TeamAttitude enums. Individual Has{Member}Member tests are fully redundant with AllMembersAreExpected.",
+      "severity": "Medium",
+      "suggestedFix": "Extract a generic helper or remove individual member existence tests since AllMembersAreExpected already covers them.",
+      "deduplicatedFrom": ["05_TEST_QUALITY", "16_ASSERTION_QUALITY", "20_OVER_ENGINEERING"]
+    },
+    {
+      "id": 21,
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 14,
+      "description": "Same pattern as PositionOrderEnumTests but using Enum.Parse() style. Individual member existence, HasExactlyNMembers, MembersHaveCorrectNames, AllMembers_CanBeEnumerated repeated for Specialty, PlayerPersonality, CoachType. AllMembers_CanBeEnumerated duplicates MembersHaveCorrectNames.",
+      "severity": "Medium",
+      "suggestedFix": "Remove AllMembers_CanBeEnumerated methods which duplicate MembersHaveCorrectNames.",
+      "deduplicatedFrom": ["05_TEST_QUALITY", "20_OVER_ENGINEERING (lines 14, 94)"]
+    },
+    {
+      "id": 22,
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+      "line": 26,
+      "description": "Redundant individual-member tests. 10 Formation + 7 Tactic + 3 TeamAttitude individual Has*Member tests subsumed by AllMembersAreExpected.",
+      "severity": "Medium",
+      "suggestedFix": "Remove individual Has*Member tests; keep AllMembersAreExpected.",
+      "deduplicatedFrom": ["05_TEST_QUALITY", "16_ASSERTION_QUALITY"]
+    },
+    {
+      "id": 23,
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 14,
+      "description": "8 individual SkillType_Has*Member tests subsumed by SkillType_MembersHaveCorrectNames.",
+      "severity": "Medium",
+      "suggestedFix": "Remove individual Has*Member tests.",
+      "deduplicatedFrom": ["05_TEST_QUALITY"]
+    },
+    {
+      "id": 24,
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 279,
+      "description": "17 individual numeric value tests each consisting of a single ((int)EnumType.Member).Should().Be(N) line. Same validation other files do in a single MembersHaveDefaultValues test.",
+      "severity": "Medium",
+      "suggestedFix": "Replace with one test per enum that validates all values in a loop, matching TacticsFormationEnumTests.Formation_MembersHaveDefaultValues pattern.",
+      "deduplicatedFrom": ["20_OVER_ENGINEERING"]
+    },
+    {
+      "id": 25,
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 428,
+      "description": "Specialty_And_PlayerPersonality_CanBeUsedTogether and All_Enums_Can_Be_Converted_To_String_And_Back test CLR behavior, not application logic.",
+      "severity": "Medium",
+      "suggestedFix": "Remove tests that only verify CLR guarantees."
+    },
+    {
+      "id": 26,
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+      "line": 512,
+      "description": "Formation_And_Tactic_AndTeamAttitude_CanCoexist assigns enums and asserts identity -- impossible to fail.",
+      "severity": "Medium",
+      "suggestedFix": "Remove this trivial test."
+    },
+    {
+      "id": 27,
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 305,
+      "description": "AllSkillTypesAndAllSkillLevels_CanBeCreated iterates 160 combinations but SkillType dimension is irrelevant. SkillTypeAndLevel_CanBeUsedTogether tests nothing meaningful.",
+      "severity": "Medium",
+      "suggestedFix": "Remove or simplify these tests."
+    },
+    {
+      "id": 28,
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Core/Models/SkillLevel.cs",
+      "line": 7,
+      "description": "SkillLevel enum starts at Level1=1, but official Hattrick game data (GAME_DATA_REFERENCE.md) shows skill levels start at 0 ('non-existent'). The current enum range is 1-20 while the official range is 0-20. The PHASE_1_PLAN.md specifies 1-20, so this follows the plan, but conflicts with the authoritative game reference.",
+      "severity": "High",
+      "suggestedFix": "Reconcile with GAME_DATA_REFERENCE.md. If the plan intentionally omits level 0, document why. Otherwise add Level0=0."
+    },
+    {
+      "id": 29,
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Core/Models/SkillType.cs",
+      "line": 7,
+      "description": "SkillType enum ordering differs from GAME_DATA_REFERENCE.md which lists Passing before Scoring, but the enum has Scoring before Passing.",
+      "severity": "Medium",
+      "suggestedFix": "Consider reordering to match the game reference or document why the ordering differs."
+    },
+    {
+      "id": 30,
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 318,
+      "description": "SkillTypeAndLevel_CanBeUsedTogether -- displayName.Should().NotBeNullOrEmpty() is the only assertion on the display name value. Should verify exact expected value.",
+      "severity": "Medium",
+      "suggestedFix": "Assert .Be() with the expected display name instead of .NotBeNullOrEmpty()."
+    },
+    {
+      "id": 31,
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 338,
+      "description": "AllSkillTypesAndAllSkillLevels_CanBeCreated -- loops over 160 combinations but only asserts .NotBeNullOrEmpty(). Would pass even if all entries mapped to the same wrong string.",
+      "severity": "Medium",
+      "suggestedFix": "Assert specific expected values or at minimum assert uniqueness across levels."
+    },
+    {
+      "id": 32,
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 86,
+      "description": "SkillType_MembersHaveCorrectNames -- uses .Contain() (subset check) instead of .BeEquivalentTo(). Would pass if extra unexpected members were added.",
+      "severity": "Medium",
+      "suggestedFix": "Use .HaveCount().And.BeEquivalentTo() pattern like other test files."
+    },
+    {
+      "id": 33,
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+      "line": 228,
+      "description": "Duplicate CanBeConvertedToString and CanBeCastFromInt tests repeated for 5 enums. Tests basic .NET enum runtime behavior.",
+      "severity": "Low",
+      "suggestedFix": "Remove or replace with a single generic helper.",
+      "deduplicatedFrom": ["20_OVER_ENGINEERING"]
+    },
+    {
+      "id": 34,
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+      "line": 461,
+      "description": "Three identical CanBeIterated tests and three identical ValuesAreUniqueAndSequential tests following the same pattern per enum. Redundant with AllMembersAreExpected.",
+      "severity": "Low",
+      "suggestedFix": "Extract generic helper or remove since covered by other tests.",
+      "deduplicatedFrom": ["20_OVER_ENGINEERING"]
+    },
+    {
+      "id": 35,
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 487,
+      "description": "Three identical AllMembersAreDistinct tests creating HashSets to verify uniqueness. Enum values are guaranteed unique by C# compiler.",
+      "severity": "Low",
+      "suggestedFix": "Remove -- compiler guarantees this.",
+      "deduplicatedFrom": ["20_OVER_ENGINEERING"]
+    },
+    {
+      "id": 36,
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 401,
+      "description": "Three identical invalid parsing tests verifying Enum.Parse throws for 'InvalidMember'. Tests .NET framework behavior, not project code.",
+      "severity": "Low",
+      "suggestedFix": "Remove or consolidate to single generic test.",
+      "deduplicatedFrom": ["20_OVER_ENGINEERING"]
+    },
+    {
+      "id": 37,
+      "agent": "19_DEAD_CODE",
+      "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+      "line": 1,
+      "description": "Redundant 'using FluentAssertions;' -- already globally imported via global usings in Hattrick.Tests.csproj",
+      "severity": "Medium",
+      "suggestedFix": "Remove line 1"
+    },
+    {
+      "id": 38,
+      "agent": "19_DEAD_CODE",
+      "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+      "line": 3,
+      "description": "Redundant 'using Xunit;' -- already globally imported via global usings in Hattrick.Tests.csproj",
+      "severity": "Medium",
+      "suggestedFix": "Remove line 3"
+    },
+    {
+      "id": 39,
+      "agent": "19_DEAD_CODE",
+      "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+      "line": 1,
+      "description": "Redundant 'using FluentAssertions;' -- already globally imported via global usings in Hattrick.Tests.csproj",
+      "severity": "Medium",
+      "suggestedFix": "Remove line 1"
+    },
+    {
+      "id": 40,
+      "agent": "19_DEAD_CODE",
+      "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+      "line": 3,
+      "description": "Redundant 'using Xunit;' -- already globally imported via global usings in Hattrick.Tests.csproj",
+      "severity": "Medium",
+      "suggestedFix": "Remove line 3"
+    },
+    {
+      "id": 41,
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 112,
+      "description": "3 individual SkillLevel_Level*Exists tests subsumed by comprehensive tests.",
+      "severity": "Low",
+      "suggestedFix": "Remove redundant individual tests."
+    },
+    {
+      "id": 42,
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 264,
+      "description": "3 display name tests subsumed by GetDisplayName_Progression_IsMonotonic.",
+      "severity": "Low",
+      "suggestedFix": "Remove redundant display name tests."
+    },
+    {
+      "id": 43,
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Core/Models/SkillLevel.cs",
+      "line": 1,
+      "description": "Enum with 20 members named Level1-Level20 where an int with range validation would be simpler, but may be mandated by the implementation plan.",
+      "severity": "Low",
+      "suggestedFix": "Consider if plan mandates enum; if not, a range-validated int may be simpler."
+    }
+  ]
+}

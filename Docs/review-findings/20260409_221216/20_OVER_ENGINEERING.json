@@ -1,0 +1,18 @@
+[
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+    "line": 13,
+    "description": "Constants SkillGoodFloor (= 7) and SkillOutstandingFloor (= 11) are declared but never referenced anywhere in the implementation. The switch expression uses `<= SkillGoodCeiling` to cover the 7–8 range (making SkillGoodFloor redundant) and `_` as the default arm (making SkillOutstandingFloor redundant). Dead constants add noise without benefit.",
+    "severity": "Low",
+    "suggestedFix": "Remove the two unused constants: `private const int SkillGoodFloor = 7;` (line 13) and `private const int SkillOutstandingFloor = 11;` (line 17). The switch logic already covers their intended boundaries through SkillGoodCeiling and the wildcard arm."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+    "line": 28,
+    "description": "The XML doc comment for GetSkillBarPercent states 'Truncates; does not round' but the implementation uses Math.Round, which rounds. This is a documentation–implementation contract mismatch. The complexity introduced by documenting a specific truncation contract that is then silently violated makes the API misleading and the behaviour harder to reason about. Tests pass because the chosen test values (0.73, 0.50, 0.99, 0.01) are not near .5 sub-decimal boundaries, so the discrepancy is not caught.",
+    "severity": "Medium",
+    "suggestedFix": "Decide on the intended behaviour and make code and docs agree. If truncation is correct (as documented in the interface XML), replace `Math.Round` with a simple cast: `(int)((skill % 1) * SkillBarPercentMultiplier)`. If rounding is actually desired, update the XML doc comment in both IPlayerDisplayService.cs and PlayerDisplayService.cs to say 'Rounds to nearest integer' and add a test for a value like 7.005 to pin the rounding behaviour."
+  }
+]

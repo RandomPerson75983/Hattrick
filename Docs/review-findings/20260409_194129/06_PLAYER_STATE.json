@@ -1,0 +1,50 @@
+[
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 29,
+    "description": "GetById returns a direct mutable reference to the stored Player object. Since Player is fully mutable, callers can modify player state (e.g., TeamId, InjuryWeeks, Skills) without calling Update(), bypassing the repository's lock and any future change-tracking or validation. This breaks the repository's thread-safety guarantees because concurrent threads can read and mutate the same Player instance without synchronization.",
+    "severity": "High",
+    "suggestedFix": "Return a defensive copy (clone) of the Player from GetById, or document clearly that callers MUST call Update() after mutation. A clone approach would require implementing a Clone/Copy method on Player. Alternatively, consider making Player immutable with a builder pattern, though that is a larger refactor."
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 19,
+    "description": "GetByTeamId returns a read-only list, but the Player objects inside are direct mutable references to the same objects stored in the repository dictionary. This means callers can mutate player state through the 'snapshot' list without calling Update(), bypassing thread safety and change tracking.",
+    "severity": "High",
+    "suggestedFix": "Same as GetById: return cloned Player objects in the list, or document the contract clearly that returned objects are live references and mutations require Update() to be safe."
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 18,
+    "description": "TeamId is a non-nullable Guid, using Guid.Empty as sentinel for 'unassigned'. This prevents null-safety checks (e.g., player.TeamId.HasValue) and risks accidental equality matches between unassigned players (all share Guid.Empty). When transfer/free-agent systems are implemented, this design will make it harder to distinguish 'not on a team' from 'assigned to a valid team' and could cause bugs in queries filtering by TeamId.",
+    "severity": "Medium",
+    "suggestedFix": "Change TeamId to Guid? (nullable). Update GetByTeamId and all references to use .HasValue / .Value patterns. This aligns with the review agent's expected patterns (player.TeamId = null for free agents) and provides compile-time safety."
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 1,
+    "description": "Player model has no validation on any property. Documented ranges (Age 17+, AgeDays 0-111, Form 1-8, Stamina 1-9, Experience 1-20, Loyalty 0.0-1.0, YellowCards 0-2, Leadership 1-8) can all be violated by setting invalid values (e.g., Age = -5, Form = 100, Loyalty = 999). While validation may be handled at the service layer, having no guard rails on the model itself means any code path that constructs or modifies a Player can silently create invalid game state.",
+    "severity": "Low",
+    "suggestedFix": "Add validation either via property setters with range checks (throwing ArgumentOutOfRangeException), or via a Validate() method that can be called before persisting. Guard clauses on setters are preferred for immediate feedback. Alternatively, if validation is intentionally deferred to services, add XML doc comments to each property explicitly stating the valid range and that the caller is responsible for validation."
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+    "line": 74,
+    "description": "Test Constructor_Default_NumericPropertiesAreZero asserts that Form, Stamina, Experience, and Leadership default to 0, but the documented valid minimum for all four is 1. A newly constructed Player with these defaults is in an invalid game state. Any code that creates a Player and forgets to set these properties will have a player with form/stamina/experience/leadership of 0, which is below the documented minimum.",
+    "severity": "Medium",
+    "suggestedFix": "Either change the Player model to default Form=1, Stamina=1, Experience=1, Leadership=1 (matching the documented minimums), or add validation that catches zero values before the player enters gameplay. The tests should then be updated to assert the correct defaults."
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 669,
+    "description": "Test Update_AllPlayerFields_ArePersisted mutates the same Player object that was added to the repository, then calls Update. Since the repository stores references (not copies), the 'update' is a no-op - the data was already changed in-place. This test would pass even if Update() did nothing, making it a weak test that doesn't verify Update actually works.",
+    "severity": "Medium",
+    "suggestedFix": "Create a NEW Player instance with the same Id and different field values, then pass that new instance to Update(). This verifies that Update() actually replaces the stored reference. Example: var updated = new Player { Id = player.Id, TeamId = teamId, Name = 'Updated Full', ... }; _sut.Update(updated);"
+  }
+]

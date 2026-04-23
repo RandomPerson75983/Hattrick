@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 429,
+    "description": "TeamRepository_ImplementsITeamRepository uses BeAssignableTo to verify that TeamRepository implements ITeamRepository. This is guaranteed at compile time by the class declaration 'public class TeamRepository : ITeamRepository' — the build would fail if this were false. The test adds no runtime value and is unnecessary.",
+    "severity": "Low",
+    "suggestedFix": "Remove the test. Compiler enforcement is sufficient — if TeamRepository ever stops implementing ITeamRepository, the project will not build."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 414,
+    "description": "TeamRepository_DoesNotExposeRemoveMethod uses reflection (typeof(ITeamRepository).GetMethods()) to assert that the interface has no Remove method. The interface definition is the authoritative source of truth and is right beside the test in the same solution. If a Remove method were added to ITeamRepository, the interface file itself would show it — no reflection needed. This is unnecessary complexity.",
+    "severity": "Low",
+    "suggestedFix": "Remove the reflection-based test. The interface definition is the contract; examining it via reflection adds indirection without value. If remove-prevention is a documented design decision, a code comment in ITeamRepository is more appropriate."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 128,
+    "description": "GetById_EmptyRepository_ReturnsNull and GetById_ReturnsNullWhenNotFound (line 115) test identical behavior: calling GetById with a Guid that was never added returns null. One covers an empty repository, the other a populated one with a different ID — but both assert the same outcome (null) via the same code path (dictionary miss). The distinction is not meaningful enough to warrant two tests.",
+    "severity": "Low",
+    "suggestedFix": "Consolidate into a single test, e.g. GetById_NonExistentId_ReturnsNull, using a Theory with InlineData or just one representative scenario. The empty-repo case is already implicitly covered since _sut starts empty."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 162,
+    "description": "IsHumanControlled_CanBeSetToTrue (line 162) and IsHumanControlled_CanBeSetToFalse (line 172) each test that a plain bool property setter works. These are two separate tests for trivial C# property assignment. The existing Constructor_Default_IsHumanControlledIsFalse test already covers false, and a single CanBeSet test with both values would suffice.",
+    "severity": "Low",
+    "suggestedFix": "Replace with a single Theory: [Theory][InlineData(true)][InlineData(false)] void IsHumanControlled_CanBeSetAndRetrieved(bool value). This halves the test count without losing coverage."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 209,
+    "description": "Budget_CanBeSetToZero is a standalone test that sets Budget to 0m and asserts it equals 0m. The default is already verified as 0m in Constructor_Default_BudgetIsZero, and setting a property to its default value exercises no interesting logic. Same pattern appears for Fans_CanBeSetToZero (line 254) and FanClubSize_CanBeSetToZero (line 263).",
+    "severity": "Low",
+    "suggestedFix": "Remove Budget_CanBeSetToZero, Fans_CanBeSetToZero, and FanClubSize_CanBeSetToZero. The default tests already cover zero values; these add no additional signal."
+  }
+]

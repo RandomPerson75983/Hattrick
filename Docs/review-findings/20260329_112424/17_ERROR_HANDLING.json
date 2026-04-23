@@ -1,0 +1,10 @@
+[
+  {
+    "agent": "17_ERROR_HANDLING",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 40,
+    "description": "GetDisplayName uses dictionary indexer (DisplayNames[level]) which throws KeyNotFoundException with an unhelpful message when called with an invalid SkillLevel value. Since C# enums are not constrained to defined values, any cast integer is a valid SkillLevel.",
+    "severity": "Medium",
+    "suggestedFix": "Use TryGetValue with an ArgumentOutOfRangeException: if (!DisplayNames.TryGetValue(level, out var name)) throw new ArgumentOutOfRangeException(nameof(level), level, $\"No display name for skill level {level}\"); return name;"
+  }
+]

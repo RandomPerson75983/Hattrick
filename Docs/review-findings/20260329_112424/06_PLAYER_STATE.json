@@ -1,0 +1,66 @@
+[
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 9,
+    "description": "Display names are completely wrong - they use fabricated names instead of official Hattrick denominations from GAME_DATA_REFERENCE.md and PHASE_1_PLAN.md. 18 of 20 levels have incorrect names. Level 2 should be 'disastrous' not 'very poor', Level 3 should be 'wretched' not 'poor', Level 4 should be 'poor' not 'below average', Level 5 should be 'weak' not 'average', Level 6 should be 'inadequate' not 'above average', Level 7 should be 'passable' not 'good', Level 8 should be 'solid' not 'very good', Level 10 should be 'formidable' not 'mediocre', Level 11 should be 'outstanding' not 'decent', Level 12 should be 'brilliant' not 'competent', Level 13 should be 'magnificent' not 'proficient', Level 14 should be 'world class' not 'accomplished', Level 15 should be 'supernatural' not 'formidable', Level 16 should be 'titanic' not 'exceptional', Level 17 should be 'extra-terrestrial' not 'outstanding', Level 18 should be 'mythical' not 'remarkable', Level 19 should be 'magical' not 'extraordinary'. Only Level 1 ('non-existent'), Level 9 ('excellent'), and Level 20 ('utopian') are correct.",
+    "severity": "Critical",
+    "suggestedFix": "Replace the entire DisplayNames dictionary with the official Hattrick denominations from PHASE_1_PLAN.md: Level1='non-existent', Level2='disastrous', Level3='wretched', Level4='poor', Level5='weak', Level6='inadequate', Level7='passable', Level8='solid', Level9='excellent', Level10='formidable', Level11='outstanding', Level12='brilliant', Level13='magnificent', Level14='world class', Level15='supernatural', Level16='titanic', Level17='extra-terrestrial', Level18='mythical', Level19='magical', Level20='utopian'"
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 38,
+    "description": "GetDisplayName uses dictionary indexer (DisplayNames[level]) which throws KeyNotFoundException for invalid SkillLevel values. Since SkillLevel is an enum, a caller could cast any int to SkillLevel and pass it in, causing an unhandled exception.",
+    "severity": "Medium",
+    "suggestedFix": "Use TryGetValue and throw a descriptive ArgumentOutOfRangeException, or return a fallback string. Example: if (!DisplayNames.TryGetValue(level, out var name)) throw new ArgumentOutOfRangeException(nameof(level), level, 'Unknown skill level'); return name;"
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Core/Models/SkillLevel.cs",
+    "line": 7,
+    "description": "SkillLevel enum starts at Level1=1, but official Hattrick game data (GAME_DATA_REFERENCE.md) shows skill levels start at 0 ('non-existent'). The current enum range is 1-20 while the official range is 0-20. The PHASE_1_PLAN.md specifies 1-20, so this follows the plan, but conflicts with the authoritative game reference. There is no way to represent a level-0 ('non-existent') skill which exists in the actual game.",
+    "severity": "High",
+    "suggestedFix": "Reconcile with GAME_DATA_REFERENCE.md. If the plan intentionally omits level 0, document why. Otherwise add Level0=0 with display name 'non-existent' and shift the current Level1 display name to 'disastrous'. This also requires updating SkillLevelDisplayNames and all tests."
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Core/Models/SkillLevel.cs",
+    "line": 5,
+    "description": "XML comment says 'Level 10 (mediocre) is the pivot/midpoint of the scale' but this is doubly wrong: (1) the display name for Level 10 per the plan should be 'formidable' not 'mediocre', and (2) Level 10 is not the midpoint of a 1-20 scale.",
+    "severity": "Low",
+    "suggestedFix": "Remove the misleading midpoint comment. Replace with: 'Enumeration of skill levels from 1 to 20, matching official Hattrick denominations from non-existent (1) to utopian (20).'"
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 229,
+    "description": "GetDisplayName_Progression_IsMonotonic test validates wrong display names. The expectedProgression array contains fabricated names (e.g., 'mediocre' for level 10, 'decent' for level 11) that match the buggy implementation rather than the official Hattrick denominations.",
+    "severity": "High",
+    "suggestedFix": "Update expectedProgression to match official Hattrick denominations: 'non-existent', 'disastrous', 'wretched', 'poor', 'weak', 'inadequate', 'passable', 'solid', 'excellent', 'formidable', 'outstanding', 'brilliant', 'magnificent', 'world class', 'supernatural', 'titanic', 'extra-terrestrial', 'mythical', 'magical', 'utopian'"
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 159,
+    "description": "Multiple individual GetDisplayName tests validate wrong expected values. GetDisplayName_Level2_ReturnsVeryPoor expects 'very poor' but should expect 'disastrous'. GetDisplayName_Level10_ReturnsMediocre expects 'mediocre' but should expect 'formidable'. Method name at line 289 has typo: 'GetDisplayName_MidpointLevel_ReturnsMediacore' should be 'ReturnsMediocre' (and the expected value itself is wrong per the plan).",
+    "severity": "High",
+    "suggestedFix": "Fix all individual display name tests to expect official Hattrick denominations. Fix the typo in method name."
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Core/Models/SkillType.cs",
+    "line": 7,
+    "description": "SkillType enum members do not have explicit integer values assigned. While the compiler assigns 0-7 sequentially, explicit values provide stability for serialization/save-load. The enum ordering also differs from the GAME_DATA_REFERENCE.md which lists Passing before Scoring, but the enum has Scoring before Passing.",
+    "severity": "Medium",
+    "suggestedFix": "Add explicit integer values to SkillType members for save/load stability (e.g., Keeper = 0, Defending = 1, etc.). Consider reordering to match the game reference or document why the ordering differs."
+  },
+  {
+    "agent": "06_PLAYER_STATE",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 9,
+    "description": "DisplayNames dictionary is a mutable Dictionary but its contents never change. Should use a frozen or readonly collection for thread safety and intent clarity.",
+    "severity": "Low",
+    "suggestedFix": "Use FrozenDictionary (System.Collections.Frozen in .NET 8+) or ReadOnlyDictionary, or replace with a static readonly array indexed by (int)level for O(1) lookup."
+  }
+]

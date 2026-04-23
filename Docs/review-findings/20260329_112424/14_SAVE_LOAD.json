@@ -1,0 +1,18 @@
+[
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "Hattrick.Core/Models/SkillType.cs",
+    "line": 7,
+    "description": "SkillType enum members have no explicit integer values assigned. All other enums in this set use explicit values. If a member is ever inserted or reordered, implicit values will shift, breaking saved data that serialized old integer values.",
+    "severity": "High",
+    "suggestedFix": "Add explicit integer values: Keeper = 0, Defending = 1, Playmaking = 2, Winger = 3, Scoring = 4, Passing = 5, SetPieces = 6, Stamina = 7."
+  },
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 40,
+    "description": "GetDisplayName throws KeyNotFoundException for invalid SkillLevel values. If a save file contains a value outside 1-20 (corrupted or future version), dictionary lookup crashes load with no fallback.",
+    "severity": "Medium",
+    "suggestedFix": "Use TryGetValue with fallback: if (!DisplayNames.TryGetValue(level, out var name)) return $\"unknown ({(int)level})\"; return name;"
+  }
+]

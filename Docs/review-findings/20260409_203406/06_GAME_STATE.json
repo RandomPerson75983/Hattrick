@@ -1,0 +1,74 @@
+[
+  {
+    "agent": "06_GAME_STATE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+    "line": 20,
+    "description": "GetById returns the live mutable Team object reference, not a copy. Any caller can mutate team state (Budget, TeamSpirit, Confidence, etc.) without calling Update(), completely bypassing the lock and breaking thread safety. The ITeamRepository doc comment says GetAll() returns a snapshot, but neither method protects the objects inside.",
+    "severity": "High",
+    "suggestedFix": "Return a defensive copy from GetById and GetAll, or make Team a record/immutable type requiring explicit Update calls to persist changes. At minimum, add a note in the interface that callers must not mutate returned objects and call Update() with a new/cloned instance instead."
+  },
+  {
+    "agent": "06_GAME_STATE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+    "line": 25,
+    "description": "GetAll() returns an IReadOnlyList snapshot (good), but the Team objects inside are still live mutable references. External code can modify Team.Budget, Team.TeamSpirit, etc. on a returned object and the change persists inside the dictionary without going through Update(). The comment 'Returns a snapshot (new list), not a live reference' is misleading because the objects themselves are live references.",
+    "severity": "High",
+    "suggestedFix": "Either return cloned Team objects in GetAll() and GetById(), or enforce immutability at the model level. Document clearly that returned objects are live references and mutation without Update() is undefined behaviour."
+  },
+  {
+    "agent": "06_GAME_STATE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 43,
+    "description": "TeamSpirit is a double documented as 0.0-10.0 but has no range enforcement. Out-of-range values (negative or above 10) can be assigned directly and will be stored without error, silently corrupting match performance calculations.",
+    "severity": "Medium",
+    "suggestedFix": "Add a validation guard in any service that sets TeamSpirit, or use a property setter that clamps/throws: `set { _teamSpirit = Math.Clamp(value, 0.0, 10.0); }`. Document the valid range and enforce it consistently."
+  },
+  {
+    "agent": "06_GAME_STATE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 47,
+    "description": "Confidence is a double documented as 0.0-10.0 but has no range enforcement, same issue as TeamSpirit. Invalid values corrupt match calculations.",
+    "severity": "Medium",
+    "suggestedFix": "Same as TeamSpirit — clamp in a property setter or validate in all service methods that modify Confidence."
+  },
+  {
+    "agent": "06_GAME_STATE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 28,
+    "description": "Budget is a decimal with no guard against negative values. In Hattrick a team can go into debt temporarily, but there is no explicit rule encoded here. If the game disallows negative budgets, a service setting Budget below zero will silently corrupt financial state with no error.",
+    "severity": "Low",
+    "suggestedFix": "Document whether negative Budget is allowed (debt) or not. If not, add validation in services or the model. If debt is allowed, document the minimum allowed value (e.g., no lower than -500,000)."
+  },
+  {
+    "agent": "06_GAME_STATE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 57,
+    "description": "CoachLevel is documented as 1-8 but defaults to 1 with no enforcement of the upper bound. A value of 0 or 9+ can be stored, corrupting training calculations that depend on coach level.",
+    "severity": "Low",
+    "suggestedFix": "Add a named constant for the max coach level (e.g., `public const int MaxCoachLevel = 8`) and validate in any service that sets CoachLevel, or use a clamped property setter."
+  },
+  {
+    "agent": "06_GAME_STATE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 63,
+    "description": "AssistantCoachLevel is documented as 0-10 but has no range enforcement. Values outside 0-10 would corrupt training effectiveness calculations.",
+    "severity": "Low",
+    "suggestedFix": "Add a named constant `MaxAssistantCoachLevel = 10` and validate in services that mutate this field."
+  },
+  {
+    "agent": "06_GAME_STATE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 1,
+    "description": "Team has no player roster reference or PlayerCount — there is no way to determine whether a team has enough players (minimum 11) to field a match just from the Team model alone. This means pre-match validation must always go through IPlayerRepository.GetByTeamId(), and there is no single-source-of-truth game state check for team viability.",
+    "severity": "Low",
+    "suggestedFix": "This is an architectural concern for later phases: a TeamService or MatchService should validate roster completeness (minimum 11 non-injured, non-suspended players) before allowing a match to proceed. Document this as a required pre-condition in the match engine design."
+  },
+  {
+    "agent": "06_GAME_STATE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\ITeamRepository.cs",
+    "line": 1,
+    "description": "ITeamRepository has no method to retrieve the human-controlled team directly. Every service that needs to act on the player's team must call GetAll() and filter by IsHumanControlled, which is O(n) and could scatter that filtering logic across many services.",
+    "severity": "Low",
+    "suggestedFix": "Add a `Team? GetHumanControlledTeam()` method to ITeamRepository and TeamRepository for O(1) lookup of the single human team, preventing scattered GetAll().Single(t => t.IsHumanControlled) calls throughout the codebase."
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "agent": "19_DEAD_CODE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 7,
+    "description": "Stale TDD phase comment in class XML doc: 'TDD Red Phase: Team class does not exist yet — these tests define the expected API.' The Team class is now fully implemented in Team.cs. This comment is misleading dead documentation that no longer reflects reality.",
+    "severity": "Low",
+    "suggestedFix": "Remove or update the comment to reflect that the Team class is implemented. Replace with: 'Tests for the Team model class, verifying all properties, defaults, and mutability.'"
+  }
+]

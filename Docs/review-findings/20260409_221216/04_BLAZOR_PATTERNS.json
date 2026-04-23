@@ -1,0 +1,34 @@
+[
+  {
+    "agent": "04_BLAZOR_PATTERNS",
+    "file": "hattrick/Components/Pages/Players.razor",
+    "line": 33,
+    "description": "The @foreach loop over _players does not use @key. Without @key, Blazor cannot efficiently track which DOM elements map to which players during re-renders, leading to unnecessary full re-renders of the list.",
+    "severity": "Low",
+    "suggestedFix": "Add @key=\"player.Id\" to the outermost element inside the foreach: <div class=\"player-row\" @key=\"player.Id\">"
+  },
+  {
+    "agent": "04_BLAZOR_PATTERNS",
+    "file": "hattrick/Components/Pages/Players.razor",
+    "line": 33,
+    "description": "The @foreach over _players does not use <Virtualize>. A squad can exceed 20 players and may grow further (youth players, loans, etc.). Rendering all rows unconditionally is inefficient for large lists. The agent guidance flags any @foreach on lists that could exceed 50 items, and player rosters are plausibly in that range during late-game.",
+    "severity": "Medium",
+    "suggestedFix": "Wrap the player rows in <Virtualize Items=\"_players\" Context=\"player\"> ... </Virtualize> to only render visible rows. Alternatively, add a note if roster size is provably bounded under 50."
+  },
+  {
+    "agent": "04_BLAZOR_PATTERNS",
+    "file": "hattrick/Components/Pages/Players.razor",
+    "line": 45,
+    "description": "The inner @foreach over DisplayedSkills does not use @key. Although DisplayedSkills is a static array of 7 items, adding @key is still best practice and avoids confusing Blazor's diffing algorithm when sibling elements are reordered.",
+    "severity": "Low",
+    "suggestedFix": "Add @key=\"skillType\" to the skill cell div: <div class=\"skill-cell\" @key=\"skillType\">"
+  },
+  {
+    "agent": "04_BLAZOR_PATTERNS",
+    "file": "hattrick/Components/Pages/Players.razor",
+    "line": 103,
+    "description": "Loading logic is placed directly in OnInitialized with no error handling, no _isLoading guard, and no retry capability. If PlayerRepository.GetByTeamId or the stats services throw, the exception will propagate unhandled and crash the component render. The recommended pattern is to extract loading into a private LoadDataAsync() method with try/catch.",
+    "severity": "Medium",
+    "suggestedFix": "Replace OnInitialized with:\n  protected override async Task OnInitializedAsync() => await LoadDataAsync();\n\n  private async Task LoadDataAsync()\n  {\n      _isLoading = true;\n      _errorMessage = null;\n      try\n      {\n          _players = PlayerRepository.GetByTeamId(Guid.Empty);\n          _totals = StatsService.GetTeamTotals(_players);\n          _averages = StatsService.GetTeamAverages(_players);\n      }\n      catch (Exception ex) { _errorMessage = ex.Message; }\n      finally { _isLoading = false; }\n  }\nAlso add _isLoading and _errorMessage fields, and conditionally render an error/spinner in the markup."
+  }
+]

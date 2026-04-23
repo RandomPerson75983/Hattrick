@@ -1,0 +1,18 @@
+[
+  {
+    "agent": "02_NULL_SAFETY",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 36,
+    "description": "Add(Player player) does not validate that 'player' is not null before accessing player.Id. A null argument would throw a NullReferenceException instead of the expected ArgumentNullException.",
+    "severity": "Medium",
+    "suggestedFix": "Add 'ArgumentNullException.ThrowIfNull(player);' as the first line inside the Add method (before the lock)."
+  },
+  {
+    "agent": "02_NULL_SAFETY",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 50,
+    "description": "Update(Player player) does not validate that 'player' is not null before accessing player.Id. A null argument would throw a NullReferenceException instead of the expected ArgumentNullException.",
+    "severity": "Medium",
+    "suggestedFix": "Add 'ArgumentNullException.ThrowIfNull(player);' as the first line inside the Update method (before the lock)."
+  }
+]

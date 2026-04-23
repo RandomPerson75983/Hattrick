@@ -1,0 +1,58 @@
+[
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+    "line": 16,
+    "description": "Repeated enum test pattern using GetEnumNames().Contains(). The identical 4-step template is copy-pasted for Position, IndividualOrder, Formation, Tactic, and TeamAttitude enums. Individual Has{Member}Member tests are fully redundant with AllMembersAreExpected.",
+    "severity": "Medium",
+    "suggestedFix": "Extract a generic helper or remove individual member existence tests since AllMembersAreExpected already covers them."
+  },
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 14,
+    "description": "Same pattern as PositionOrderEnumTests but using Enum.Parse() style. Individual member existence, HasExactlyNMembers, MembersHaveCorrectNames, AllMembers_CanBeEnumerated repeated for Specialty, PlayerPersonality, CoachType. AllMembers_CanBeEnumerated duplicates MembersHaveCorrectNames.",
+    "severity": "Medium",
+    "suggestedFix": "Remove AllMembers_CanBeEnumerated methods which duplicate MembersHaveCorrectNames."
+  },
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 279,
+    "description": "17 individual numeric value tests each consisting of a single ((int)EnumType.Member).Should().Be(N) line. Same validation other files do in a single MembersHaveDefaultValues test.",
+    "severity": "Medium",
+    "suggestedFix": "Replace with one test per enum that validates all values in a loop, matching TacticsFormationEnumTests.Formation_MembersHaveDefaultValues pattern."
+  },
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+    "line": 228,
+    "description": "Duplicate CanBeConvertedToString and CanBeCastFromInt tests repeated for 5 enums. Tests basic .NET enum runtime behavior.",
+    "severity": "Low",
+    "suggestedFix": "Remove or replace with a single generic helper."
+  },
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+    "line": 461,
+    "description": "Three identical CanBeIterated tests and three identical ValuesAreUniqueAndSequential tests following the same pattern per enum. Redundant with AllMembersAreExpected.",
+    "severity": "Low",
+    "suggestedFix": "Extract generic helper or remove since covered by other tests."
+  },
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 487,
+    "description": "Three identical AllMembersAreDistinct tests creating HashSets to verify uniqueness. Enum values are guaranteed unique by C# compiler.",
+    "severity": "Low",
+    "suggestedFix": "Remove -- compiler guarantees this."
+  },
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 401,
+    "description": "Three identical invalid parsing tests verifying Enum.Parse throws for 'InvalidMember'. Tests .NET framework behavior, not project code.",
+    "severity": "Low",
+    "suggestedFix": "Remove or consolidate to single generic test."
+  }
+]

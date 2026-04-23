@@ -1,0 +1,18 @@
+[
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+    "line": 22,
+    "description": "The per-player estimated value expression `p.TSI * EstimatedValueMultiplier` is duplicated at lines 22 and 42, once inside GetTeamTotals (as a Sum lambda) and again inside GetTeamAverages (as an Average lambda). If the formula changes, both lambdas must be updated. Should be extracted to a private static helper: `private static decimal GetPlayerEstimatedValue(Player p) => p.TSI * EstimatedValueMultiplier;`",
+    "severity": "Medium",
+    "suggestedFix": "Extract a private static method:\n  private static decimal GetPlayerEstimatedValue(Player p) => p.TSI * EstimatedValueMultiplier;\nThen replace both lambdas:\n  TotalEstimatedValue = players.Sum(GetPlayerEstimatedValue),\n  AvgEstimatedValue   = players.Average(p => (double)GetPlayerEstimatedValue(p)),"
+  },
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "Hattrick.Tests/Services/PlayerStatsServiceTests.cs",
+    "line": 178,
+    "description": "The identical three-player list (tsi:4500/2000/7000, wage:10000/8000/15000, nationalityId:1/2/3, all healthy, zero cards) is copy-pasted verbatim across three consecutive test methods: GetTeamTotals_WithMultiplePlayers_ReturnsSumOfTSI (line 178), GetTeamTotals_WithMultiplePlayers_ReturnsSumOfWage (line 191), and GetTeamTotals_WithMultiplePlayers_ReturnsSumOfEstimatedValue (line 205). All three tests exercise different assertions on the exact same input data.",
+    "severity": "Medium",
+    "suggestedFix": "Extract to a static helper or a shared field:\n  private static List<Player> CreateThreePlayerSquad() => new()\n  {\n      CreatePlayer(tsi: 4500, wage: 10000m, nationalityId: 1, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 5, stamina: 5, experience: 5, age: 25),\n      CreatePlayer(tsi: 2000, wage: 8000m,  nationalityId: 2, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 4, stamina: 4, experience: 4, age: 22),\n      CreatePlayer(tsi: 7000, wage: 15000m, nationalityId: 3, injuryWeeks: 0, redCard: false, yellowCards: 0, form: 6, stamina: 7, experience: 9, age: 30),\n  };\nThen reference it in all three tests: var players = CreateThreePlayerSquad();"
+  }
+]

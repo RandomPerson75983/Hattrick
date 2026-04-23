@@ -1,0 +1,34 @@
+[
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 98,
+    "description": "Hardcoded loop bounds 'for (int level = 1; level <= 20; level++)' -- the 1 and 20 represent SkillLevel min/max range boundaries",
+    "severity": "Low",
+    "suggestedFix": "Use (int)SkillLevel.Level1 and (int)SkillLevel.Level20"
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 202,
+    "description": "Same hardcoded 1 to 20 loop bounds in GetDisplayName_AllLevels_ReturnNonEmptyString",
+    "severity": "Low",
+    "suggestedFix": "Use (int)SkillLevel.Level1 and (int)SkillLevel.Level20"
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 215,
+    "description": "Same hardcoded 1 to 20 loop bounds in GetDisplayName_AllLevels_ReturnUniqueNames",
+    "severity": "Low",
+    "suggestedFix": "Use (int)SkillLevel.Level1 and (int)SkillLevel.Level20"
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 255,
+    "description": "Same hardcoded 1 to 20 loop bounds in GetDisplayName_Progression_IsMonotonic",
+    "severity": "Low",
+    "suggestedFix": "Use (int)SkillLevel.Level1 and (int)SkillLevel.Level20"
+  }
+]

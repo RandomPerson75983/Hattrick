@@ -1,0 +1,66 @@
+[
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 216,
+    "description": "Reference mutation in Update_ReplacesPlayerData: The test mutates the same Player object reference that was added to the repository, then calls Update, then calls GetById. Because PlayerRepository stores references (not copies), GetById returns the exact same object. The assertions on lines 232-235 verify the mutated object against itself, so the test would pass even if Update() were a no-op. The test should create a NEW Player object with the same Id for the update, or fetch via GetById after Update and verify against a separate reference.",
+    "severity": "Medium",
+    "suggestedFix": "Create a separate Player object with the same Id and updated fields for the Update call, then fetch via GetById and assert against the expected values. Example: var updatedPlayer = new Player { Id = player.Id, TeamId = player.TeamId, Name = \"Updated Name\", Age = 30, Form = 8 }; _sut.Update(updatedPlayer); var result = _sut.GetById(player.Id); result!.Name.Should().Be(\"Updated Name\");"
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 238,
+    "description": "Reference mutation in Update_PreservesPlayerId: Same issue as Update_ReplacesPlayerData. The test mutates the same reference that is stored in the repository, so GetById returns the exact same object. The assertion on line 253 is trivially true because result IS player.",
+    "severity": "Medium",
+    "suggestedFix": "Create a new Player object with the same Id for the update, then verify that GetById returns an object with that Id."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 662,
+    "description": "Reference mutation in Update_AllPlayerFields_ArePersisted: The test mutates the same Player object reference that was added, calls Update, then fetches via GetById. Since the repository stores the same reference, GetById returns the mutated object. All assertions (lines 685-695) verify the object against itself, so they would pass even if Update() did nothing.",
+    "severity": "Medium",
+    "suggestedFix": "Create a new Player object with the same Id and all updated fields. Pass that to Update(), then fetch via GetById and assert against expected values."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 270,
+    "description": "Reference mutation in Update_DoesNotAffectOtherPlayers: The test mutates player1.Name directly then calls Update. While the assertion checks player2 (a different reference), the mutation pattern is still incorrect. If the repository were later refactored to clone on Add, this test's Update call would not actually update the stored copy.",
+    "severity": "Low",
+    "suggestedFix": "Create a new Player object with player1's Id and the updated Name, pass it to Update, then verify player2 is unaffected."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+    "line": 55,
+    "description": "Test DI_InterfacesAreProperlyImplemented is a tautology. GetRequiredService<IRandomProvider>() already returns an object that implements IRandomProvider (that's how DI works). Asserting .Should().BeAssignableTo<IRandomProvider>() on an object retrieved via IRandomProvider will always be true. The test adds no value beyond what DI_ContainerRegistersAllInfrastructureServices already covers.",
+    "severity": "Low",
+    "suggestedFix": "Either delete this test entirely (it duplicates DI_ContainerRegistersAllInfrastructureServices) or change it to assert the concrete implementation types, e.g., randomProvider.Should().BeOfType<RandomProvider>(), which would actually verify the correct implementation is registered."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+    "line": 79,
+    "description": "The RegisterServices method duplicates the application's actual DI registration. If the real app adds or changes registrations, this test's private method won't reflect that, making the tests pass even though the real container is misconfigured. Tests should use the same registration method the application uses.",
+    "severity": "High",
+    "suggestedFix": "Extract the application's DI registration into a shared extension method (e.g., IServiceCollection.AddHattrickServices()) and call that method both in the app startup and in these tests. This ensures the tests validate the actual DI configuration."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 27,
+    "description": "Reference mutation in Add_PlayerIsRetrievableAfterAdd: The test calls Add(player), then GetById(player.Id), then asserts result.Name == player.Name. Since the repository stores the reference directly, result IS player. The assertion is trivially true. A proper test would verify the stored data against hardcoded expected values or fetch a fresh copy.",
+    "severity": "Low",
+    "suggestedFix": "Assert against the literal expected values rather than comparing result properties to the same object's properties. E.g., result!.Name.Should().Be(\"Test Player\") instead of result.Name.Should().Be(player.Name)."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 290,
+    "description": "Reference mutation in Update_CanChangeTeamId: The test mutates player.TeamId directly on the same reference stored in the repository, then calls Update. Since the repository stores references, the TeamId is already changed before Update is called. The test would pass even if Update() were a no-op.",
+    "severity": "Medium",
+    "suggestedFix": "Create a new Player object with the same Id but a different TeamId, pass it to Update, then verify via GetByTeamId that the player appears under the new team and not the old."
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+    "line": 20,
+    "description": "GetById returns a direct reference to the internal mutable Team object. Since Team has all public setters, callers can mutate the stored entity in-place without going through Update(), bypassing the lock and corrupting repository state silently.",
+    "severity": "High",
+    "suggestedFix": "Return a defensive copy: `return _teams.TryGetValue(teamId, out var team) ? CloneTeam(team) : null;` — or make Team immutable (init-only setters) so external mutation is impossible."
+  },
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+    "line": 29,
+    "description": "GetAll returns a snapshot list (preventing list mutation) but each Team element is the same live reference stored internally. Callers can modify any Team's fields (e.g., Budget, Fans) directly without calling Update(), silently bypassing thread safety and making the change invisible to other snapshots taken later.",
+    "severity": "High",
+    "suggestedFix": "Return cloned Team objects in the list, or make Team properties init-only to prevent external mutation. The test GetAll_ReturnedListIsSnapshot_NotLiveReference only verifies the list count, not that objects are independent copies, so this bug is not caught by any existing test."
+  }
+]

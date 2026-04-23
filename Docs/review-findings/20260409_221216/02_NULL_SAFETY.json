@@ -1,0 +1,18 @@
+[
+  {
+    "agent": "02_NULL_SAFETY",
+    "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+    "line": 16,
+    "description": "GetTeamTotals does not guard against a null 'players' argument. If a caller passes null, the method throws NullReferenceException at the LINQ call rather than a descriptive ArgumentNullException. ArgumentNullException.ThrowIfNull(players) should be added at the top of both GetTeamTotals and GetTeamAverages.",
+    "severity": "Medium",
+    "suggestedFix": "Add 'ArgumentNullException.ThrowIfNull(players);' as the first line of both GetTeamTotals and GetTeamAverages."
+  },
+  {
+    "agent": "02_NULL_SAFETY",
+    "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+    "line": 31,
+    "description": "GetTeamAverages does not guard against a null 'players' argument. The empty-list guard (players.Count == 0) will itself throw NullReferenceException if players is null, rather than a descriptive ArgumentNullException.",
+    "severity": "Medium",
+    "suggestedFix": "Add 'ArgumentNullException.ThrowIfNull(players);' as the first line of GetTeamAverages, before the Count check."
+  }
+]

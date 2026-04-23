@@ -1,0 +1,18 @@
+[
+  {
+    "agent": "12_PERFORMANCE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+    "line": 57,
+    "description": "Update() performs a double dictionary lookup: ContainsKey() on line 57 followed by the indexer assignment _teams[team.Id] on line 63. Each is an independent O(1) hash lookup, so the key is hashed and located twice per Update call. At scale (frequent match-engine updates across 30 teams), this is unnecessary work.",
+    "severity": "Low",
+    "suggestedFix": "Use a single TryGetValue to check existence, then fall back to ContainsKey+throw only if not found — or simply attempt the assignment and let a sentinel flag the absence. Alternatively, restructure: if (!_teams.ContainsKey(team.Id)) throw; _teams[team.Id] = team; is already readable, but a cleaner O(1)-single-pass pattern is: if (!_teams.TryAdd equivalent exists) use CollectionsMarshal or just accept the double lookup given its low constant cost at 30-team scale. For this repo size the impact is negligible, but the pattern should be consistent with how Add uses TryAdd (single-pass)."
+  },
+  {
+    "agent": "12_PERFORMANCE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 568,
+    "description": "GetAll_HumanAndAiTeams_AreAllReturned iterates the returned IReadOnlyList<Team> three times in succession: once with Count(t => t.IsHumanControlled), once with Count(t => !t.IsHumanControlled), and once with Single(t => t.IsHumanControlled). Each LINQ call is a full linear scan. While test collections are tiny and this is not production hot-path code, it demonstrates the Count(predicate) instead of Any() habit that should not leak into production code.",
+    "severity": "Low",
+    "suggestedFix": "In tests this is acceptable, but to avoid normalising the pattern: cache var result = _sut.GetAll(); then compute counts once, or collapse the two Count() assertions into a single grouped assertion. For production code, prefer Any() over Count() > 0 / Count() == 0 checks."
+  }
+]

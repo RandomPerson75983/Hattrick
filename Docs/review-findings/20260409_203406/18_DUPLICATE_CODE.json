@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 104,
+    "description": "Constructor_Default_StaffLevelsAreZero (line 104-112) asserts all four optional staff properties default to 0. However, each of those same properties has its own dedicated BoundaryMinimum_IsZero test below (AssistantCoachLevel at line 414, DoctorLevel at line 447, SpokespersonLevel at line 477, FinancialDirectorLevel at line 509). The combined defaults test partially duplicates four individual boundary tests.",
+    "severity": "Low",
+    "suggestedFix": "Remove the combined Constructor_Default_StaffLevelsAreZero test and rely on the four individual BoundaryMinimum_IsZero tests that already cover the same assertions. Alternatively, keep only the combined test and remove the redundant BoundaryMinimum_IsZero assertions from the four individual test sections."
+  },
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 430,
+    "description": "DoctorLevel (lines 430-458), SpokespersonLevel (lines 460-488), and FinancialDirectorLevel (lines 490-519) each have three structurally identical test methods: AcceptsValidValues([Theory] 0,3,5), BoundaryMinimum_IsZero, and BoundaryMaximum_IsFive. All three staff types share the same 0-5 range, producing nine tests that are near-identical copies differing only in the property name being accessed.",
+    "severity": "Medium",
+    "suggestedFix": "Consolidate into a parameterised helper or a single [Theory] data-driven test that accepts a property selector and the expected max. For example: [Theory][MemberData(nameof(StaffLevelData))] public void StaffLevel_AcceptsValidRange(Func<Team,int> getter, Action<Team,int> setter, int max). Alternatively, accept the duplication given the trivial nature of property get/set tests."
+  },
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 116,
+    "description": "GetById_ReturnsNullWhenNotFound (line 116) and GetById_EmptyRepository_ReturnsNull (line 129) both assert that GetById returns null for a Guid that is not in the repository. The only structural difference is that one test pre-adds a team and the other does not; both ultimately exercise the same code path (unknown Guid returns null).",
+    "severity": "Low",
+    "suggestedFix": "Remove GetById_EmptyRepository_ReturnsNull since GetById_ReturnsNullWhenNotFound already covers the null-return contract. The empty-repository scenario adds no additional value beyond what a not-found lookup already tests."
+  },
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 440,
+    "description": "The thread-safety test block in TeamRepositoryTests (ConcurrentAdds_DoNotCorruptState at line 440, ConcurrentReadsAndWrites_DoNotThrow at line 457) is structurally identical to the equivalent block in PlayerRepositoryTests (lines 512-570). Both use the same Parallel.For approach with the same modulo-3 branching pattern (add / read-all / read-by-id) and the same iteration counts. This is duplicated test scaffolding across two test classes.",
+    "severity": "Low",
+    "suggestedFix": "Accept the duplication as each repository is tested in isolation, or extract a shared generic helper such as RepositoryThreadSafetyHarness<TRepo, TEntity> that both test classes can reuse. Flag for consideration if more repositories are added."
+  },
+  {
+    "agent": "18_DUPLICATE_CODE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+    "line": 1,
+    "description": "TeamRepository and PlayerRepository are structurally near-identical. Both have the same private Lock + Dictionary fields, and Add/Update/GetById implementations that differ only in entity type and error message noun ('team' vs 'player'). While this is acceptable for a repository pattern, it creates four pairs of duplicated methods that grow maintenance surface as repositories evolve.",
+    "severity": "Low",
+    "suggestedFix": "Consider extracting a generic base class InMemoryRepository<TEntity> that implements the common Add/Update/GetById pattern parameterised by key selector (e.g., Func<TEntity, Guid> getId). Concrete repositories can then inherit and add entity-specific methods (e.g., GetByTeamId for PlayerRepository, GetAll for TeamRepository). Only worth doing if a third repository follows the same pattern."
+  }
+]

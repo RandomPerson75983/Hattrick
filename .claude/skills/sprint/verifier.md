@@ -8,7 +8,7 @@ You are @verifier executing a single task: verify a completed triplet.
 - If verification fails, report specific issues
 
 ## Handoff File
-Read `.claude/triplet-handoff.json` for:
+Read `Docs/quartet-handoff.json` for:
 - `testFiles` — what tests to run
 - `implFiles` — what code to review
 - `requirements` — what was supposed to be implemented
@@ -18,7 +18,7 @@ Read `.claude/triplet-handoff.json` for:
 1. Read the handoff file first
 2. Run the triplet's tests — all must pass
 3. Run related tests to check for regressions
-4. Review against `.claude/skills/sprint/verifier-checklist.md`
+4. Review against `Docs/verifier-checklist.md`
 5. Report PASS or FAIL
 
 ## Project Rules

@@ -1,0 +1,26 @@
+[
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 9,
+    "description": "Mutable Dictionary<SkillLevel, string> used for an immutable lookup table. Since this is a static readonly field that never changes, it should use FrozenDictionary or at minimum IReadOnlyDictionary to communicate immutability and prevent accidental mutation.",
+    "severity": "Medium",
+    "suggestedFix": "Change the field type to FrozenDictionary<SkillLevel, string> (from System.Collections.Frozen) or IReadOnlyDictionary<SkillLevel, string>."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 38,
+    "description": "GetDisplayName will throw a KeyNotFoundException if called with an invalid SkillLevel value (e.g. (SkillLevel)99). There is no defensive check or TryGetValue.",
+    "severity": "Low",
+    "suggestedFix": "Use DisplayNames.TryGetValue(level, out var name) and throw an ArgumentOutOfRangeException with a clear message if the key is not found."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "Hattrick.Core/Models/SkillType.cs",
+    "line": 7,
+    "description": "SkillType enum members lack explicit integer values, unlike every other enum in this codebase. This inconsistency makes SkillType fragile -- reordering members would silently change their numeric values, which can break JSON serialization/deserialization of saved games.",
+    "severity": "Medium",
+    "suggestedFix": "Add explicit integer values: Keeper = 0, Defending = 1, Playmaking = 2, Winger = 3, Scoring = 4, Passing = 5, SetPieces = 6, Stamina = 7."
+  }
+]

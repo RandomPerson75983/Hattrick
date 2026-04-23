@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 27,
+    "description": "GetById returns a direct mutable reference to the stored Player object. Callers can mutate player state (e.g., change Name, Age, Skills) without calling Update(), bypassing the repository lock and any future validation. This undermines the thread-safety guarantees the repository provides. The same issue applies to GetByTeamId (line 15), which returns a list of live mutable references.",
+    "severity": "High",
+    "suggestedFix": "Return a defensive copy (clone) of the Player object from GetById and GetByTeamId, or make Player immutable/use a record. Alternatively, document that callers MUST call Update() after mutation and accept the risk, but this is fragile."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 13,
+    "description": "Player.Id has a public setter, allowing the ID to be changed after construction. If a Player is stored in the repository (keyed by Id) and a caller changes the Id, the repository's internal dictionary becomes inconsistent -- the player is stored under the old key but now reports a different Id. This breaks GetById, Update, and Remove operations.",
+    "severity": "Medium",
+    "suggestedFix": "Make the Id setter init-only (use 'init' instead of 'set') so it can only be assigned during object initialization. If JSON deserialization requires a setter, use a dedicated DTO for serialization instead."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+    "line": 79,
+    "description": "The DI test has its own RegisterServices method (lines 79-87) that duplicates the registrations from MauiProgram.cs. These must be kept in sync manually. If a new service is added to MauiProgram but not to the test's RegisterServices, the test will not catch missing registrations, defeating its purpose.",
+    "severity": "Medium",
+    "suggestedFix": "Extract the service registration logic into a shared static method (e.g., ServiceRegistration.RegisterCoreServices(IServiceCollection)) that both MauiProgram.cs and the DI tests call. This ensures a single source of truth for registrations."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 8,
+    "description": "The test instantiates the concrete PlayerRepository directly ('private readonly PlayerRepository _sut = new()') rather than using the IPlayerRepository interface. While acceptable for unit tests of the concrete class, it means tests are coupled to the implementation. If a different IPlayerRepository implementation is created, these tests won't cover it.",
+    "severity": "Low",
+    "suggestedFix": "Declare the SUT as IPlayerRepository: 'private readonly IPlayerRepository _sut = new PlayerRepository()'. This validates the interface contract rather than the concrete type. The test 'PlayerRepository_ImplementsIPlayerRepository' (line 633) already checks assignability, so the type could safely be the interface."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "Hattrick/MauiProgram.cs",
+    "line": 24,
+    "description": "SaveGameService and SaveSlotService are registered as Singletons but are stateless services (not repositories holding in-memory state). The architecture guide specifies repositories as Singleton and services as Scoped. While Singleton works in MAUI (single user), it deviates from the documented architecture pattern and could cause issues if the app later supports multiple concurrent game sessions or if services acquire per-request state.",
+    "severity": "Low",
+    "suggestedFix": "Consider whether these should be AddScoped per the architecture guide. For MAUI Blazor desktop apps with a single user, Singleton is functionally equivalent to Scoped, so this is a minor style/consistency issue. GameStateService holds mutable state, so Singleton is correct for it. Document the rationale if keeping Singleton."
+  }
+]

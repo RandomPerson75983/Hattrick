@@ -1,0 +1,50 @@
+[
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+    "line": 36,
+    "description": "All tests in PlayersPageTests assert against the output of BuildExpectedMarkup(), which is a helper defined in the test class itself. The tests never render an actual Players.razor component — they assert that a locally-constructed string contains substrings of itself. Every test is permanently green regardless of what the real component does. This is a circular self-referential test with zero coverage of the production component.",
+    "severity": "Critical",
+    "suggestedFix": "Replace with real bUnit component tests using BunitContext + Render<Players>(). Inject mock IPlayerRepository/IPlayerDisplayService, render the component, and assert against the actual rendered DOM. The BuildExpectedMarkup helper should be deleted and replaced with real component rendering."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Components/PlayersSidebarTests.cs",
+    "line": 33,
+    "description": "All tests in PlayersSidebarTests assert against BuildExpectedSidebarMarkup(), a helper defined in the test class itself. No actual PlayersSidebar component is rendered. The tests verify that a locally-built string contains substrings from that same string — they will always pass regardless of the real component's behavior. Additionally, the sidebar markup hardcodes all stat values as '0' and never tests with real player data, so stat computation logic is not tested at all.",
+    "severity": "Critical",
+    "suggestedFix": "Replace with real bUnit component tests using BunitContext + Render<PlayersSidebar>(). Supply real player collections via mock IPlayerStatsService and assert that computed totals and averages appear correctly in the rendered markup with non-zero values."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+    "line": 19,
+    "description": "AddHattrickCoreServices_WhenCalled_RegistersAllServices uses .NotBeNull() as the only assertion after GetRequiredService<T>(). GetRequiredService already throws InvalidOperationException if the service is unregistered, so the .NotBeNull() check is redundant and adds no additional verification. The test name claims to verify 'RegistersAllServices' but does nothing beyond proving the call doesn't throw.",
+    "severity": "Low",
+    "suggestedFix": "Either remove the .NotBeNull() calls since GetRequiredService already proves registration (the throw-on-miss behavior is the assertion), or replace with .Should().BeAssignableTo<T>() to verify interface assignability. The test in its current form is fine functionally but the .NotBeNull() assertions are noise."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+    "line": 184,
+    "description": "PlayersPage_Layout_MainContentAndSidebarInsideLayout uses .BeGreaterThan(layoutStart) where layoutStart is the index of 'players-layout' within the string. However, 'players-layout' appears in 'players-main-content' and 'players-sidebar' class names too, so indexOf('players-layout') returns the position of 'players-layout' inside 'players-layout' itself — meaning layoutStart and the mainContentIndex could overlap unexpectedly. The test only verifies index ordering in a self-constructed string, not real DOM nesting.",
+    "severity": "Medium",
+    "suggestedFix": "This is a secondary concern once the primary circular-test issue is fixed by switching to bUnit rendering. With bUnit, DOM nesting is verified structurally rather than via string index comparisons."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Services/PlayerStatsServiceTests.cs",
+    "line": 64,
+    "description": "GetTeamTotals_WithEmptyList_* tests (7 tests) verify empty-squad guard values using exact equality (.Be(0), .Be(0m), .Be(0.0)). These are correct and sensible. However, there is no test verifying that EstimatedValue is computed per-player before summing (i.e. sum(TSI*25)) vs computed as sum(TSI)*25 — both produce the same total but different avg values. A component isolation test with players having different TSI would distinguish correct per-player computation from a collapsed formula.",
+    "severity": "Medium",
+    "suggestedFix": "Add a test: two players with TSI=1000 and TSI=3000; verify TotalEstimatedValue=100000 (i.e. (1000+3000)*25). Then add a GetTeamAverages test: same two players, AvgEstimatedValue should be 50000 ((1000*25 + 3000*25)/2 = 50000), which is different from (1000+3000)/2*25=50000 in this case — pick asymmetric values to expose bugs."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Services/PlayerDisplayServiceTests.cs",
+    "line": 249,
+    "description": "GetSkillColorClass tests cover the boundary at 8 (skill-good range) entering from below (8.99 → skill-good) but miss the exact boundary test for skill value 8.0 itself. The comment says range '7-8' maps to skill-good, but there is no test for exactly GetSkillColorClass(8.0). Without this test, a bug where 8.0 maps to skill-excellent instead of skill-good would go undetected.",
+    "severity": "Medium",
+    "suggestedFix": "Add: [Fact] public void GetSkillColorClass_ExactlyAtEight_ReturnsGood() { _sut.GetSkillColorClass(8.0).Should().Be(\"skill-good\"); } — analogous to the existing ExactlyAtSeven and ExactlyAtNine tests."
+  }
+]

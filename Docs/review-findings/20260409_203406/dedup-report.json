@@ -1,0 +1,612 @@
+{
+  "totalRaw": 69,
+  "totalAfterDedup": 57,
+  "duplicatesRemoved": 12,
+  "deduplicationDetails": {
+    "duplicatesRemoved": [
+      {
+        "kept": { "agent": "10_LOGIC_ERRORS", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs", "line": 20, "description": "GetById returns a direct reference to the internal mutable Team object. Since Team has all public setters, callers can mutate the stored entity in-place without going through Update(), bypassing the lock and corrupting repository state silently.", "severity": "High" },
+        "removed": { "agent": "06_GAME_STATE", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs", "line": 20, "description": "GetById returns the live mutable Team object reference, not a copy.", "severity": "High" },
+        "reason": "Same file, same line, same root cause: GetById returns a live mutable reference. Kept 10_LOGIC_ERRORS for more specific suggested fix."
+      },
+      {
+        "kept": { "agent": "10_LOGIC_ERRORS", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs", "line": 29, "description": "GetAll returns a snapshot list (preventing list mutation) but each Team element is the same live reference stored internally. Callers can modify any Team's fields without calling Update(), silently bypassing thread safety.", "severity": "High" },
+        "removed": { "agent": "06_GAME_STATE", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs", "line": 25, "description": "GetAll() returns an IReadOnlyList snapshot (good), but the Team objects inside are still live mutable references.", "severity": "High" },
+        "reason": "Same file, same method, same root cause: GetAll returns live mutable object references despite returning a snapshot list. Lines 25 vs 29 are within the same method block. Kept 10_LOGIC_ERRORS for noting the test gap."
+      },
+      {
+        "kept": { "agent": "11_EDGE_CASES", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 43, "description": "TeamSpirit is documented as 0.0-10.0 but has no validation guard. Any caller can set it to -5.0 or 99.0 without error. Downstream match-engine calculations will produce incorrect results silently.", "severity": "High" },
+        "removed": { "agent": "06_GAME_STATE", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 43, "description": "TeamSpirit is a double documented as 0.0-10.0 but has no range enforcement.", "severity": "Medium" },
+        "reason": "Same file, same line, same root cause: TeamSpirit has no range validation. Kept 11_EDGE_CASES for higher severity (High) and more specific fix example."
+      },
+      {
+        "kept": { "agent": "11_EDGE_CASES", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 48, "description": "Confidence is documented as 0.0-10.0 but has no validation guard. Same silent-corruption risk as TeamSpirit.", "severity": "High" },
+        "removed": { "agent": "06_GAME_STATE", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 47, "description": "Confidence is a double documented as 0.0-10.0 but has no range enforcement, same issue as TeamSpirit.", "severity": "Medium" },
+        "reason": "Same file, within 1 line, same root cause: Confidence has no range validation. Kept 11_EDGE_CASES for higher severity (High) and more specific fix."
+      },
+      {
+        "kept": { "agent": "11_EDGE_CASES", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 59, "description": "CoachLevel is documented as 1-8 (minimum 1), but the property setter allows 0 or any negative value. A CoachLevel of 0 could cause division-by-zero in match engine code that indexes into coach-level tables.", "severity": "High" },
+        "removed": { "agent": "06_GAME_STATE", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 57, "description": "CoachLevel is documented as 1-8 but defaults to 1 with no enforcement of the upper bound. A value of 0 or 9+ can be stored.", "severity": "Low" },
+        "reason": "Same file, within 2 lines, same root cause: CoachLevel has no range enforcement. Kept 11_EDGE_CASES for higher severity (High) and more complete error description."
+      },
+      {
+        "kept": { "agent": "11_EDGE_CASES", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 64, "description": "AssistantCoachLevel is documented as 0-10 but has no upper-bound guard. Setting it to 11 or higher is accepted silently. Same applies to DoctorLevel (0-5), SpokespersonLevel (0-5), and FinancialDirectorLevel (0-5).", "severity": "Medium" },
+        "removed": { "agent": "06_GAME_STATE", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 63, "description": "AssistantCoachLevel is documented as 0-10 but has no range enforcement. Values outside 0-10 would corrupt training effectiveness calculations.", "severity": "Low" },
+        "reason": "Same file, within 1 line, same root cause: AssistantCoachLevel has no range validation. Kept 11_EDGE_CASES for higher severity (Medium) and broader scope covering DoctorLevel and other staff levels."
+      },
+      {
+        "kept": { "agent": "08_ARCHITECTURE", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 44, "description": "TeamSpirit, Confidence and CoachLevel documented ranges have no enforcement — architectural framing noting service-layer validation responsibility.", "severity": "Low" },
+        "removed": { "agent": "08_ARCHITECTURE", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 44, "description": "TeamSpirit and Confidence are documented as 0.0–10.0 and CoachLevel as 1–8, but all properties are plain auto-properties with no range enforcement.", "severity": "Low" },
+        "reason": "08_ARCHITECTURE's finding on Team.cs line 44 is fully subsumed by 11_EDGE_CASES findings at lines 43, 48, and 59 which cover the same three fields at higher severity. The architectural framing (service-layer responsibility) is the only distinct angle — retaining one note but removing as a standalone finding to avoid triple-counting."
+      },
+      {
+        "kept": { "agent": "20_OVER_ENGINEERING", "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs", "line": 128, "description": "GetById_EmptyRepository_ReturnsNull and GetById_ReturnsNullWhenNotFound test identical behavior: calling GetById with a Guid that was never added returns null. The distinction is not meaningful enough to warrant two tests.", "severity": "Low" },
+        "removed": { "agent": "18_DUPLICATE_CODE", "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs", "line": 116, "description": "GetById_ReturnsNullWhenNotFound and GetById_EmptyRepository_ReturnsNull both assert that GetById returns null for a Guid that is not in the repository.", "severity": "Low" },
+        "reason": "Same file, same root cause: two tests cover the same GetById-returns-null code path. Both Low severity. Kept 20_OVER_ENGINEERING for clearer consolidation suggestion."
+      },
+      {
+        "kept": { "agent": "27_API_SURFACE", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs", "line": 57, "description": "Update checks _teams.ContainsKey(team.Id) and then sets _teams[team.Id] = team as two separate dictionary operations within the same lock. Inconsistent with Add which uses TryAdd (single-pass). Minor consistency/clarity issue.", "severity": "Low" },
+        "removed": { "agent": "12_PERFORMANCE", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs", "line": 57, "description": "Update() performs a double dictionary lookup: ContainsKey() on line 57 followed by the indexer assignment _teams[team.Id] on line 63. Each is an independent O(1) hash lookup, so the key is hashed and located twice per Update call.", "severity": "Low" },
+        "reason": "Same file, same line, same root cause: Update does two dictionary lookups instead of one. Both Low severity. Kept 27_API_SURFACE for broader framing of consistency with Add method."
+      }
+    ],
+    "relatedGroups": [
+      {
+        "rootCause": "Team model properties have no range validation (service-layer vs model-layer responsibility)",
+        "issues": [
+          { "agent": "08_ARCHITECTURE", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 44, "note": "Architectural framing — validation should be documented as service-layer responsibility" },
+          { "agent": "11_EDGE_CASES", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 43, "note": "TeamSpirit specific" },
+          { "agent": "11_EDGE_CASES", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 48, "note": "Confidence specific" },
+          { "agent": "11_EDGE_CASES", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 59, "note": "CoachLevel specific" },
+          { "agent": "11_EDGE_CASES", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 64, "note": "AssistantCoachLevel and other staff levels" },
+          { "agent": "16_ASSERTION_QUALITY", "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs", "line": 287, "note": "Boundary tests give false confidence — no out-of-range tests" },
+          { "agent": "11_EDGE_CASES", "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs", "line": 273, "note": "Missing out-of-range test coverage for TeamSpirit, Confidence, CoachLevel" }
+        ]
+      },
+      {
+        "rootCause": "TeamRepository returns live mutable object references, bypassing locking",
+        "issues": [
+          { "agent": "10_LOGIC_ERRORS", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs", "line": 20, "note": "GetById" },
+          { "agent": "10_LOGIC_ERRORS", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs", "line": 29, "note": "GetAll" },
+          { "agent": "27_API_SURFACE", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 13, "note": "Team.Id mutable public setter compounds the problem" }
+        ]
+      },
+      {
+        "rootCause": "CoachLevel magic number and missing named constants in Team.cs",
+        "issues": [
+          { "agent": "01_MAGIC_NUMBERS", "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs", "line": 59, "note": "Literal 1 as default CoachLevel — needs MinCoachLevel constant" },
+          { "agent": "01_MAGIC_NUMBERS", "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs", "line": 374, "note": "Literal 8 for max CoachLevel in test — depends on Team.MaxCoachLevel constant" },
+          { "agent": "01_MAGIC_NUMBERS", "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs", "line": 424, "note": "Literal 10 for max AssistantCoachLevel in test" },
+          { "agent": "01_MAGIC_NUMBERS", "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs", "line": 453, "note": "Literal 5 for max DoctorLevel in test" }
+        ]
+      },
+      {
+        "rootCause": "Redundant/over-engineered tests in TeamRepositoryTests (interface reflection and compile-time-guaranteed assertions)",
+        "issues": [
+          { "agent": "05_TEST_QUALITY", "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs", "line": 414, "note": "Naming issue with DoesNotExposeRemoveMethod" },
+          { "agent": "05_TEST_QUALITY", "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs", "line": 429, "note": "Naming issue with ImplementsITeamRepository" },
+          { "agent": "20_OVER_ENGINEERING", "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs", "line": 414, "note": "Reflection test has no value" },
+          { "agent": "20_OVER_ENGINEERING", "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs", "line": 429, "note": "Compile-time-guaranteed assertion" }
+        ]
+      }
+    ]
+  },
+  "uniqueFindings": [
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 59,
+      "description": "Literal `1` used as the default value for CoachLevel represents the minimum allowed coach level — a domain game rule. It should be a named constant so the rule is self-documenting and consistent with any future validation logic.",
+      "severity": "High",
+      "suggestedFix": "Add `public const int MinCoachLevel = 1;` (and `MaxCoachLevel = 8`) to Team.cs as public constants, then change the initializer to `public int CoachLevel { get; set; } = MinCoachLevel;`. Tests referencing the literal boundaries should also reference these constants."
+    },
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 464,
+      "description": "Literal `50` used as the loop bound when pre-loading teams in `ConcurrentReadsAndWrites_DoNotThrow`. This is an arbitrary test parameter that should be a named constant for clarity and easy adjustment.",
+      "severity": "Low",
+      "suggestedFix": "Add `const int preloadedTeamCount = 50;` at the top of the test method and use it in the loop: `for (var i = 0; i < preloadedTeamCount; i++)`."
+    },
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 374,
+      "description": "Literal `8` used as the max CoachLevel boundary value in `InlineData` and `.Be(8, ...)` assertion. This magic number duplicates the game rule without referencing a named constant; if the max changes, tests silently diverge from the model.",
+      "severity": "Low",
+      "suggestedFix": "If `Team.MaxCoachLevel = 8` is added as a public constant (see Team.cs finding), update the test InlineData and assertion to reference `Team.MaxCoachLevel` instead of the literal `8`."
+    },
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 424,
+      "description": "Literal `10` used as the max AssistantCoachLevel boundary value in `InlineData` and `.Be(10, ...)` assertion. Same issue as above — a game-rule boundary with no named constant.",
+      "severity": "Low",
+      "suggestedFix": "Add `public const int MaxAssistantCoachLevel = 10;` to Team.cs and reference it in the test `InlineData` and assertion."
+    },
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 453,
+      "description": "Literal `5` used as the max DoctorLevel boundary value. Same pattern — game-rule boundary expressed as a bare literal in both InlineData and assertion.",
+      "severity": "Low",
+      "suggestedFix": "Add `public const int MaxDoctorLevel = 5;` to Team.cs (and similarly for Spokesperson and FinancialDirector) and reference it in tests."
+    },
+    {
+      "agent": "02_NULL_SAFETY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 57,
+      "description": "Three consecutive GetById calls use the null-forgiving operator `!` to dereference the result directly (lines 57-59) without a prior null-check assertion. If GetById unexpectedly returns null the test throws NullReferenceException instead of a meaningful assertion failure.",
+      "severity": "Low",
+      "suggestedFix": "Store each result in a variable, assert NotBeNull(), then access properties via the null-forgiving operator: `var r1 = _sut.GetById(team1.Id); r1.Should().NotBeNull(); r1!.Name.Should().Be(\"Northford Athletic\");`"
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\CoachTypeEnumTests.cs",
+      "line": 18,
+      "description": "Test name 'CoachType_MemberHasExpectedOrdinal' has only two segments. The convention requires three: MethodName_Scenario_ExpectedResult. The name lacks the expected result segment.",
+      "severity": "Medium",
+      "suggestedFix": "Rename to 'CoachType_CastToInt_ReturnsExpectedOrdinal' to include the expected result segment."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 526,
+      "description": "Test name 'Team_IsMutable_AllPropertiesCanBeChangedAfterConstruction' uses 'Team' as the method segment, which is the class name rather than a specific method or property under test. This reduces clarity about what is actually being exercised.",
+      "severity": "Low",
+      "suggestedFix": "Rename to something like 'Properties_AfterConstruction_CanBeReassigned' to better reflect the MethodName_Scenario_ExpectedResult pattern."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 558,
+      "description": "Test names 'FullTeam_AllPropertiesCanBeSetViaObjectInitializer' and 'FullTeam_MinimalAiTeam_HasCorrectDefaults' use 'FullTeam' as the method segment, which is not a method or property name. These don't follow MethodName_Scenario_ExpectedResult.",
+      "severity": "Low",
+      "suggestedFix": "Rename to e.g. 'ObjectInitializer_AllProperties_AreStoredCorrectly' and 'Constructor_AiTeamWithMinimalConfig_DefaultsAreZeroExceptCoachLevel'."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 27,
+      "description": "Test name 'Add_TeamIsRetrievableAfterAdd' does not follow MethodName_Scenario_ExpectedResult — it conflates scenario and expected result into one phrase and repeats 'Add'. The expected result is implicit, not explicit.",
+      "severity": "Medium",
+      "suggestedFix": "Rename to 'Add_NewTeam_IsRetrievableViaGetById' to separate scenario from expected result clearly."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 44,
+      "description": "Test name 'Add_MultipleTeamsAreAllRetrievable' collapses scenario and expected result into one segment. Missing distinct Scenario and ExpectedResult parts.",
+      "severity": "Medium",
+      "suggestedFix": "Rename to 'Add_MultipleDistinctTeams_AllAreRetrievableIndividually'."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 414,
+      "description": "Test name 'TeamRepository_DoesNotExposeRemoveMethod' uses the class name as the method segment, not a method name. The naming does not follow MethodName_Scenario_ExpectedResult.",
+      "severity": "Medium",
+      "suggestedFix": "Rename to 'ITeamRepository_Interface_DoesNotDeclareRemoveMethod' to better identify the subject (the interface) and the expected result."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 429,
+      "description": "Test name 'TeamRepository_ImplementsITeamRepository' uses the class name as the method segment rather than a method under test. This doesn't follow MethodName_Scenario_ExpectedResult.",
+      "severity": "Low",
+      "suggestedFix": "Rename to 'TeamRepository_WhenResolved_ImplementsITeamRepository' or simply rely on compile-time type safety (this test has little value if the code compiles)."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\DependencyInjectionTests.cs",
+      "line": 11,
+      "description": "All three test names use 'DI_' as the method segment, which is a category prefix, not a method name. 'DI_ContainerRegistersAllInfrastructureServices', 'DI_ContainerRegistersServicesAsSingletons', and 'DI_InterfacesResolveToCorrectConcreteTypes' do not follow MethodName_Scenario_ExpectedResult.",
+      "severity": "Medium",
+      "suggestedFix": "Rename to follow the pattern, e.g. 'AddHattrickCoreServices_Called_RegistersAllRequiredInterfaces', 'AddHattrickCoreServices_Called_RegistersServicesAsSingletons', 'AddHattrickCoreServices_Called_InterfacesMapToExpectedConcreteTypes'."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 263,
+      "description": "In 'Update_ReplacesTeamData', the test does not verify fields not set in updatedTeam (e.g., IsHumanControlled, FanClubSize) revert to defaults, making coverage of the 'replace' semantics incomplete.",
+      "severity": "Low",
+      "suggestedFix": "Add assertions for fields not set in updatedTeam to confirm they revert to default values after a full replacement, proving the repository replaces rather than patches the record."
+    },
+    {
+      "agent": "06_GAME_STATE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 28,
+      "description": "Budget is a decimal with no guard against negative values. In Hattrick a team can go into debt temporarily, but there is no explicit rule encoded here. If the game disallows negative budgets, a service setting Budget below zero will silently corrupt financial state with no error.",
+      "severity": "Low",
+      "suggestedFix": "Document whether negative Budget is allowed (debt) or not. If not, add validation in services or the model. If debt is allowed, document the minimum allowed value (e.g., no lower than -500,000)."
+    },
+    {
+      "agent": "06_GAME_STATE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 1,
+      "description": "Team has no player roster reference or PlayerCount — there is no way to determine whether a team has enough players (minimum 11) to field a match just from the Team model alone.",
+      "severity": "Low",
+      "suggestedFix": "This is an architectural concern for later phases: a TeamService or MatchService should validate roster completeness (minimum 11 non-injured, non-suspended players) before allowing a match to proceed. Document this as a required pre-condition in the match engine design."
+    },
+    {
+      "agent": "06_GAME_STATE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\ITeamRepository.cs",
+      "line": 1,
+      "description": "ITeamRepository has no method to retrieve the human-controlled team directly. Every service that needs to act on the player's team must call GetAll() and filter by IsHumanControlled, which is O(n) and could scatter that filtering logic across many services.",
+      "severity": "Low",
+      "suggestedFix": "Add a `Team? GetHumanControlledTeam()` method to ITeamRepository and TeamRepository for O(1) lookup of the single human team, preventing scattered GetAll().Single(t => t.IsHumanControlled) calls throughout the codebase."
+    },
+    {
+      "agent": "07_REPOSITORY_PATTERNS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 65,
+      "description": "Test Add_NullTeam_ThrowsArgumentNullException uses a bare .Throw<ArgumentNullException>() assertion without checking the parameter name. If the implementation ever accidentally throws on a different null check, the test still passes. Same pattern repeats at line 315 for Update_NullTeam_ThrowsArgumentNullException.",
+      "severity": "Low",
+      "suggestedFix": "Add .WithParameterName(\"team\") to the FluentAssertions Throw chain: act.Should().Throw<ArgumentNullException>().WithParameterName(\"team\");"
+    },
+    {
+      "agent": "08_ARCHITECTURE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 8,
+      "description": "Test SUT is typed as the concrete class `TeamRepository` rather than the interface `ITeamRepository`. This couples the tests to the implementation and does not verify the interface contract.",
+      "severity": "Medium",
+      "suggestedFix": "Change the field declaration to `private readonly ITeamRepository _sut = new TeamRepository();` so the tests exercise the interface contract rather than the concrete type directly."
+    },
+    {
+      "agent": "08_ARCHITECTURE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\ServiceCollectionExtensions.cs",
+      "line": 21,
+      "description": "ISaveGameService and ISaveSlotService are registered as Singleton. According to the documented DI lifetime rules, the decision should be documented in a comment explaining why Singleton is appropriate.",
+      "severity": "Low",
+      "suggestedFix": "If these services are truly stateless (and ISaveGameService appears to be), document with a comment explaining why Singleton is chosen over Scoped. If they carry per-session state, change to AddScoped. Example: `// Singleton: stateless file I/O service; no per-request state` above each registration."
+    },
+    {
+      "agent": "08_ARCHITECTURE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Services\\SaveSlotService.cs",
+      "line": 17,
+      "description": "SaveSlotService constructor uses an optional parameter `string? customSaveDir = null` for its save directory. Optional constructor parameters are a DI anti-pattern: the DI container will silently pass the default (null) and there is no way to register a different directory via normal DI configuration.",
+      "severity": "Low",
+      "suggestedFix": "Introduce a dedicated options/config class (e.g., `SaveSlotOptions` with a `SaveDirectory` property) and inject it via the DI container: `services.AddSingleton(new SaveSlotOptions { SaveDirectory = ... })`. The constructor then takes `SaveSlotOptions options` instead of a nullable string."
+    },
+    {
+      "agent": "08_ARCHITECTURE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\DependencyInjectionTests.cs",
+      "line": 29,
+      "description": "DI_ContainerRegistersServicesAsSingletons only asserts singleton lifetime for IGameStateService, IPlayerRepository, and ITeamRepository — leaving IRandomProvider, IDateTimeProvider, ISaveGameService, and ISaveSlotService unverified.",
+      "severity": "Low",
+      "suggestedFix": "Add singleton lifetime assertions for all 7 registered services: resolve each interface twice and assert `Should().BeSameAs()` for IRandomProvider, IDateTimeProvider, ISaveGameService, and ISaveSlotService as well."
+    },
+    {
+      "agent": "10_LOGIC_ERRORS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 20,
+      "description": "GetById returns a direct reference to the internal mutable Team object. Since Team has all public setters, callers can mutate the stored entity in-place without going through Update(), bypassing the lock and corrupting repository state silently.",
+      "severity": "High",
+      "suggestedFix": "Return a defensive copy: `return _teams.TryGetValue(teamId, out var team) ? CloneTeam(team) : null;` — or make Team immutable (init-only setters) so external mutation is impossible."
+    },
+    {
+      "agent": "10_LOGIC_ERRORS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 29,
+      "description": "GetAll returns a snapshot list (preventing list mutation) but each Team element is the same live reference stored internally. Callers can modify any Team's fields directly without calling Update(), silently bypassing thread safety. The test GetAll_ReturnedListIsSnapshot_NotLiveReference only verifies list count, not that objects are independent copies, so this bug is not caught by any existing test.",
+      "severity": "High",
+      "suggestedFix": "Return cloned Team objects in the list, or make Team properties init-only to prevent external mutation."
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 43,
+      "description": "TeamSpirit is documented as 0.0-10.0 but has no validation guard. Any caller can set it to -5.0 or 99.0 without error. Downstream match-engine calculations that assume this range will produce incorrect results silently.",
+      "severity": "High",
+      "suggestedFix": "Add a clamping guard or throw on out-of-range assignment. Either enforce in the setter (private backing field + guard) or add a static validation helper. Example: if (value < 0.0 || value > 10.0) throw new ArgumentOutOfRangeException(nameof(TeamSpirit), value, \"TeamSpirit must be between 0.0 and 10.0.\");"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 48,
+      "description": "Confidence is documented as 0.0-10.0 but has no validation guard. Same silent-corruption risk as TeamSpirit.",
+      "severity": "High",
+      "suggestedFix": "Add a range guard matching TeamSpirit. if (value < 0.0 || value > 10.0) throw new ArgumentOutOfRangeException(nameof(Confidence), value, \"Confidence must be between 0.0 and 10.0.\");"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 59,
+      "description": "CoachLevel is documented as 1-8 (minimum 1, every team must have a coach), but the property setter allows 0 or any negative value. A CoachLevel of 0 violates the invariant stated in the XML doc and could cause division-by-zero or index-out-of-bounds in match engine code.",
+      "severity": "High",
+      "suggestedFix": "Guard the setter: if (value < 1 || value > 8) throw new ArgumentOutOfRangeException(nameof(CoachLevel), value, \"CoachLevel must be between 1 and 8.\");"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 28,
+      "description": "Budget has no lower bound guard. A negative Budget is accepted silently, which could allow the game to enter an invalid financial state.",
+      "severity": "Medium",
+      "suggestedFix": "Decide on the game rule: if teams can go into debt, document it explicitly and ensure all callers handle negative budgets. If not, guard: if (value < 0) throw new ArgumentOutOfRangeException(nameof(Budget), value, \"Budget cannot be negative.\");"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 64,
+      "description": "AssistantCoachLevel is documented as 0-10 but has no upper-bound guard. Setting it to 11 or higher is accepted silently. Same issue applies to DoctorLevel (0-5), SpokespersonLevel (0-5), and FinancialDirectorLevel (0-5) — all have documented maxima that are not enforced.",
+      "severity": "Medium",
+      "suggestedFix": "Add range guards to all staff level setters matching their documented maxima. Example for AssistantCoachLevel: if (value < 0 || value > 10) throw new ArgumentOutOfRangeException(...);"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 18,
+      "description": "Name is initialized to string.Empty, but the auto-property setter allows null to be assigned (e.g., team.Name = null). Any code that calls Name.Length or Name[0] without a null check will throw a NullReferenceException.",
+      "severity": "Medium",
+      "suggestedFix": "Add a null guard in the setter or change the property to use a backing field: set { _name = value ?? string.Empty; }. Alternatively, annotate with [DisallowNull] and validate in the repository's Add/Update methods."
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 37,
+      "description": "Add() validates that team is not null but does not validate that team.Id is not Guid.Empty. A caller could accidentally store a default-constructed Guid (Guid.Empty) as a team's ID.",
+      "severity": "Low",
+      "suggestedFix": "Add a guard after the null check: if (team.Id == Guid.Empty) throw new ArgumentException(\"Team ID must not be Guid.Empty.\", nameof(team));"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 51,
+      "description": "Update() validates that team is not null but also does not guard against Guid.Empty.",
+      "severity": "Low",
+      "suggestedFix": "Add the same Guid.Empty guard as suggested for Add(): if (team.Id == Guid.Empty) throw new ArgumentException(\"Team ID must not be Guid.Empty.\", nameof(team));"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 273,
+      "description": "TeamSpirit tests cover the valid boundary values (0.0, 5.0, 10.0) but there are no tests for out-of-range inputs (e.g., -1.0, 10.1, double.MaxValue). If validation is ever added to Team.cs, these cases have no regression coverage.",
+      "severity": "Low",
+      "suggestedFix": "Add negative and over-max tests: TeamSpirit_BelowMinimum_ThrowsArgumentOutOfRangeException() and TeamSpirit_AboveMaximum_ThrowsArgumentOutOfRangeException(). Same for Confidence and CoachLevel."
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 199,
+      "description": "Budget tests cover zero and large positive values but there is no test for a negative Budget. Without a test, the intended behavior (allowed or rejected) is undocumented.",
+      "severity": "Low",
+      "suggestedFix": "Add a test: Budget_NegativeValue_[ThrowsArgumentOutOfRangeException | IsAllowedForDebt]. The name should reflect the decided game rule."
+    },
+    {
+      "agent": "12_PERFORMANCE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 568,
+      "description": "GetAll_HumanAndAiTeams_AreAllReturned iterates the returned IReadOnlyList<Team> three times in succession with separate LINQ Count and Single calls. While test collections are tiny, it demonstrates the Count(predicate) instead of Any() habit that should not leak into production code.",
+      "severity": "Low",
+      "suggestedFix": "Cache var result = _sut.GetAll(); then compute counts once, or collapse the two Count() assertions into a single grouped assertion. For production code, prefer Any() over Count() > 0 / Count() == 0 checks."
+    },
+    {
+      "agent": "13_LINQ_GOTCHAS",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 418,
+      "description": "Deferred execution: `removeMethods` is an unevaluated `IEnumerable<MethodInfo>` returned by `GetMethods().Where(...)` and is never materialized before being passed to `.Should().BeEmpty()`. The query is not executed until FluentAssertions enumerates it during the assertion.",
+      "severity": "Low",
+      "suggestedFix": "Materialize the query immediately: `var removeMethods = interfaceType.GetMethods().Where(m => m.Name.Equals(\"Remove\", StringComparison.Ordinal)).ToList();`"
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\ITeamRepository.cs",
+      "line": 8,
+      "description": "ITeamRepository has no Clear or Load method. When loading a saved game, there is no way to populate the in-memory repository from persisted data, meaning all team data is lost on every app restart or game load.",
+      "severity": "Critical",
+      "suggestedFix": "Add void Clear() and void Load(IEnumerable<Team> teams) (or async equivalents) to ITeamRepository and implement in TeamRepository. Clear should empty _teams. Load should repopulate _teams from the provided collection."
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 10,
+      "description": "TeamRepository has no Clear or Load method, making it impossible to restore team state when loading a saved game. The singleton repository will always start empty after app restart.",
+      "severity": "Critical",
+      "suggestedFix": "Implement void Clear() { lock (_lock) { _teams.Clear(); } } and void Load(IEnumerable<Team> teams) { lock (_lock) { _teams.Clear(); foreach (var t in teams) _teams[t.Id] = t; } } to support save/load round trips."
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\IPlayerRepository.cs",
+      "line": 8,
+      "description": "IPlayerRepository has no Clear or Load method. Player data cannot be restored from a save file. All 24 Player properties (skills dictionary, form, stamina, experience, injury, cards, wages, etc.) are permanently lost on app restart.",
+      "severity": "Critical",
+      "suggestedFix": "Add void Clear() and void Load(IEnumerable<Player> players) to IPlayerRepository and implement in PlayerRepository, following the same pattern as the TeamRepository fix."
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 8,
+      "description": "No TeamDto class exists anywhere in the codebase. The Team model is serialized directly via ISaveGameService, which means any future property changes to Team.cs will silently break old saves with no DTO versioning layer.",
+      "severity": "High",
+      "suggestedFix": "Create a TeamDto class mirroring all 14 Team properties. Create SaveGameMapper.ToDto(Team) and SaveGameMapper.FromDto(TeamDto) methods. Create a SaveGameDataDto aggregate with List<TeamDto> Teams and List<PlayerDto> Players properties."
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Player.cs",
+      "line": 8,
+      "description": "No PlayerDto class exists. The Player model (24 properties including Skills dictionary with SkillType enum keys) is serialized directly, risking breakage when models evolve. The Dictionary<SkillType, double> Skills property is particularly fragile: System.Text.Json serializes enum-keyed dictionaries as integer keys by default unless JsonStringEnumConverter is applied explicitly.",
+      "severity": "High",
+      "suggestedFix": "Create a PlayerDto with all 24 Player properties. Pay special attention to Skills: use Dictionary<string, double> in the DTO and convert SkillType enum to/from string in the mapper."
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Services\\SaveGameService.cs",
+      "line": 17,
+      "description": "SaveGameService uses JsonIgnoreCondition.WhenWritingNull, but ITeamRepository and IPlayerRepository have no load mechanism wired to SaveGameService. There is no SaveGameDataDto, no SaveGameMapper, and no aggregate save/load path that saves both Team and Player collections together. The entire Team and Player persistence layer is missing.",
+      "severity": "Critical",
+      "suggestedFix": "Create a SaveGameDataDto aggregating all persistent state (teams, players, season number, week number, turn number, human player team ID). Create a SaveGameMapper. Update SaveGameService to serialize SaveGameDataDto on save and to call ITeamRepository.Clear()+Load() and IPlayerRepository.Clear()+Load() on game load."
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Services\\GameStateService.cs",
+      "line": 31,
+      "description": "GameStateService.Reset() resets season/week/turn state but is not connected to clearing the Team and Player repositories. When loading a new game or restarting, stale in-memory repository data from a previous session could persist alongside newly loaded data, causing ID conflicts or data inconsistency.",
+      "severity": "High",
+      "suggestedFix": "After implementing Clear() on repositories, ensure that any new-game or load-game flow calls Reset() on GameStateService AND Clear() on ITeamRepository and IPlayerRepository before loading new data."
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\DependencyInjectionTests.cs",
+      "line": 19,
+      "description": "DI_ContainerRegistersAllInfrastructureServices contains zero explicit FluentAssertions. It calls GetRequiredService for each service but relies entirely on exception-throwing as the implicit assertion mechanism. There is no .Should() call anywhere in the test body.",
+      "severity": "Medium",
+      "suggestedFix": "Add explicit assertions: e.g. `container.GetRequiredService<IRandomProvider>().Should().NotBeNull();` for each resolved service, or restructure as a Theory so each registration is individually verified with an explicit assertion."
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\DependencyInjectionTests.cs",
+      "line": 59,
+      "description": "DI_InterfacesResolveToCorrectConcreteTypes uses .BeOfType<T>() as the sole assertion for each resolved service, with no verification of any property or state on the resolved object. At minimum confirming the instance is not null before asserting type would improve robustness.",
+      "severity": "Low",
+      "suggestedFix": "Chain a follow-up assertion: `var provider = container.GetRequiredService<IRandomProvider>(); provider.Should().NotBeNull().And.BeOfType<RandomProvider>();`"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 453,
+      "description": "ConcurrentAdds_DoNotCorruptState asserts only `.HaveCount(teamCount)` after 200 concurrent adds. The assertion does not verify that all 200 distinct teams are present, only that the count is correct. A race-condition bug that duplicates some teams and loses others could still produce a count of 200.",
+      "severity": "Medium",
+      "suggestedFix": "Also assert that the returned teams have 200 distinct Ids: `_sut.GetAll().Select(t => t.Id).Distinct().Should().HaveCount(teamCount, \"all concurrent adds must produce unique, distinct teams\");`"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 519,
+      "description": "ConcurrentUpdates_DoNotCorruptState verifies the surviving team name only with `.StartWith(\"Updated by thread \")`. This is a weak assertion — any partial write, corruption, or even the original name starting with that prefix would pass. The budget and fans fields updated by each thread are not verified at all.",
+      "severity": "Medium",
+      "suggestedFix": "After the concurrent updates complete, verify the full state of the retrieved team is internally consistent: check that Name, Budget, and Fans all correspond to the same thread's update. At minimum add: `result!.Budget.Should().BeGreaterThanOrEqualTo(100_000m, \"budget must reflect a complete update\");`"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 287,
+      "description": "TeamSpirit boundary tests and Confidence boundary tests only verify that valid boundary values round-trip correctly. They do not test that values outside the documented range (0.0-10.0) are rejected or clamped. The test names imply boundary enforcement testing but only confirm storage of valid values, giving false confidence that the boundary is enforced.",
+      "severity": "Medium",
+      "suggestedFix": "Either: (a) add tests for invalid values (e.g., TeamSpirit = -1.0, TeamSpirit = 11.0) that verify the model throws or clamps, OR (b) rename the boundary tests to `TeamSpirit_CanStoreMinimumValue` / `TeamSpirit_CanStoreMaximumValue` to accurately reflect that they only confirm storage, not enforcement."
+    },
+    {
+      "agent": "17_ERROR_HANDLING",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 42,
+      "description": "Add() throws ArgumentException for a duplicate ID, but InvalidOperationException is more semantically correct for a 'duplicate already exists' condition. ArgumentException signals that the argument value itself is inherently invalid, whereas a duplicate-key collision is an invalid operation against the repository's current state.",
+      "severity": "Low",
+      "suggestedFix": "Replace `throw new ArgumentException(...)` with `throw new InvalidOperationException($\"A team with ID '{team.Id}' already exists in the repository.\");` and update the corresponding test assertion."
+    },
+    {
+      "agent": "17_ERROR_HANDLING",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 16,
+      "description": "Inconsistent error propagation: GetById() returns null when a team is not found, while Update() throws KeyNotFoundException for the same condition. Callers must handle two different 'not found' contracts from the same repository.",
+      "severity": "Low",
+      "suggestedFix": "Decide on a single convention. If returning null for GetById is intentional (nullable return type signals optional lookup), document it clearly on the interface and ensure callers null-check before use. If the convention is throw-on-not-found, change GetById to throw KeyNotFoundException and update its return type to non-nullable Team."
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 104,
+      "description": "Constructor_Default_StaffLevelsAreZero asserts all four optional staff properties default to 0. However, each of those same properties has its own dedicated BoundaryMinimum_IsZero test below, partially duplicating four individual boundary tests.",
+      "severity": "Low",
+      "suggestedFix": "Remove the combined Constructor_Default_StaffLevelsAreZero test and rely on the four individual BoundaryMinimum_IsZero tests that already cover the same assertions. Alternatively, keep only the combined test and remove the redundant BoundaryMinimum_IsZero assertions from the four individual test sections."
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 430,
+      "description": "DoctorLevel (lines 430-458), SpokespersonLevel (lines 460-488), and FinancialDirectorLevel (lines 490-519) each have three structurally identical test methods: AcceptsValidValues([Theory] 0,3,5), BoundaryMinimum_IsZero, and BoundaryMaximum_IsFive. All three staff types share the same 0-5 range, producing nine near-identical test copies.",
+      "severity": "Medium",
+      "suggestedFix": "Consolidate into a parameterised helper or a single [Theory] data-driven test that accepts a property selector and the expected max. For example: [Theory][MemberData(nameof(StaffLevelData))] public void StaffLevel_AcceptsValidRange(Func<Team,int> getter, Action<Team,int> setter, int max)."
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 440,
+      "description": "The thread-safety test block in TeamRepositoryTests (ConcurrentAdds_DoNotCorruptState, ConcurrentReadsAndWrites_DoNotThrow) is structurally identical to the equivalent block in PlayerRepositoryTests. Both use the same Parallel.For approach with the same modulo-3 branching pattern and the same iteration counts. This is duplicated test scaffolding across two test classes.",
+      "severity": "Low",
+      "suggestedFix": "Accept the duplication as each repository is tested in isolation, or extract a shared generic helper such as RepositoryThreadSafetyHarness<TRepo, TEntity> that both test classes can reuse."
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 1,
+      "description": "TeamRepository and PlayerRepository are structurally near-identical. Both have the same private Lock + Dictionary fields, and Add/Update/GetById implementations that differ only in entity type and error message noun ('team' vs 'player').",
+      "severity": "Low",
+      "suggestedFix": "Consider extracting a generic base class InMemoryRepository<TEntity> that implements the common Add/Update/GetById pattern parameterised by key selector. Only worth doing if a third repository follows the same pattern."
+    },
+    {
+      "agent": "19_DEAD_CODE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 7,
+      "description": "Stale TDD phase comment in class XML doc: 'TDD Red Phase: Team class does not exist yet — these tests define the expected API.' The Team class is now fully implemented in Team.cs. This comment is misleading dead documentation.",
+      "severity": "Low",
+      "suggestedFix": "Remove or update the comment to reflect that the Team class is implemented. Replace with: 'Tests for the Team model class, verifying all properties, defaults, and mutability.'"
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 429,
+      "description": "TeamRepository_ImplementsITeamRepository uses BeAssignableTo to verify that TeamRepository implements ITeamRepository. This is guaranteed at compile time by the class declaration — the build would fail if this were false. The test adds no runtime value.",
+      "severity": "Low",
+      "suggestedFix": "Remove the test. Compiler enforcement is sufficient — if TeamRepository ever stops implementing ITeamRepository, the project will not build."
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 414,
+      "description": "TeamRepository_DoesNotExposeRemoveMethod uses reflection (typeof(ITeamRepository).GetMethods()) to assert that the interface has no Remove method. The interface definition is the authoritative source of truth. This is unnecessary complexity.",
+      "severity": "Low",
+      "suggestedFix": "Remove the reflection-based test. The interface definition is the contract; examining it via reflection adds indirection without value. If remove-prevention is a documented design decision, a code comment in ITeamRepository is more appropriate."
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+      "line": 128,
+      "description": "GetById_EmptyRepository_ReturnsNull and GetById_ReturnsNullWhenNotFound (line 115) test identical behavior: calling GetById with a Guid that was never added returns null. The empty-repo case adds no additional value beyond what a not-found lookup already tests.",
+      "severity": "Low",
+      "suggestedFix": "Consolidate into a single test, e.g. GetById_NonExistentId_ReturnsNull, using a Theory with InlineData or just one representative scenario. The empty-repo case is already implicitly covered since _sut starts empty."
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 162,
+      "description": "IsHumanControlled_CanBeSetToTrue (line 162) and IsHumanControlled_CanBeSetToFalse (line 172) each test that a plain bool property setter works. Two separate tests for trivial C# property assignment. The existing Constructor_Default_IsHumanControlledIsFalse test already covers false.",
+      "severity": "Low",
+      "suggestedFix": "Replace with a single Theory: [Theory][InlineData(true)][InlineData(false)] void IsHumanControlled_CanBeSetAndRetrieved(bool value)."
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+      "line": 209,
+      "description": "Budget_CanBeSetToZero, Fans_CanBeSetToZero (line 254), and FanClubSize_CanBeSetToZero (line 263) are standalone tests that set a property to 0m and assert it equals 0m. The default is already verified in Constructor_Default_* tests. Setting a property to its default value exercises no interesting logic.",
+      "severity": "Low",
+      "suggestedFix": "Remove Budget_CanBeSetToZero, Fans_CanBeSetToZero, and FanClubSize_CanBeSetToZero. The default tests already cover zero values; these add no additional signal."
+    },
+    {
+      "agent": "27_API_SURFACE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+      "line": 13,
+      "description": "Team.Id has a public setter (`public Guid Id { get; set; }`), making the entity's identity mutable after construction. The TeamRepository keys its internal dictionary on `team.Id` at the time of `Add`; if a caller mutates `team.Id` afterward, the stored key and the object's own Id diverge, making `GetById(team.Id)` return null for the modified team.",
+      "severity": "High",
+      "suggestedFix": "Change the property to `public Guid Id { get; init; } = Guid.NewGuid();` so the Id can only be set at object-initializer time and is immutable thereafter."
+    },
+    {
+      "agent": "27_API_SURFACE",
+      "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+      "line": 57,
+      "description": "Update checks _teams.ContainsKey(team.Id) and then sets _teams[team.Id] = team as two separate dictionary operations within the same lock. Inconsistent with the Add method which correctly uses TryAdd (single-pass). Minor consistency/clarity issue.",
+      "severity": "Low",
+      "suggestedFix": "Refactor to a guard-and-assign pattern matching the style of Add for consistency: `if (!_teams.ContainsKey(team.Id)) throw new KeyNotFoundException(...); _teams[team.Id] = team;` is already readable; optionally align with TryAdd style."
+    }
+  ],
+  "summary": {
+    "totalIssuesBefore": 69,
+    "duplicatesRemoved": 12,
+    "relatedGroupsFound": 4,
+    "totalIssuesAfter": 57,
+    "bySeverity": {
+      "Critical": 4,
+      "High": 8,
+      "Medium": 15,
+      "Low": 30
+    }
+  }
+}

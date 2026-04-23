@@ -4,8 +4,8 @@ Execute a development sprint using sequential single-task agents to enforce TDD 
 
 ## State Files
 
-- `.claude/sprint-state.json` — Sprint progress (survives compaction)
-- `.claude/quartet-handoff.json` — Context passed between agents (deleted after each quartet)
+- `Docs/sprint-state.json` — Sprint progress (survives compaction)
+- `Docs/quartet-handoff.json` — Context passed between agents (deleted after each quartet)
 
 ---
 
@@ -43,7 +43,7 @@ If the sprint is following a phase plan (e.g., `Docs/PHASE_9_DYNAMIC_EVENTS.md`)
 ## PHASE 1 — PLANNING
 
 1. **Check for existing sprint state**
-   - If `.claude/sprint-state.json` exists → Resume from saved position
+   - If `Docs/sprint-state.json` exists → Resume from saved position
    - If not → Continue with planning
 
 2. **Analyze the feature**
@@ -73,7 +73,7 @@ For each quartet, run this sequence:
 
 Create handoff file first:
 ```json
-// .claude/quartet-handoff.json
+// Docs/quartet-handoff.json
 {
   "quartet": "PositionPlayerReadinessService",
   "requirements": "Formula: 50 + (min(games,10) * 5). Modifier 0.9 if <3 games.",
@@ -87,7 +87,7 @@ Then spawn:
 ```
 Spawn agent (subagent_type: "general-purpose", name: "test-writer")
 Prompt: Read .claude/skills/sprint/test-writer.md
-        Read .claude/quartet-handoff.json for requirements
+        Read Docs/quartet-handoff.json for requirements
         Write tests for: [quartet name]
         Update handoff.testFiles with paths you created
         Update handoff.notes with any gotchas discovered
@@ -99,7 +99,7 @@ Update sprint-state.json: `currentStep = "test-verifier"`
 ```
 Spawn agent (subagent_type: "general-purpose", name: "test-verifier")
 Prompt: Read .claude/skills/sprint/test-verifier.md
-        Read .claude/quartet-handoff.json for requirements context
+        Read Docs/quartet-handoff.json for requirements context
         Review the tests written by @test-writer for quality and coverage
         Report PASS or FAIL with specific issues
 ```
@@ -116,7 +116,7 @@ Update sprint-state.json: `currentStep = "coder"`
 ```
 Spawn agent (subagent_type: "general-purpose", name: "coder")
 Prompt: Read .claude/skills/sprint/coder.md
-        Read .claude/quartet-handoff.json for context
+        Read Docs/quartet-handoff.json for context
         Implement to make tests pass
         Update handoff.implFiles with paths you created
         Update handoff.notes with key decisions
@@ -128,7 +128,7 @@ Update sprint-state.json: `currentStep = "verifier"`
 ```
 Spawn agent (subagent_type: "general-purpose", name: "verifier")
 Prompt: Read .claude/skills/sprint/verifier.md
-        Read .claude/quartet-handoff.json for file paths and context
+        Read Docs/quartet-handoff.json for file paths and context
         Verify the quartet
 ```
 
@@ -144,7 +144,7 @@ git commit -m "feat: [quartet name]
 Co-Authored-By: Claude <noreply@anthropic.com>"
 ```
 
-Delete `.claude/quartet-handoff.json`
+Delete `Docs/quartet-handoff.json`
 
 Update sprint-state.json: advance `currentQuartet`, reset `currentStep` to "test-writer"
 
@@ -166,7 +166,7 @@ ALL tests must pass before proceeding.
 
 1. Update `Docs/STATUS.md` with session entry
 2. Update `MEMORY.md` if needed
-3. Delete `.claude/sprint-state.json`
+3. Delete `Docs/sprint-state.json`
 4. Report final summary with test count
 5. Run `/review` for code review
 
@@ -174,9 +174,9 @@ ALL tests must pass before proceeding.
 
 ## RECOVERY (After Compaction)
 
-1. Read `.claude/sprint-state.json`
+1. Read `Docs/sprint-state.json`
 2. Rebuild: `dotnet build Hattrick.Tests/Hattrick.Tests.csproj --verbosity quiet`
-3. If `.claude/quartet-handoff.json` exists, read it for context
+3. If `Docs/quartet-handoff.json` exists, read it for context
 4. Resume from `currentQuartet` + `currentStep`
 
 ---

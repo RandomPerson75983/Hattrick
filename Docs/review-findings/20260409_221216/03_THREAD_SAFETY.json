@@ -1,0 +1,10 @@
+[
+  {
+    "agent": "03_THREAD_SAFETY",
+    "file": "Hattrick/Components/Pages/Players.razor",
+    "line": 88,
+    "description": "DisplayedSkills is declared as 'private static readonly SkillType[]' (a plain array). Arrays are mutable in C# — any code can write to elements even through a readonly reference. While this specific array is only ever iterated and never mutated after the static initializer, the type gives no compile-time guarantee of immutability. If any future code accidentally assigns to an index (e.g. DisplayedSkills[0] = ...) it would silently affect all concurrent renders sharing this static field.",
+    "severity": "Low",
+    "suggestedFix": "Change the type to IReadOnlyList<SkillType> to enforce immutability at the type level: 'private static readonly IReadOnlyList<SkillType> DisplayedSkills = [SkillType.Keeper, SkillType.Defending, SkillType.Playmaking, SkillType.Winger, SkillType.Scoring, SkillType.Passing, SkillType.SetPieces];'"
+  }
+]

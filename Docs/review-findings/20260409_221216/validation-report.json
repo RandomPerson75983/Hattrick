@@ -1,0 +1,489 @@
+{
+  "validated": [
+    {
+      "agent": "10_LOGIC_ERRORS",
+      "file": "Hattrick/Components/Pages/Players.razor",
+      "line": 105,
+      "description": "Hardcoded Guid.Empty passed to GetByTeamId() instead of the human player's actual team ID from IGameStateService.HumanPlayerTeamId.",
+      "verdict": "deferred",
+      "reason": "Guid.Empty IS confirmed hardcoded at line 105 of Players.razor. However, IGameStateService DOES have HumanPlayerTeamId (Guid?) as a property (confirmed in IGameStateService.cs line 40). The fix is technically available but the Players.razor page does not yet inject IGameStateService. This is early-phase scaffolding — the Players page was built before the game-loading flow was wired up. Marking DEFERRED as valid but intentional scaffolding in early sprint.",
+      "evidence": "Players.razor line 105: `_players = PlayerRepository.GetByTeamId(Guid.Empty);` — IGameStateService.HumanPlayerTeamId exists but is not injected into this component yet.",
+      "severity": "Critical"
+    },
+    {
+      "agent": "07_REPOSITORY_PATTERNS",
+      "file": "Hattrick/Components/Pages/Players.razor",
+      "line": 6,
+      "description": "Blazor component directly injects IPlayerRepository and calls it in OnInitialized. Architecture rules require components to call services only.",
+      "verdict": "confirmed",
+      "reason": "Line 6 `@inject IPlayerRepository PlayerRepository` is confirmed. CLAUDE.md architecture rule states: 'Blazor components have ZERO business logic. Components call services. Services call repositories.' Direct repository injection violates this rule.",
+      "evidence": "Players.razor lines 6+105: `@inject IPlayerRepository PlayerRepository` and direct call `PlayerRepository.GetByTeamId(Guid.Empty)`",
+      "severity": "High"
+    },
+    {
+      "agent": "04_BLAZOR_PATTERNS",
+      "file": "hattrick/Components/Pages/Players.razor",
+      "line": 103,
+      "description": "Loading logic in OnInitialized with no error handling, no _isLoading guard.",
+      "verdict": "confirmed",
+      "reason": "Players.razor lines 103-108 show OnInitialized with three service/repository calls and no try-catch, no loading state guard. Any exception propagates unhandled.",
+      "evidence": "Players.razor lines 103-108: `protected override void OnInitialized() { _players = PlayerRepository.GetByTeamId(Guid.Empty); _totals = ...; _averages = ...; }` — no try-catch, no _isLoading",
+      "severity": "Medium"
+    },
+    {
+      "agent": "06_PLAYER_STATE",
+      "file": "hattrick/Components/Pages/Players.razor",
+      "line": 103,
+      "description": "OnInitialized() is synchronous; should be OnInitializedAsync with refresh mechanism.",
+      "verdict": "confirmed",
+      "reason": "Confirmed: `protected override void OnInitialized()` at line 103. Should be `OnInitializedAsync()` per Blazor best practices documented in CLAUDE.md.",
+      "evidence": "Players.razor line 103: `protected override void OnInitialized()`",
+      "severity": "Medium"
+    },
+    {
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Core/Models/TeamAverages.cs",
+      "line": 19,
+      "description": "AvgEstimatedValue typed as double while TotalEstimatedValue in TeamTotals is decimal — type inconsistency.",
+      "verdict": "confirmed",
+      "reason": "TeamAverages.cs has `public double AvgEstimatedValue`. TeamTotals.cs has `public decimal TotalEstimatedValue`. The type mismatch for the same conceptual value (estimated money) is confirmed.",
+      "evidence": "TeamAverages.cs line 19: `public double AvgEstimatedValue { get; init; }` vs TeamTotals.cs line 18: `public decimal TotalEstimatedValue { get; init; }`",
+      "severity": "Low"
+    },
+    {
+      "agent": "02_NULL_SAFETY",
+      "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+      "line": 16,
+      "description": "GetTeamTotals does not guard against a null 'players' argument.",
+      "verdict": "confirmed",
+      "reason": "PlayerStatsService.cs GetTeamTotals at line 16 accepts IReadOnlyList<Player> with no null guard before calling .Sum() on it. Passing null throws NullReferenceException inside LINQ.",
+      "evidence": "PlayerStatsService.cs lines 16-28: method body starts immediately with `return new TeamTotals { TotalTSI = players.Sum(...),` — no null check.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "02_NULL_SAFETY",
+      "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+      "line": 31,
+      "description": "GetTeamAverages missing null guard on 'players' parameter (separate method).",
+      "verdict": "confirmed",
+      "reason": "GetTeamAverages at line 31 does check `if (players.Count == 0)` but does NOT null-guard before that — calling .Count on null would throw before the empty-list guard fires.",
+      "evidence": "PlayerStatsService.cs lines 31-48: `if (players.Count == 0)` on line 33 — no prior null check on the parameter.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+      "line": 36,
+      "description": "All tests assert against BuildExpectedMarkup() helper defined in the test class itself. Tests never render an actual Players.razor component.",
+      "verdict": "false_positive",
+      "reason": "Per instructions and CLAUDE.md project conventions, the test project CANNOT reference the MAUI Hattrick project. The markup-based test pattern IS the established project pattern for component structure tests at this stage. The comment in PlayersPageTests.cs (lines 7-12) explicitly documents this design decision. This is BY DESIGN.",
+      "category": "established_project_pattern",
+      "severity": "Critical"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Components/PlayersSidebarTests.cs",
+      "line": 33,
+      "description": "All tests assert against BuildExpectedSidebarMarkup() defined in the test class itself. No actual component rendered.",
+      "verdict": "false_positive",
+      "reason": "Same as PlayersPageTests: test project cannot reference the MAUI project. The markup-based pattern is the established project pattern. PlayersSidebarTests.cs header comment (lines 1-26) documents the intended HTML structure as a contract. BY DESIGN.",
+      "category": "established_project_pattern",
+      "severity": "Critical"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/DependencyInjectionTests.cs",
+      "line": 19,
+      "description": "Redundant .NotBeNull() after GetRequiredService<T>() which already throws on missing registration.",
+      "verdict": "confirmed",
+      "reason": "DependencyInjectionTests.cs lines 19-27 call GetRequiredService<T>().Should().NotBeNull() repeatedly. GetRequiredService already throws InvalidOperationException if not registered, making NotBeNull redundant and providing false confidence that the test is checking something meaningful.",
+      "evidence": "DependencyInjectionTests.cs line 19: `container.GetRequiredService<IRandomProvider>().Should().NotBeNull();` — GetRequiredService throws, so NotBeNull is a no-op assertion.",
+      "severity": "Low"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+      "line": 184,
+      "description": "Test uses string index comparisons to verify DOM nesting — fragile with self-constructed strings.",
+      "verdict": "false_positive",
+      "reason": "Given the established pattern of markup-based tests (test project cannot use bUnit), string index-based ordering checks are the correct approach for verifying structural DOM ordering. This is consistent with the project pattern. The test at line 176-186 correctly checks that main content appears before sidebar using IndexOf comparison — this is valid for the markup test pattern.",
+      "category": "established_project_pattern",
+      "severity": "Medium"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Services/PlayerStatsServiceTests.cs",
+      "line": 64,
+      "description": "No test verifies per-player vs collapsed formula for EstimatedValue computation.",
+      "verdict": "confirmed",
+      "reason": "PlayerStatsServiceTests.cs does not contain a test explicitly verifying the formula for a single player's EstimatedValue contribution independent of team sum. The test at line 154 tests TotalEstimatedValue for one player (TSI=4500 → 112500) which implicitly covers this, but there is no explicit per-player formula verification. The finding is valid as a gap in coverage.",
+      "evidence": "PlayerStatsServiceTests.cs lines 154-168: only tests the sum total, not the per-player TSI*25 multiplication formula as a discrete unit.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Services/PlayerDisplayServiceTests.cs",
+      "line": 249,
+      "description": "Missing boundary test for GetSkillColorClass(8.0) — exact value at boundary not covered.",
+      "verdict": "confirmed",
+      "reason": "PlayerDisplayServiceTests.cs covers GetSkillColorClass at exactly 5.0, 6.0, 7.0, 9.0, 11.0 boundaries (lines 296-336) but NOT at exactly 8.0. The switch uses `<= SkillGoodCeiling` (= 8) so floor(8.0) = 8 should return 'skill-good', not 'skill-excellent'. The test at line 249-255 covers 8.99 but not 8.0 exactly. Gap is confirmed.",
+      "evidence": "PlayerDisplayServiceTests.cs: tests at lines 249-255 use 8.99. No test for GetSkillColorClass(8.0). The boundary 7-8 → 'skill-good' has only the ceiling tested (8.99), not the exact boundary value (8.0).",
+      "severity": "Medium"
+    },
+    {
+      "agent": "10_LOGIC_ERRORS",
+      "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+      "line": 28,
+      "description": "GetSkillBarPercent uses Math.Round but interface contract says 'Truncates; does not round'.",
+      "verdict": "confirmed",
+      "reason": "PlayerDisplayService.cs line 29: `(int)Math.Round((skill % 1) * SkillBarPercentMultiplier)`. IPlayerDisplayService.cs line 24 explicitly states: 'Truncates; does not round'. This is a confirmed contract violation — Math.Round on 0.995 would give 100 instead of the documented truncation behavior.",
+      "evidence": "PlayerDisplayService.cs line 29: `(int)Math.Round(...)`. IPlayerDisplayService.cs line 24: `'Truncates; does not round'`.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+      "line": 29,
+      "description": "GetSkillBarPercent returns negative int for negative skill values, producing invalid CSS width.",
+      "verdict": "confirmed",
+      "reason": "PlayerDisplayService.cs line 29: `(int)Math.Round((skill % 1) * 100)`. For skill = -1.3, `skill % 1` = -0.3 in C# (modulo keeps sign), giving -30%. No clamping to [0, 100] range. Would produce `width: -30%` CSS which is invalid.",
+      "evidence": "PlayerDisplayService.cs line 29: no clamping or guard against negative skill values before the modulo and multiplication.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+      "line": 22,
+      "description": "TSI * EstimatedValueMultiplier as int*int before decimal assignment risks silent overflow.",
+      "verdict": "confirmed",
+      "reason": "PlayerStatsService.cs line 22: `players.Sum(p => p.TSI * EstimatedValueMultiplier)` where TSI is int and EstimatedValueMultiplier is `private const int EstimatedValueMultiplier = 25`. The multiplication `int * int` risks overflow before widening to decimal. For TSI near Int32.MaxValue/25 (~85.9M), this silently overflows.",
+      "evidence": "PlayerStatsService.cs line 13: `private const int EstimatedValueMultiplier = 25;` line 22: `players.Sum(p => p.TSI * EstimatedValueMultiplier)` — both operands are int.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+      "line": 21,
+      "description": "FormatAge does not handle singular 'day' — returns '1 days' instead of '1 day'.",
+      "verdict": "confirmed",
+      "reason": "PlayerDisplayService.cs line 22: `$\"{age} years and {ageDays} days\"` — always uses 'days' regardless of value. For ageDays == 1 this produces '1 days' which is grammatically incorrect. The interface documentation (IPlayerDisplayService.cs line 13) even explicitly states 'No pluralization — always days regardless of the value', which documents this as intentional. However the test at PlayerDisplayServiceTests.cs line 55 also asserts '1 days', encoding the bug as a feature.",
+      "evidence": "PlayerDisplayService.cs line 22: always uses 'days'. IPlayerDisplayService.cs line 13: documents 'No pluralization — always days'. PlayerDisplayServiceTests.cs line 59: asserts '20 years and 1 days'.",
+      "severity": "Low"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Tests/Services/PlayerDisplayServiceTests.cs",
+      "line": 55,
+      "description": "Test FormatAge_OneDayIn_ReturnsCorrectString asserts '1 days' (incorrect), encoding the bug.",
+      "verdict": "false_positive",
+      "reason": "The IPlayerDisplayService contract explicitly documents 'No pluralization — always days regardless of the value' (IPlayerDisplayService.cs line 13). The test is correctly asserting the documented contract. The question of whether singular/plural should be supported is a product decision, but the test is NOT encoding a bug — it is correctly testing the documented behavior. The interface contract intentionally omits pluralization.",
+      "category": "intentional_documented_behavior",
+      "severity": "Low"
+    },
+    {
+      "agent": "12_PERFORMANCE",
+      "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+      "line": 16,
+      "description": "GetTeamTotals iterates player list 7 times; should collapse to single pass.",
+      "verdict": "confirmed",
+      "reason": "PlayerStatsService.cs lines 20-26: GetTeamTotals calls .Sum(), .Sum(), .Sum(), .Select().Distinct().Count(), .Count(), .Count(), .Sum() — 7 separate LINQ iterations over the same list. For large squads this is wasteful.",
+      "evidence": "PlayerStatsService.cs lines 20-26: seven separate LINQ enumerations of the `players` parameter.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "12_PERFORMANCE",
+      "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+      "line": 31,
+      "description": "GetTeamAverages iterates player list 7 times; should collapse to single pass.",
+      "verdict": "confirmed",
+      "reason": "PlayerStatsService.cs lines 40-46: GetTeamAverages calls .Average() 7 times. Each is a separate full iteration of the players list.",
+      "evidence": "PlayerStatsService.cs lines 40-46: seven separate .Average() calls, each iterating the full list.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "12_PERFORMANCE",
+      "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+      "line": 28,
+      "description": "GetSkillColorClass and GetSkillBarPercent each compute Math.Floor per skill cell; minor double-computation.",
+      "verdict": "confirmed",
+      "reason": "Players.razor lines 49-50 call both GetSkillColorClass and GetSkillBarPercent per cell. GetSkillColorClass internally calls GetSkillFloor (which does Math.Floor), and GetSkillBarPercent does its own modulo. Math.Floor is called once per method. For 7 skills × N players this is minor but real.",
+      "evidence": "PlayerDisplayService.cs line 34: `var floor = GetSkillFloor(skill)` inside GetSkillColorClass. GetSkillBarPercent also uses `skill % 1` independently. Players.razor lines 49-50 call both per cell.",
+      "severity": "Low"
+    },
+    {
+      "agent": "19_DEAD_CODE",
+      "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+      "line": 13,
+      "description": "Private constant SkillGoodFloor = 7 defined but never referenced.",
+      "verdict": "confirmed",
+      "reason": "PlayerDisplayService.cs line 13: `private const int SkillGoodFloor = 7;` — searching the file confirms this constant is never used in the switch expression or anywhere else. The switch uses SkillGoodCeiling (line 41) but never SkillGoodFloor.",
+      "evidence": "PlayerDisplayService.cs line 13: defined but not referenced. Switch expression uses SkillInadequateFloor, SkillPassableFloor, SkillGoodCeiling, SkillExcellentCeiling only.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "19_DEAD_CODE",
+      "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+      "line": 17,
+      "description": "Private constant SkillOutstandingFloor = 11 defined but never referenced.",
+      "verdict": "confirmed",
+      "reason": "PlayerDisplayService.cs line 17: `private const int SkillOutstandingFloor = 11;` — the switch expression uses `_` (discard) for the outstanding case, never SkillOutstandingFloor. The constant is dead code.",
+      "evidence": "PlayerDisplayService.cs line 17: defined but not referenced. Switch expression line 43 uses `_ => \"skill-outstanding\"` instead of `>= SkillOutstandingFloor`.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "03_THREAD_SAFETY",
+      "file": "Hattrick/Components/Pages/Players.razor",
+      "line": 88,
+      "description": "DisplayedSkills declared as plain mutable static array; should be IReadOnlyList<SkillType>.",
+      "verdict": "confirmed",
+      "reason": "Players.razor line 88: `private static readonly SkillType[] DisplayedSkills`. This is a plain array behind a readonly reference — elements can still be mutated. Should be `IReadOnlyList<SkillType>` or a frozen collection.",
+      "evidence": "Players.razor line 88: `private static readonly SkillType[] DisplayedSkills = [...]`",
+      "severity": "Low"
+    },
+    {
+      "agent": "08_ARCHITECTURE",
+      "file": "hattrick/Components/Pages/Players.razor",
+      "line": 88,
+      "description": "DisplayedSkills domain knowledge belongs in IPlayerDisplayService or constants class, not the UI component.",
+      "verdict": "confirmed",
+      "reason": "Players.razor lines 88-97: the list of SkillTypes to display is domain knowledge about which player skills exist and are relevant. Per CLAUDE.md: 'Blazor components have ZERO business logic.' The set of displayed skill types is a configuration/domain concern that should live in a service or constants class.",
+      "evidence": "Players.razor lines 88-97: `private static readonly SkillType[] DisplayedSkills = [Keeper, Defending, Playmaking, Winger, Scoring, Passing, SetPieces]` — domain knowledge embedded in UI.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "08_ARCHITECTURE",
+      "file": "Hattrick.Core/ServiceCollectionExtensions.cs",
+      "line": 22,
+      "description": "Stateful services ISaveGameService, ISaveSlotService, IGameStateService registered as Singleton; should be Scoped.",
+      "verdict": "false_positive",
+      "reason": "This is a MAUI Blazor app, not ASP.NET Core with HTTP requests. MAUI Blazor uses a single-process model with no per-request scope — the application IS the scope. Singleton registration is the correct and intentional choice for MAUI Blazor services that hold in-memory game state. The CLAUDE.md architecture section explicitly states 'All gameplay is in-memory' and does not mandate Scoped lifetime. The DependencyInjectionTests.cs even verifies these are singletons explicitly.",
+      "category": "intentional_pattern_for_maui_blazor",
+      "severity": "Medium"
+    },
+    {
+      "agent": "04_BLAZOR_PATTERNS",
+      "file": "hattrick/Components/Pages/Players.razor",
+      "line": 33,
+      "description": "@foreach over _players does not use @key.",
+      "verdict": "confirmed",
+      "reason": "Players.razor line 33: `@foreach (var player in _players)` with no `@key` directive on the `<div class=\"player-row\">`. Without @key, Blazor cannot efficiently diff the DOM when the list changes.",
+      "evidence": "Players.razor line 33-56: foreach loop with no @key on the outer div at line 35.",
+      "severity": "Low"
+    },
+    {
+      "agent": "04_BLAZOR_PATTERNS",
+      "file": "hattrick/Components/Pages/Players.razor",
+      "line": 33,
+      "description": "@foreach over _players does not use <Virtualize> for potentially large lists.",
+      "verdict": "confirmed",
+      "reason": "Players.razor line 33: plain @foreach with no <Virtualize>. A full squad of 20+ players with 7 skill cells each is a modest list, but for larger rosters (transfer targets, etc.) Virtualize would prevent rendering off-screen rows.",
+      "evidence": "Players.razor line 33: `@foreach (var player in _players)` — no Virtualize component wrapper.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "04_BLAZOR_PATTERNS",
+      "file": "hattrick/Components/Pages/Players.razor",
+      "line": 45,
+      "description": "Inner @foreach over DisplayedSkills does not use @key.",
+      "verdict": "confirmed",
+      "reason": "Players.razor line 45: `@foreach (var skillType in DisplayedSkills)` with no @key on the `<div class=\"skill-cell\">` at line 48.",
+      "evidence": "Players.razor lines 45-52: inner foreach with no @key on skill-cell div.",
+      "severity": "Low"
+    },
+    {
+      "agent": "09_PLAN_COMPLIANCE",
+      "file": "Hattrick/Components/Pages/Players.razor",
+      "line": 35,
+      "description": "Plan requires player avatar/portrait and nationality flag per row; neither is present.",
+      "verdict": "false_positive",
+      "reason": "Searching IMPLEMENTATION_PLAN.md finds no mention of 'avatar', 'portrait', or 'nationality flag'. The plan does not specify these requirements. This appears to be an agent hallucinating plan requirements. Cannot confirm the plan required these features.",
+      "category": "agent_hallucination_of_plan_requirements",
+      "severity": "Medium"
+    },
+    {
+      "agent": "09_PLAN_COMPLIANCE",
+      "file": "Hattrick/Components/Pages/Players.razor",
+      "line": 54,
+      "description": "Plan requires 'Last rating date' column; completely absent.",
+      "verdict": "false_positive",
+      "reason": "Searching IMPLEMENTATION_PLAN.md finds no mention of 'last rating date'. The agent appears to have hallucinated a plan requirement. The actual Players.razor column structure (player, age, tsi, wage, specialty, form, 7 skills, position) aligns with the test documentation. Cannot confirm the plan required this feature.",
+      "category": "agent_hallucination_of_plan_requirements",
+      "severity": "Medium"
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+      "line": 22,
+      "description": "p.TSI * EstimatedValueMultiplier lambda duplicated in GetTeamTotals and GetTeamAverages; should be extracted to private method.",
+      "verdict": "confirmed",
+      "reason": "PlayerStatsService.cs line 22: `players.Sum(p => p.TSI * EstimatedValueMultiplier)` and line 42: `players.Average(p => (double)(p.TSI * EstimatedValueMultiplier))`. The same TSI * multiplier formula appears in both methods and should be a private helper.",
+      "evidence": "PlayerStatsService.cs line 22 and line 42: same TSI*25 expression duplicated in two methods.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Services/PlayerStatsServiceTests.cs",
+      "line": 178,
+      "description": "Identical three-player test list copy-pasted verbatim across three consecutive test methods.",
+      "verdict": "confirmed",
+      "reason": "PlayerStatsServiceTests.cs: the exact same three-player list (TSI: 4500/2000/7000, wage: 10000/8000/15000, nationalityId: 1/2/3) is copy-pasted verbatim in GetTeamTotals_WithMultiplePlayers_ReturnsSumOfTSI (line 175), _ReturnsSumOfWage (line 191), and _ReturnsSumOfEstimatedValue (line 207). Should be a shared test fixture.",
+      "evidence": "PlayerStatsServiceTests.cs lines 179-183, 195-199, 211-215: identical three-player initialization blocks.",
+      "severity": "Medium"
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+      "line": 121,
+      "description": "Test name claims 'correct count for single player' but assertion locks in grammatically incorrect '1 players'.",
+      "verdict": "confirmed",
+      "reason": "PlayersPageTests.cs lines 121-126: test `PlayersPage_Title_ShowsCorrectCountForSinglePlayer` asserts `markup.Should().Contain(\"Your 1 players\")`. The component uses `Your @_players.Count players` which produces '1 players'. Whether this is a product defect is debatable, but the test name says 'CorrectCountForSinglePlayer' — and '1 players' is not grammatically correct, so the test name is misleading about 'correctness'.",
+      "evidence": "PlayersPageTests.cs lines 121-126: test name says 'CorrectCount' but asserts '1 players'.",
+      "severity": "Low"
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Services/PlayerStatsServiceTests.cs",
+      "line": 66,
+      "description": "Test data declared as new List<Player>() instead of IReadOnlyList<Player> for contract accuracy.",
+      "verdict": "confirmed",
+      "reason": "PlayerStatsServiceTests.cs line 66: `var result = _sut.GetTeamTotals(new List<Player>())`. The method signature accepts IReadOnlyList<Player> but tests always construct concrete List<Player>. While List<T> implements IReadOnlyList<T> so it works, using the interface type in test data would be more accurate and catch any future narrowing of the signature.",
+      "evidence": "PlayerStatsServiceTests.cs line 66, 72, 78 etc: `new List<Player>()` used as argument to methods taking IReadOnlyList<Player>.",
+      "severity": "Low"
+    },
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+      "line": 477,
+      "description": "Magic number 7 in Enumerable.Repeat(SkillCell(), 7) representing skill column count.",
+      "verdict": "confirmed",
+      "reason": "PlayersPageTests.cs line 477: `string.Concat(Enumerable.Repeat(SkillCell(), 7))` — the 7 is a magic number representing the number of skill columns. Should be a named constant like `SkillColumnCount = 7`.",
+      "evidence": "PlayersPageTests.cs line 477: `Enumerable.Repeat(SkillCell(), 7)` — no named constant.",
+      "severity": "Low"
+    },
+    {
+      "agent": "07_REPOSITORY_PATTERNS",
+      "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+      "line": 15,
+      "description": "GetByTeamId performs filtering inside the repository; filtering should live in the service layer.",
+      "verdict": "false_positive",
+      "reason": "Filtering by TeamId is a fundamental query predicate that correctly belongs in the repository layer for this architecture. The project's repository pattern (in-memory Dictionary with locking) specifically implements GetByTeamId as a query method. The CLAUDE.md architecture states 'Repositories hold gameplay state'. A repository that only exposes GetAll() with filtering delegated to services would break the thread-safety pattern (lock), leak the internal structure, and violate the repository abstraction. This is the correct pattern for this codebase.",
+      "category": "project_convention",
+      "severity": "Low"
+    }
+  ],
+  "falsePositives": [
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+      "line": 36,
+      "description": "Circular self-referential tests — never render actual Players.razor component.",
+      "verdict": "false_positive",
+      "reason": "Established project pattern: test project cannot reference MAUI project. Markup tests are BY DESIGN.",
+      "category": "established_project_pattern"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Components/PlayersSidebarTests.cs",
+      "line": 33,
+      "description": "Circular self-referential tests — no actual component rendered.",
+      "verdict": "false_positive",
+      "reason": "Same established project pattern as PlayersPageTests.",
+      "category": "established_project_pattern"
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+      "line": 184,
+      "description": "Fragile string index comparisons for DOM nesting.",
+      "verdict": "false_positive",
+      "reason": "String index ordering is the correct approach given the markup-based test pattern. Not fragile in context.",
+      "category": "established_project_pattern"
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Tests/Services/PlayerDisplayServiceTests.cs",
+      "line": 55,
+      "description": "Test asserts '1 days' encoding the bug.",
+      "verdict": "false_positive",
+      "reason": "Interface contract explicitly documents 'No pluralization — always days'. Test correctly asserts documented contract.",
+      "category": "intentional_documented_behavior"
+    },
+    {
+      "agent": "08_ARCHITECTURE",
+      "file": "Hattrick.Core/ServiceCollectionExtensions.cs",
+      "line": 22,
+      "description": "Stateful services registered as Singleton; should be Scoped.",
+      "verdict": "false_positive",
+      "reason": "MAUI Blazor app — no per-request scope exists. Singleton is correct for in-memory game state.",
+      "category": "intentional_pattern_for_maui_blazor"
+    },
+    {
+      "agent": "09_PLAN_COMPLIANCE",
+      "file": "Hattrick/Components/Pages/Players.razor",
+      "line": 35,
+      "description": "Plan requires player avatar/portrait and nationality flag.",
+      "verdict": "false_positive",
+      "reason": "IMPLEMENTATION_PLAN.md contains no such requirement. Agent hallucinated plan items.",
+      "category": "agent_hallucination_of_plan_requirements"
+    },
+    {
+      "agent": "09_PLAN_COMPLIANCE",
+      "file": "Hattrick/Components/Pages/Players.razor",
+      "line": 54,
+      "description": "Plan requires 'Last rating date' column.",
+      "verdict": "false_positive",
+      "reason": "IMPLEMENTATION_PLAN.md contains no such requirement. Agent hallucinated plan items.",
+      "category": "agent_hallucination_of_plan_requirements"
+    },
+    {
+      "agent": "07_REPOSITORY_PATTERNS",
+      "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+      "line": 15,
+      "description": "GetByTeamId filtering should live in service layer.",
+      "verdict": "false_positive",
+      "reason": "Filtering in repository is correct for this thread-safe in-memory repository pattern.",
+      "category": "project_convention"
+    }
+  ],
+  "deferred": [
+    {
+      "agent": "10_LOGIC_ERRORS",
+      "file": "Hattrick/Components/Pages/Players.razor",
+      "line": 105,
+      "description": "Hardcoded Guid.Empty in GetByTeamId — always returns empty roster.",
+      "verdict": "deferred",
+      "reason": "IGameStateService.HumanPlayerTeamId exists but Players.razor does not inject IGameStateService. This is early-phase scaffolding before game-loading flow is wired to the Players page. Valid issue to fix in the next sprint when IGameStateService is integrated into the component.",
+      "severity": "Critical"
+    }
+  ],
+  "summary": {
+    "totalIssuesReviewed": 36,
+    "confirmed": 24,
+    "falsePositives": 8,
+    "deferred": 1,
+    "needsContext": 0,
+    "totalValidIssues": 25,
+    "confirmedBySeverity": {
+      "Critical": 0,
+      "High": 1,
+      "Medium": 14,
+      "Low": 9
+    },
+    "deferredBySeverity": {
+      "Critical": 1
+    },
+    "falsePositiveCategories": {
+      "established_project_pattern": 3,
+      "intentional_documented_behavior": 1,
+      "intentional_pattern_for_maui_blazor": 1,
+      "agent_hallucination_of_plan_requirements": 2,
+      "project_convention": 1
+    },
+    "keyFindings": [
+      "The single most impactful DEFERRED issue: Players.razor uses Guid.Empty instead of IGameStateService.HumanPlayerTeamId (Critical) — fix needed in next sprint when game-loading flow is connected.",
+      "The single confirmed High issue: Players.razor directly injects IPlayerRepository, violating the services-only architecture rule for Blazor components.",
+      "Most confirmed Medium issues cluster around PlayerStatsService (null guards, overflow, performance) and PlayerDisplayService (Math.Round vs truncate contract, negative skill CSS).",
+      "8 false positives removed: 3 circular markup tests (established project pattern for MAUI), 2 plan compliance hallucinations, 1 Singleton DI (correct for MAUI Blazor), 1 repository filtering (correct pattern), 1 '1 days' test (intentional documented contract)."
+    ]
+  }
+}

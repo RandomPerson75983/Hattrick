@@ -1,0 +1,10 @@
+[
+  {
+    "agent": "02_NULL_SAFETY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 57,
+    "description": "Three consecutive GetById calls use the null-forgiving operator `!` to dereference the result directly (lines 57-59) without a prior null-check assertion. If GetById unexpectedly returns null the test throws NullReferenceException instead of a meaningful assertion failure. Compare with the same test class's other GetById usages that correctly call result.Should().NotBeNull() first.",
+    "severity": "Low",
+    "suggestedFix": "Store each result in a variable, assert NotBeNull(), then access properties via the null-forgiving operator: `var r1 = _sut.GetById(team1.Id); r1.Should().NotBeNull(); r1!.Name.Should().Be(\"Northford Athletic\");` — or chain: `_sut.GetById(team1.Id).Should().NotBeNull().And.Match<Team>(t => t.Name == \"Northford Athletic\");`"
+  }
+]

@@ -1,0 +1,415 @@
+{
+  "totalFindings": 51,
+  "truePositives": 36,
+  "falsePositives": 15,
+  "findings": [
+    {
+      "id": 1,
+      "agent": "01_MAGIC_NUMBERS",
+      "description": "Magic number 50 used as loop bound for preloading players in ConcurrentReadsAndWrites test.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "Test helper constants like loop bounds and sample sizes are standard test scaffolding, not domain magic numbers. The value 50 is arbitrary test data, not a domain rule. Extracting every numeric literal in test setup to a constant adds noise without improving readability."
+    },
+    {
+      "id": 2,
+      "agent": "01_MAGIC_NUMBERS",
+      "description": "Magic number 3 used as modulo divisor to branch between Add/Read-by-team/Read-by-id operations in ConcurrentReadsAndWrites test.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "The modulo 3 is a test partitioning strategy, not a domain constant. It simply divides operations into thirds. Naming it 'operationTypeCount' adds no clarity — the i % 3 == 0/1/2 pattern with inline comments is self-explanatory."
+    },
+    {
+      "id": 3,
+      "agent": "01_MAGIC_NUMBERS",
+      "description": "Magic numbers 20 and 15 in expression '20 + (i % 15)' for generating player ages in ConcurrentUpdates test.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "These are arbitrary test data generators for concurrent update testing, not domain rules. The test is verifying thread safety, not age validation. Extracting these to constants would not improve test clarity."
+    },
+    {
+      "id": 4,
+      "agent": "01_MAGIC_NUMBERS",
+      "description": "Magic numbers 22 (Age), 50 (AgeDays), 6 (Form), 7 (Stamina), 5 (Experience) in the CreatePlayer helper method.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "These are default test fixture values in a helper method. They represent 'a valid player' for tests that don't care about specific values. Named constants for test fixture defaults are over-engineering — the helper method itself is the abstraction."
+    },
+    {
+      "id": 5,
+      "agent": "01_MAGIC_NUMBERS",
+      "description": "Magic numbers 5.0 and 0.5 in formula '5.0 + (int)skillType * 0.5' used to generate skill values.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "This is test data generation logic, not a domain formula. The formula simply creates unique values per skill type for testing. It's not a game rule that would need to be maintained or referenced elsewhere."
+    },
+    {
+      "id": 6,
+      "agent": "01_MAGIC_NUMBERS",
+      "description": "Magic number 8 in HaveCount(8) assertion for skill type count. Should reference the enum to avoid drift.",
+      "severity": "Low",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "This is a valid finding. If a new SkillType is added to the enum, this assertion would fail silently by not exercising the new type. Using Enum.GetValues<SkillType>().Length would make the test self-maintaining. This is a real drift risk."
+    },
+    {
+      "id": 7,
+      "agent": "06_PLAYER_STATE",
+      "description": "GetById and GetByTeamId return direct mutable references to stored Player objects, bypassing thread-safety.",
+      "severity": "High",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. PlayerRepository.GetById (line 29) returns _players.GetValueOrDefault(playerId) which is the actual stored reference. GetByTeamId returns references inside a read-only list wrapper. Callers can mutate player state without locks. This is a real architectural concern, though typical for in-memory repos at this stage."
+    },
+    {
+      "id": 8,
+      "agent": "06_PLAYER_STATE",
+      "description": "TeamId is a non-nullable Guid using Guid.Empty as sentinel for 'unassigned'.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Player.TeamId defaults to Guid.Empty (line 18). Using Guid.Empty as 'unassigned' is a valid pattern but does risk accidental equality between unassigned players and any code that forgets to check for Empty. A nullable Guid? would be more explicit."
+    },
+    {
+      "id": 9,
+      "agent": "06_PLAYER_STATE",
+      "description": "Player model has no validation on any property.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "Player is explicitly designed as a mutable POCO (the class comment says 'Mutable model class since player state changes during gameplay'). Per CLAUDE.md architecture rules, validation belongs in services, not models. The comment documents valid ranges. This is an intentional design choice, not a bug."
+    },
+    {
+      "id": 10,
+      "agent": "06_PLAYER_STATE",
+      "description": "Test Constructor_Default_NumericPropertiesAreZero asserts Form, Stamina, Experience, Leadership default to 0 but documented minimums are 1.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. The Player comments say Form is 1-8, Stamina is 1-9, Experience is 1-20, Leadership is 1-8, but all default to 0. The test codifies these invalid defaults. Either the defaults or the documented ranges need to be reconciled. Since validation belongs in services per project conventions, the cleanest fix is to set defaults to valid minimums (1)."
+    },
+    {
+      "id": 11,
+      "agent": "11_EDGE_CASES",
+      "description": "Add() and Update() do not guard against null player arguments.",
+      "severity": "High",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. PlayerRepository.Add (line 37) and Update (line 52) access player.Id without null checks. Passing null would throw NullReferenceException rather than the more informative ArgumentNullException. Adding ArgumentNullException.ThrowIfNull(player) is a simple defensive improvement."
+    },
+    {
+      "id": 12,
+      "agent": "05_TEST_QUALITY",
+      "description": "Reference mutation in Update_ReplacesPlayerData: test mutates same object reference, assertions verify object against itself.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 219-234: the test modifies the same player object that was added, calls Update, then GetById returns the same reference. All assertions pass trivially because result IS player. A proper test would create a new Player with the same Id."
+    },
+    {
+      "id": 13,
+      "agent": "05_TEST_QUALITY",
+      "description": "Reference mutation in Update_PreservesPlayerId: assertion is trivially true.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 238-254: player is mutated in place, then the assertion checks result.Id == originalId. Since result IS player (same reference), this is always true regardless of Update behavior."
+    },
+    {
+      "id": 14,
+      "agent": "05_TEST_QUALITY",
+      "description": "Reference mutation in Update_AllPlayerFields_ArePersisted: assertions verify object against itself.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 662-696: same pattern — mutate the original player object, call Update, GetById returns same reference. All 10 field assertions pass trivially."
+    },
+    {
+      "id": 15,
+      "agent": "05_TEST_QUALITY",
+      "description": "Reference mutation in Update_DoesNotAffectOtherPlayers: mutates player1.Name directly then calls Update.",
+      "severity": "Low",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Line 279: player1.Name is mutated on the same reference that was added. The test verifies player2 is unchanged, which is valuable, but the Update call is a no-op since the reference is already stored. Minor issue since the main assertion (player2 unchanged) is still valid."
+    },
+    {
+      "id": 16,
+      "agent": "05_TEST_QUALITY",
+      "description": "RegisterServices method duplicates application's actual DI registration from MauiProgram.cs.",
+      "severity": "High",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. DependencyInjectionTests.RegisterServices (line 79-87) manually duplicates the exact same registrations as MauiProgram.cs (lines 22-29). If MauiProgram.cs is updated, the test won't catch the drift. Should extract a shared registration method."
+    },
+    {
+      "id": 17,
+      "agent": "05_TEST_QUALITY",
+      "description": "Reference mutation in Add_PlayerIsRetrievableAfterAdd: result IS player, assertions are trivially true.",
+      "severity": "Low",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 33-40: player is added, GetById returns the same reference. Assertions like result.Name.Should().Be(player.Name) compare the object to itself. Should assert against literal expected values."
+    },
+    {
+      "id": 18,
+      "agent": "05_TEST_QUALITY",
+      "description": "Reference mutation in Update_CanChangeTeamId: mutates player.TeamId directly, Update is a no-op.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 297-299: player.TeamId is changed on the stored reference. Update is called but does nothing new. However, the assertions at lines 306-311 (checking GetByTeamId results) ARE valuable and non-trivial because they verify the repository's Where filter works against the mutated reference."
+    },
+    {
+      "id": 19,
+      "agent": "16_ASSERTION_QUALITY",
+      "description": "DI_InterfacesAreProperlyImplemented uses .BeAssignableTo on objects already resolved via GetRequiredService. Tautological.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 55-77: GetRequiredService<IRandomProvider>() returns an IRandomProvider by definition. Asserting .BeAssignableTo<IRandomProvider>() is always true. Should use .BeOfType<RandomProvider>() to verify correct implementation wiring."
+    },
+    {
+      "id": 20,
+      "agent": "16_ASSERTION_QUALITY",
+      "description": "Redundant NotBeNull assertions after GetRequiredService.",
+      "severity": "Low",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 26-33: GetRequiredService<T>() throws InvalidOperationException if unregistered, never returns null. The .NotBeNull() assertions are redundant. However, they could be seen as documenting intent, so this is low severity."
+    },
+    {
+      "id": 21,
+      "agent": "16_ASSERTION_QUALITY",
+      "description": "Skills_CanSetAllEightSkillTypes only asserts HaveCount(8) without verifying keys or values.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 251-261: the test iterates all SkillType values, sets computed values, but only checks HaveCount(8). It doesn't verify each key is present or values are correct. A dictionary with 8 arbitrary keys would pass this test."
+    },
+    {
+      "id": 22,
+      "agent": "16_ASSERTION_QUALITY",
+      "description": "NotBeNull as only assertion for individual player lookups in Add_MultiplePlayersAreAllRetrievable.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 58-60: three .NotBeNull() assertions without verifying correct player identity. However, line 61 checks HaveCount(3) on GetByTeamId. The individual GetById checks could verify names or IDs for stronger coverage."
+    },
+    {
+      "id": 23,
+      "agent": "16_ASSERTION_QUALITY",
+      "description": "GetByTeamId_ReturnsIReadOnlyList only verifies return type without content verification.",
+      "severity": "Low",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 186-198: only assertion is .BeAssignableTo<IReadOnlyList<Player>>(). No content verification. Other tests cover content, so this is low severity, but could be improved."
+    },
+    {
+      "id": 24,
+      "agent": "16_ASSERTION_QUALITY",
+      "description": "ConcurrentReadsAndWrites_DoNotThrow only asserts no exception without state verification.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 488-527: the test only checks act.Should().NotThrow(). Silent data corruption (lost writes, corrupted dictionary) would not be detected. Should verify final state after concurrent operations."
+    },
+    {
+      "id": 25,
+      "agent": "16_ASSERTION_QUALITY",
+      "description": "ConcurrentUpdates_DoNotCorruptState only checks name prefix, wouldn't detect partial/torn updates.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 565-591: only asserts result.Name.StartsWith('Updated by thread '). Age and TeamId of the final state are not verified against the corresponding thread's values. A torn update mixing fields from different threads would pass."
+    },
+    {
+      "id": 26,
+      "agent": "07_REPOSITORY_PATTERNS",
+      "description": "GetByTeamId contains filtering logic (Where clause on TeamId) inside the repository.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "A repository method that filters by a foreign key is a standard and expected repository pattern. GetByTeamId is a simple query method — it would be over-engineering to force all filtering into services. The repository is the natural place for data access patterns like 'get by FK'."
+    },
+    {
+      "id": 27,
+      "agent": "08_ARCHITECTURE",
+      "description": "Player.Id has a public setter, allowing ID to be changed after construction. Breaks dictionary consistency.",
+      "severity": "Medium",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "Player.Id needs a public setter (or at minimum init) for JSON deserialization. System.Text.Json requires a public setter by default. The init accessor would work for deserialization scenarios but the project currently uses standard public setters throughout all model properties. This is a design choice consistent with the POCO pattern used. Changing Id after Add would indeed cause issues, but that's a caller responsibility, not a model defect."
+    },
+    {
+      "id": 28,
+      "agent": "08_ARCHITECTURE",
+      "description": "Test instantiates concrete PlayerRepository directly rather than IPlayerRepository interface.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "This is a unit test for the concrete PlayerRepository class. Testing the concrete type directly is the correct pattern for unit testing a specific implementation. If the test were an integration test or testing through DI, using the interface would be appropriate. The test also explicitly verifies interface assignability in PlayerRepository_ImplementsIPlayerRepository (line 633)."
+    },
+    {
+      "id": 29,
+      "agent": "08_ARCHITECTURE",
+      "description": "SaveGameService and SaveSlotService registered as Singletons but agent suggests Scoped.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "In a MAUI Blazor desktop app, there is no HTTP request scope — Scoped and Singleton behave identically since there is a single DI scope for the application lifetime. The DependencyInjectionTests confirm singleton registration is intentional. Using Scoped would be misleading in a desktop context."
+    },
+    {
+      "id": 30,
+      "agent": "10_LOGIC_ERRORS",
+      "description": "YellowCards comment says (0-2) at 2 suspended, but official Hattrick suspends at 3 bookings.",
+      "severity": "High",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "In the real Hattrick game, cumulative yellow card suspension occurs after 3 yellow cards accumulated across competitive matches, not 2. The PHASE_1_PLAN.md specifies (0-2) which deviates from the real game. The FORMULAS.md reference to '2 yellows -> red' refers to within-match (2 yellows in one game = red card), which is different from cumulative suspension. The model comment and tests encode the wrong rule if the goal is to match Hattrick. Should be (0-3) with suspension at 3."
+    },
+    {
+      "id": 31,
+      "agent": "10_LOGIC_ERRORS",
+      "description": "Test region header says (0-2) and boundary test asserts max 2. Encodes incorrect game rule.",
+      "severity": "High",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Tests at lines 512-539 codify the 0-2 range. Per Hattrick rules, cumulative yellow cards range is 0-3 (suspension at 3). Tests need updating if the game is to match real Hattrick rules."
+    },
+    {
+      "id": 32,
+      "agent": "10_LOGIC_ERRORS",
+      "description": "Player has both int Stamina property and SkillType.Stamina in Skills dictionary. Ambiguity about source of truth.",
+      "severity": "Medium",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "These serve different purposes by design. Player.Stamina (int, line 55) represents the player's current stamina LEVEL (1-9), which is the integer skill level visible to the user. Skills[SkillType.Stamina] (double) represents the trainable sub-level with decimal precision (e.g., 7.73) for the training system. This mirrors the real Hattrick where displayed skill levels are integers but training progress is tracked with sub-levels. The int Stamina is the displayed level, the Skills dictionary entry is the training sub-level. Same pattern applies to Form/Experience but those don't have corresponding SkillType entries because they're not trainable. Documentation could be clearer but this is not a logic error."
+    },
+    {
+      "id": 33,
+      "agent": "11_EDGE_CASES",
+      "description": "No validation on Age property. Default is 0, minimum documented as 17.",
+      "severity": "Medium",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "Player is a POCO — validation belongs in services per project architecture rules (CLAUDE.md: 'Blazor components have ZERO business logic. Components call services. Services call repositories.'). The default of 0 is the C# int default. Players are created by services that set valid ages. Model-level validation would be over-engineering for this architecture."
+    },
+    {
+      "id": 34,
+      "agent": "11_EDGE_CASES",
+      "description": "No validation on AgeDays property. Comment says 0-111 but no enforcement.",
+      "severity": "Medium",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "Same as finding 33. Player is a POCO; validation belongs in services. The comment documents the expected range for implementors. Service-layer validation is the correct pattern per project conventions."
+    },
+    {
+      "id": 35,
+      "agent": "11_EDGE_CASES",
+      "description": "Form property documented as 1-8 but defaults to 0.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "While validation belongs in services, the default value of 0 is outside the documented valid range of 1-8. A newly constructed Player object is immediately in an invalid state. Setting the default to 1 (the minimum valid value) costs nothing and prevents accidental use of uninitialized players. This is distinct from adding validation — it's about sensible defaults."
+    },
+    {
+      "id": 36,
+      "agent": "11_EDGE_CASES",
+      "description": "Stamina property documented as 1-9 but defaults to 0.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Same as finding 35. Default of 0 is outside documented range 1-9. Should default to 1."
+    },
+    {
+      "id": 37,
+      "agent": "11_EDGE_CASES",
+      "description": "Experience property documented as 1-20 but defaults to 0.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Same as finding 35. Default of 0 is outside documented range 1-20. Should default to 1."
+    },
+    {
+      "id": 38,
+      "agent": "11_EDGE_CASES",
+      "description": "Leadership property documented as 1-8 but defaults to 0.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Same as finding 35. Default of 0 is outside documented range 1-8. Should default to 1."
+    },
+    {
+      "id": 39,
+      "agent": "11_EDGE_CASES",
+      "description": "YellowCards documented as 0-2 but no enforcement. InjuryWeeks no guard against negative.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "Same pattern as other validation findings — Player is a POCO, validation belongs in services. The range might also be wrong (should be 0-3 per finding 30). Low severity and not actionable at the model level."
+    },
+    {
+      "id": 40,
+      "agent": "11_EDGE_CASES",
+      "description": "Loyalty documented as 0.0-1.0 but no validation.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "Player is a POCO; validation belongs in services per project conventions. This is consistent with how all other properties are handled."
+    },
+    {
+      "id": 41,
+      "agent": "11_EDGE_CASES",
+      "description": "Skills dictionary property has public setter allowing null replacement.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Line 39: Skills has a public setter with default initialization. Setting Skills = null would cause NullReferenceException on any subsequent access. While validation belongs in services, a null Skills dictionary is never valid. Making the setter init-only or adding a null guard in the setter would prevent this class of bug."
+    },
+    {
+      "id": 42,
+      "agent": "11_EDGE_CASES",
+      "description": "Test uses .First() on GetByTeamId() result without guarding against empty.",
+      "severity": "Low",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Line 460: _sut.GetByTeamId(teamBId).First().Name.Should().Be('Team B Player'). If the test setup failed or a bug caused the list to be empty, First() would throw InvalidOperationException instead of a clear assertion failure. Using .Should().ContainSingle().Which.Name.Should().Be() would be cleaner."
+    },
+    {
+      "id": 43,
+      "agent": "12_PERFORMANCE",
+      "description": "GetByTeamId scans all players with Where() — O(n) per call.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Line 19: _players.Values.Where(p => p.TeamId == teamId) scans all players. At current scale this is fine, but at scale (thousands of players across many teams) a secondary index would help. Valid observation for future consideration."
+    },
+    {
+      "id": 44,
+      "agent": "12_PERFORMANCE",
+      "description": "Add method does ContainsKey + indexer set — two dictionary operations.",
+      "severity": "Low",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 40-46: ContainsKey then indexer set. Dictionary.TryAdd would be a single operation. Minor optimization, but clean and easy to apply."
+    },
+    {
+      "id": 45,
+      "agent": "12_PERFORMANCE",
+      "description": "Update method does ContainsKey + indexer set — two hash lookups.",
+      "severity": "Low",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Lines 55-60: same pattern as Add. Could use a single lookup, but given the lock and small scale, this is a minor style improvement."
+    },
+    {
+      "id": 46,
+      "agent": "14_SAVE_LOAD",
+      "description": "IPlayerRepository has no GetAll(), ClearAsync(), or LoadAsync() methods for save/load.",
+      "severity": "High",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. IPlayerRepository (lines 8-37) only has GetByTeamId, GetById, Add, Update, Remove. No way to enumerate all players for serialization or clear/reload state. These will be needed when save/load is wired to repositories. The severity is appropriate since save/load is a core feature."
+    },
+    {
+      "id": 47,
+      "agent": "14_SAVE_LOAD",
+      "description": "Dictionary<SkillType, double> with enum keys — System.Text.Json cannot round-trip by default.",
+      "severity": "Critical",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "System.Text.Json has supported Dictionary<TEnum, TValue> serialization since .NET 5. In .NET 10 (the project's target framework), enum dictionary keys are serialized as their string names by default, and with JsonStringEnumConverter configured (as in SaveGameService.cs line 23), they serialize cleanly. Additionally, the project has not yet wired Player serialization into the save system, so this is premature. A round-trip test would be good insurance but there is no current bug."
+    },
+    {
+      "id": 48,
+      "agent": "14_SAVE_LOAD",
+      "description": "Player.Id defaults to Guid.NewGuid() — deserialization risk.",
+      "severity": "Low",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. Line 13: Id = Guid.NewGuid() means every deserialized Player gets a new Guid before the deserialized value overwrites it. With System.Text.Json this works (it sets the property after construction), but if DefaultIgnoreCondition ever skips the Id, it would silently assign a new Guid. A round-trip test is warranted."
+    },
+    {
+      "id": 49,
+      "agent": "14_SAVE_LOAD",
+      "description": "SaveGameService uses DefaultIgnoreCondition = WhenWritingNull, risks data loss for nullable properties.",
+      "severity": "Medium",
+      "verdict": "TRUE_POSITIVE",
+      "reason": "Confirmed. SaveGameService.cs line 20: WhenWritingNull omits null values from JSON output. If Player.TeamId were changed to Guid? (as finding 8 suggests), a null TeamId would be silently dropped and would deserialize as a new Guid (due to the default). This is a latent risk that should be documented or changed."
+    },
+    {
+      "id": 50,
+      "agent": "14_SAVE_LOAD",
+      "description": "No PlayerDto class exists yet — high risk for missing properties when DTO is introduced.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "This is a future concern, not a current issue. The DTO layer doesn't exist yet and may never be needed if the model serializes cleanly. The suggestion to write a reflection-based test is good advice for when/if DTOs are introduced, but not an actionable finding for the current codebase."
+    },
+    {
+      "id": 51,
+      "agent": "14_SAVE_LOAD",
+      "description": "Player.Wage is decimal — System.Text.Json may lose precision during round-tripping.",
+      "severity": "Low",
+      "verdict": "FALSE_POSITIVE",
+      "reason": "System.Text.Json handles decimal serialization correctly in .NET 10. Decimal values like 12500.50m round-trip without precision loss. This would only be an issue with extremely large or high-precision decimals outside the range of typical game wages. A round-trip test would be good practice but this is not a real bug."
+    }
+  ]
+}

@@ -8,7 +8,7 @@ You are @coder executing a single task: implement code to make tests pass.
 - When done, update the handoff file and exit
 
 ## Handoff File
-1. Read `.claude/triplet-handoff.json` for:
+1. Read `Docs/quartet-handoff.json` for:
    - `requirements` — what to implement
    - `testFiles` — where the tests are
    - `notes` — gotchas from test-writer

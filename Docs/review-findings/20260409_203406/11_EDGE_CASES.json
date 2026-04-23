@@ -1,0 +1,82 @@
+[
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 43,
+    "description": "TeamSpirit is documented as 0.0-10.0 but has no validation guard. Any caller can set it to -5.0 or 99.0 without error. Downstream match-engine calculations that assume this range will produce incorrect results silently.",
+    "severity": "High",
+    "suggestedFix": "Add a clamping guard or throw on out-of-range assignment. Either enforce in the setter (private backing field + guard) or add a static validation helper. Example: if (value < 0.0 || value > 10.0) throw new ArgumentOutOfRangeException(nameof(TeamSpirit), value, \"TeamSpirit must be between 0.0 and 10.0.\");"
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 48,
+    "description": "Confidence is documented as 0.0-10.0 but has no validation guard. Same silent-corruption risk as TeamSpirit.",
+    "severity": "High",
+    "suggestedFix": "Add a range guard matching TeamSpirit. if (value < 0.0 || value > 10.0) throw new ArgumentOutOfRangeException(nameof(Confidence), value, \"Confidence must be between 0.0 and 10.0.\");"
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 59,
+    "description": "CoachLevel is documented as 1-8 (minimum 1, every team must have a coach), but the property setter allows 0 or any negative value. A CoachLevel of 0 violates the invariant stated in the XML doc and could cause division-by-zero or index-out-of-bounds in match engine code that indexes into coach-level tables.",
+    "severity": "High",
+    "suggestedFix": "Guard the setter: if (value < 1 || value > 8) throw new ArgumentOutOfRangeException(nameof(CoachLevel), value, \"CoachLevel must be between 1 and 8.\");"
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 28,
+    "description": "Budget has no lower bound guard. A negative Budget is accepted silently, which could allow the game to enter an invalid financial state (e.g., spending money the team doesn't have without triggering any game event).",
+    "severity": "Medium",
+    "suggestedFix": "Decide on the game rule: if teams can go into debt, document it explicitly and ensure all callers handle negative budgets. If not, guard: if (value < 0) throw new ArgumentOutOfRangeException(nameof(Budget), value, \"Budget cannot be negative.\");"
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "C:\\Projects\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 64,
+    "description": "AssistantCoachLevel is documented as 0-10 but has no upper-bound guard. Setting it to 11 or higher is accepted silently. Same issue applies to DoctorLevel (0-5), SpokespersonLevel (0-5), and FinancialDirectorLevel (0-5) — all have documented maxima that are not enforced.",
+    "severity": "Medium",
+    "suggestedFix": "Add range guards to all staff level setters matching their documented maxima. Example for AssistantCoachLevel: if (value < 0 || value > 10) throw new ArgumentOutOfRangeException(...);"
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 18,
+    "description": "Name is initialized to string.Empty, but the auto-property setter allows null to be assigned (e.g., team.Name = null). Any code that calls Name.Length or Name[0] without a null check will throw a NullReferenceException.",
+    "severity": "Medium",
+    "suggestedFix": "Add a null guard in the setter or change the property to use a backing field: set { _name = value ?? string.Empty; }. Alternatively, annotate with [DisallowNull] and validate in the repository's Add/Update methods."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+    "line": 37,
+    "description": "Add() validates that team is not null but does not validate that team.Id is not Guid.Empty. A caller could accidentally store a default-constructed Guid (Guid.Empty) as a team's ID, which would allow a second team with Guid.Empty to be rejected as a duplicate — but more importantly, it allows an invalid sentinel value to live in the repository.",
+    "severity": "Low",
+    "suggestedFix": "Add a guard after the null check: if (team.Id == Guid.Empty) throw new ArgumentException(\"Team ID must not be Guid.Empty.\", nameof(team));"
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+    "line": 51,
+    "description": "Update() validates that team is not null but also does not guard against Guid.Empty. A team with Guid.Empty that was accidentally stored via Add would be silently overwritten by Update, making it harder to detect the problem.",
+    "severity": "Low",
+    "suggestedFix": "Add the same Guid.Empty guard as suggested for Add(): if (team.Id == Guid.Empty) throw new ArgumentException(\"Team ID must not be Guid.Empty.\", nameof(team));"
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 273,
+    "description": "TeamSpirit tests cover the valid boundary values (0.0, 5.0, 10.0) but there are no tests for out-of-range inputs (e.g., -1.0, 10.1, double.MaxValue). If validation is ever added to Team.cs, these cases have no regression coverage.",
+    "severity": "Low",
+    "suggestedFix": "Add negative and over-max tests: TeamSpirit_BelowMinimum_ThrowsArgumentOutOfRangeException() and TeamSpirit_AboveMaximum_ThrowsArgumentOutOfRangeException(). Same for Confidence and CoachLevel."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 199,
+    "description": "Budget tests cover zero and large positive values but there is no test for a negative Budget. Without a test, the intended behavior (allowed or rejected) is undocumented, and a future guard could regress silently.",
+    "severity": "Low",
+    "suggestedFix": "Add a test: Budget_NegativeValue_[ThrowsArgumentOutOfRangeException | IsAllowedForDebt]. The name should reflect the decided game rule."
+  }
+]

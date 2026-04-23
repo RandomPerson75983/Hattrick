@@ -1,0 +1,394 @@
+{
+  "totalFindings": 43,
+  "confirmed": 40,
+  "falsePositives": 3,
+  "findings": [
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 98,
+      "description": "Hardcoded loop bounds 'for (int level = 1; level <= 20; level++)' -- the 1 and 20 represent SkillLevel min/max range boundaries",
+      "severity": "Low",
+      "status": "CONFIRMED",
+      "reason": "Line 102 has 'for (int level = 1; level <= 20; level++)'. The 1 and 20 are magic numbers that should reference (int)SkillLevel.Level1 and (int)SkillLevel.Level20."
+    },
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 202,
+      "description": "Same hardcoded 1 to 20 loop bounds in GetDisplayName_AllLevels_ReturnNonEmptyString",
+      "severity": "Low",
+      "status": "CONFIRMED",
+      "reason": "Line 202 has 'for (int level = 1; level <= 20; level++)'. Same magic number pattern as finding #1."
+    },
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 215,
+      "description": "Same hardcoded 1 to 20 loop bounds in GetDisplayName_AllLevels_ReturnUniqueNames",
+      "severity": "Low",
+      "status": "CONFIRMED",
+      "reason": "Line 215 has 'for (int level = 1; level <= 20; level++)'. Same magic number pattern."
+    },
+    {
+      "agent": "01_MAGIC_NUMBERS",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 255,
+      "description": "Same hardcoded 1 to 20 loop bounds in GetDisplayName_Progression_IsMonotonic",
+      "severity": "Low",
+      "status": "CONFIRMED",
+      "reason": "Line 255 has 'for (int level = 1; level <= 20; level++)'. Same magic number pattern."
+    },
+    {
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+      "line": 38,
+      "description": "GetDisplayName uses dictionary indexer (DisplayNames[level]) which throws KeyNotFoundException for invalid SkillLevel values.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 40 returns 'DisplayNames[level]' which is a raw dictionary indexer. No TryGetValue or validation. Passing (SkillLevel)0 or any invalid value will throw KeyNotFoundException with an unhelpful message."
+    },
+    {
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+      "line": 9,
+      "description": "Display names are completely wrong - 18 of 20 levels have incorrect names vs official Hattrick denominations.",
+      "severity": "Critical",
+      "status": "CONFIRMED",
+      "reason": "PHASE_1_PLAN.md lines 31-42 and GAME_DATA_REFERENCE.md lines 18-41 both define official denominations. The plan uses 1-20 mapping: 1=non-existent, 2=disastrous, 3=wretched, 4=poor, 5=weak, 6=inadequate, 7=passable, 8=solid, 9=excellent, 10=formidable, etc. The code has fabricated names like Level2='very poor', Level10='mediocre'. Only Level1 ('non-existent'), Level9 ('excellent'), and Level20 ('utopian') match the plan."
+    },
+    {
+      "agent": "08_ARCHITECTURE",
+      "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+      "line": 9,
+      "description": "Mutable Dictionary<SkillLevel, string> used for an immutable lookup table.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 9 declares 'private static readonly Dictionary<SkillLevel, string> DisplayNames'. The field is readonly but the Dictionary type itself is mutable. Should use FrozenDictionary or IReadOnlyDictionary to prevent accidental mutation."
+    },
+    {
+      "agent": "14_SAVE_LOAD",
+      "file": "Hattrick.Core/Models/SkillType.cs",
+      "line": 7,
+      "description": "SkillType enum members have no explicit integer values assigned.",
+      "severity": "High",
+      "status": "CONFIRMED",
+      "reason": "Lines 8-15 show 'Keeper, Defending, Playmaking, Winger, Scoring, Passing, SetPieces, Stamina' with no '= N' assignments. All other enums (SkillLevel, Position, IndividualOrder, Formation, Tactic, TeamAttitude, Specialty, PlayerPersonality, CoachType) have explicit values. Inserting a member would silently shift all subsequent values, breaking serialized data."
+    },
+    {
+      "agent": "09_PLAN_COMPLIANCE",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 229,
+      "description": "GetDisplayName_Progression_IsMonotonic test encodes wrong display names matching buggy implementation.",
+      "severity": "Critical",
+      "status": "CONFIRMED",
+      "reason": "Lines 230-252 define expectedProgression with wrong values (e.g., 'very poor' for Level 2, 'mediocre' for Level 10). These match the buggy SkillLevelDisplayNames.cs rather than the official denominations from PHASE_1_PLAN.md."
+    },
+    {
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 159,
+      "description": "Multiple individual GetDisplayName tests validate wrong expected values. Typo 'ReturnsMediacore' at line 289.",
+      "severity": "High",
+      "status": "CONFIRMED",
+      "reason": "Line 169: GetDisplayName_Level2_ReturnsVeryPoor asserts 'very poor' but plan says 'disastrous'. Line 179: GetDisplayName_Level10_ReturnsMediocre asserts 'mediocre' but plan says 'formidable'. Line 289: method name has typo 'ReturnsMediacore' instead of 'ReturnsMediocre'. All verified in the actual code."
+    },
+    {
+      "agent": "09_PLAN_COMPLIANCE",
+      "file": "Hattrick.Core/Models/SkillLevel.cs",
+      "line": 45,
+      "description": "Comment incorrectly calls Level 10 'mediocre' and 'pivot/midpoint of the scale'.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 5 reads 'Level 10 (mediocre) is the pivot/midpoint of the scale.' Level 10 should be 'formidable' per the plan. Level 10 is not really a midpoint in Hattrick's 1-20 scale either."
+    },
+    {
+      "agent": "10_LOGIC_ERRORS",
+      "file": "Hattrick.Core/Models/SkillLevel.cs",
+      "line": 8,
+      "description": "SkillLevel default value (0) is not a valid enum member. default(SkillLevel) is 0, which does not correspond to any defined member.",
+      "severity": "High",
+      "status": "CONFIRMED",
+      "reason": "Line 9 starts at 'Level1 = 1'. default(SkillLevel) evaluates to 0, which has no defined member. Any uninitialized SkillLevel field holds an undefined value that could cause issues (e.g., KeyNotFoundException in GetDisplayName)."
+    },
+    {
+      "agent": "11_EDGE_CASES",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 199,
+      "description": "No test covers GetDisplayName with an invalid/out-of-range SkillLevel value.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Reviewed all tests in SkillEnumTests.cs. No test passes an invalid SkillLevel (e.g., (SkillLevel)0, (SkillLevel)21, (SkillLevel)(-1)) to GetDisplayName. The behavior for these edge cases is untested."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 228,
+      "description": "Test name GetDisplayName_Progression_IsMonotonic is misleading.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 227 defines test 'GetDisplayName_Progression_IsMonotonic' but the test on lines 229-261 checks exact string equality against a hardcoded array, not monotonicity. The Hattrick skill scale goes from 'non-existent' to 'utopian' which is not monotonically ordered by any measurable property."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 265,
+      "description": "Test GetDisplayName_LowerLevels_SuggestWeakness uses vague assertions, duplicates coverage.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Lines 264-274 show the test checking that level1 contains 'non' and level3 does not contain 'excellent'. These are vague substring assertions that don't verify correct values. The progression test at line 227 already checks all exact values."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 277,
+      "description": "Test GetDisplayName_UpperLevels_SuggestExcellence uses vague assertions, duplicated by progression test.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Lines 276-286 check level18.NotContain('poor') and level20.Be('utopian'). The NotContain assertion is vague and the utopian check is already covered by the progression test."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 447,
+      "description": "Test naming convention violation: All_Enums_Can_Be_Converted_To_String_And_Back uses underscores within word boundaries.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 446 shows 'All_Enums_Can_Be_Converted_To_String_And_Back'. Project convention is MethodName_Scenario_ExpectedResult with PascalCase segments. The underscores between each word violate this pattern."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 428,
+      "description": "Test naming convention violation: Specialty_And_PlayerPersonality_CanBeUsedTogether uses underscores within word boundaries.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 428 shows 'Specialty_And_PlayerPersonality_CanBeUsedTogether'. The underscore around 'And' violates the MethodName_Scenario_ExpectedResult convention."
+    },
+    {
+      "agent": "05_TEST_QUALITY",
+      "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+      "line": 512,
+      "description": "Test naming convention violation: Formation_And_Tactic_AndTeamAttitude_CanCoexist has inconsistent underscore usage.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 512 shows 'Formation_And_Tactic_AndTeamAttitude_CanCoexist'. The underscores around 'And' and 'Tactic' are inconsistent with MethodName_Scenario_ExpectedResult convention."
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+      "line": 16,
+      "description": "Repeated enum test pattern. Individual Has*Member tests fully redundant with AllMembersAreExpected.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Lines 26-83 define 6 individual Position_Has*Member tests using GetEnumNames().Contains(). Lines 86-101 define AllMembersAreExpected which uses BeEquivalentTo to check all members at once. Similarly lines 138-185 define 5 IndividualOrder_Has*Member tests, and lines 188-203 define AllMembersAreExpected for IndividualOrder. The individual tests are completely redundant."
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 14,
+      "description": "Individual member existence and AllMembers_CanBeEnumerated tests duplicate MembersHaveCorrectNames.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Lines 14-67 have 8 individual Specialty_Has*Member tests. Line 80 has MembersHaveCorrectNames with HaveCount().And.BeEquivalentTo() covering all. Lines 93-115 have AllMembers_CanBeEnumerated which duplicates MembersHaveCorrectNames. Same patterns repeat for PlayerPersonality and CoachType."
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+      "line": 26,
+      "description": "Redundant individual-member tests. 10 Formation + 7 Tactic + 3 TeamAttitude individual Has*Member tests subsumed by AllMembersAreExpected.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Lines 26-123 define 10 individual Formation_Has*Member tests. Line 126 has AllMembersAreExpected with BeEquivalentTo. Lines 216-283 define 7 Tactic_Has*Member tests with AllMembersAreExpected at line 286. Lines 370-397 define 3 TeamAttitude_Has*Member tests with AllMembersAreExpected at line 400. All individual tests are redundant."
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 14,
+      "description": "8 individual SkillType_Has*Member tests subsumed by SkillType_MembersHaveCorrectNames.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Lines 13-67 define 8 individual SkillType_Has*Member tests using Enum.Parse. Line 80 has MembersHaveCorrectNames which checks all names. The individual tests are redundant. Note: MembersHaveCorrectNames uses .Contain() instead of .BeEquivalentTo() (separate finding #32), but the individual tests are still redundant."
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 279,
+      "description": "17 individual numeric value tests should be consolidated.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Lines 279-396 contain 17 individual single-assertion tests (8 for Specialty, 6 for PlayerPersonality, 3 for CoachType) each checking one enum member's int value. Other test files (like TacticsFormationEnumTests) use a consolidated MembersHaveDefaultValues pattern."
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 428,
+      "description": "Specialty_And_PlayerPersonality_CanBeUsedTogether and All_Enums_Can_Be_Converted_To_String_And_Back test CLR behavior.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Lines 428-443 assign enums and assert identity (specialty.Should().Be(Specialty.Technical)) -- tests CLR assignment behavior. Lines 446-474 test ToString/Parse roundtrip which is guaranteed by CLR. Neither test application logic."
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+      "line": 512,
+      "description": "Formation_And_Tactic_AndTeamAttitude_CanCoexist assigns enums and asserts identity -- impossible to fail.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Lines 512-523 assign three enum variables and assert they equal themselves. This is a trivial test that cannot fail."
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 305,
+      "description": "AllSkillTypesAndAllSkillLevels_CanBeCreated iterates 160 combinations but SkillType dimension is irrelevant.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Lines 322-341 loop over all SkillTypes x all SkillLevels (8x20=160) but only call GetDisplayName(level) which ignores the skill type parameter. The SkillType dimension adds nothing. SkillTypeAndLevel_CanBeUsedTogether (line 306) similarly only asserts .NotBeNullOrEmpty()."
+    },
+    {
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Core/Models/SkillLevel.cs",
+      "line": 7,
+      "description": "SkillLevel range 1-20 conflicts with GAME_DATA_REFERENCE.md which shows 0-20.",
+      "severity": "High",
+      "status": "FALSE_POSITIVE",
+      "reason": "PHASE_1_PLAN.md explicitly specifies 'SkillLevel display names (1-20)' at line 31. The implementation follows the plan. GAME_DATA_REFERENCE shows 0-20 but the plan intentionally chose 1-20. The finding acknowledges this but still flags it as High severity. Since the code matches the plan, this is a plan design decision, not a code bug."
+    },
+    {
+      "agent": "06_PLAYER_STATE",
+      "file": "Hattrick.Core/Models/SkillType.cs",
+      "line": 7,
+      "description": "SkillType enum ordering differs from GAME_DATA_REFERENCE.md (Passing before Scoring vs Scoring before Passing).",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "GAME_DATA_REFERENCE.md lines 14-16 list order as: 5. Passing, 6. Scoring. SkillType.cs lines 12-13 have Scoring before Passing. The ordering differs from the authoritative game reference. While this is not a functional bug (enum values are implicit), it could cause confusion and differs from the source material."
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 318,
+      "description": "SkillTypeAndLevel_CanBeUsedTogether -- displayName.Should().NotBeNullOrEmpty() is the only assertion on display name value.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 318 shows 'displayName.Should().NotBeNullOrEmpty()'. This would pass for any non-empty string, providing no validation of correctness."
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 338,
+      "description": "AllSkillTypesAndAllSkillLevels_CanBeCreated -- loops over 160 combinations but only asserts .NotBeNullOrEmpty().",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 338 shows 'displayName.Should().NotBeNullOrEmpty()' inside a nested loop. Would pass even if all display names were the same wrong string."
+    },
+    {
+      "agent": "16_ASSERTION_QUALITY",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 86,
+      "description": "SkillType_MembersHaveCorrectNames uses .Contain() (subset check) instead of .BeEquivalentTo().",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 86 shows 'memberNames.Should().Contain(new[] { ... })'. This is a subset assertion -- it would pass even if extra unexpected members were added. Other test files (PositionOrderEnumTests, TacticsFormationEnumTests, SpecialtyPersonalityEnumTests) use .HaveCount().And.BeEquivalentTo() which is more precise."
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+      "line": 228,
+      "description": "Duplicate CanBeConvertedToString and CanBeCastFromInt tests repeated for 5 enums. Tests basic CLR behavior.",
+      "severity": "Low",
+      "status": "CONFIRMED",
+      "reason": "Lines 228-277 define 4 tests: Position_CanBeConvertedToString, Position_CanBeCastFromInt, IndividualOrder_CanBeConvertedToString, IndividualOrder_CanBeCastFromInt. These test CLR enum ToString/cast behavior which is guaranteed by the runtime. Similar tests exist in TacticsFormationEnumTests."
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+      "line": 461,
+      "description": "Three CanBeIterated tests and three ValuesAreUniqueAndSequential tests, redundant with AllMembersAreExpected.",
+      "severity": "Low",
+      "status": "CONFIRMED",
+      "reason": "Lines 461-509 define AllFormationMembers_CanBeIterated, AllTacticMembers_CanBeIterated, AllTeamAttitudeMembers_CanBeIterated which enumerate and check Contains for each member. Lines 526-562 define FormationValues_AreUniqueAndSequential, TacticValues_AreUniqueAndSequential, TeamAttitudeValues_AreUniqueAndSequential. These are covered by AllMembersAreExpected and MembersHaveDefaultValues tests."
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 487,
+      "description": "Three AllMembersAreDistinct tests using HashSets, enum values guaranteed unique by compiler.",
+      "severity": "Low",
+      "status": "CONFIRMED",
+      "reason": "Lines 487-517 define PlayerPersonality_AllMembersAreDistinct, CoachType_AllMembersAreDistinct, Specialty_AllMembersAreDistinct. Each creates a HashSet and asserts count equals expected. C# compiler guarantees enum member names are distinct, so these tests can never fail."
+    },
+    {
+      "agent": "18_DUPLICATE_CODE",
+      "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+      "line": 401,
+      "description": "Three identical invalid parsing tests verifying Enum.Parse throws for 'InvalidMember'.",
+      "severity": "Low",
+      "status": "CONFIRMED",
+      "reason": "Lines 401-421 define Specialty_ParsingInvalidMember_Throws, PlayerPersonality_ParsingInvalidMember_Throws, CoachType_ParsingInvalidMember_Throws. All verify that Enum.Parse throws ArgumentException for 'InvalidMember' -- this is CLR behavior, not application logic."
+    },
+    {
+      "agent": "19_DEAD_CODE",
+      "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+      "line": 1,
+      "description": "Redundant 'using FluentAssertions;' -- already globally imported via global usings in Hattrick.Tests.csproj.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 1 has 'using FluentAssertions;'. Hattrick.Tests.csproj lines 23-25 declare '<Using Include=\"FluentAssertions\" />' which generates a global using. The explicit using is redundant."
+    },
+    {
+      "agent": "19_DEAD_CODE",
+      "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+      "line": 3,
+      "description": "Redundant 'using Xunit;' -- already globally imported via global usings in Hattrick.Tests.csproj.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 3 has 'using Xunit;'. Hattrick.Tests.csproj lines 23-25 declare '<Using Include=\"Xunit\" />'. The explicit using is redundant."
+    },
+    {
+      "agent": "19_DEAD_CODE",
+      "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+      "line": 1,
+      "description": "Redundant 'using FluentAssertions;' -- already globally imported via global usings in Hattrick.Tests.csproj.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 1 has 'using FluentAssertions;'. Already globally imported via csproj <Using> directive."
+    },
+    {
+      "agent": "19_DEAD_CODE",
+      "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+      "line": 3,
+      "description": "Redundant 'using Xunit;' -- already globally imported via global usings in Hattrick.Tests.csproj.",
+      "severity": "Medium",
+      "status": "CONFIRMED",
+      "reason": "Line 3 has 'using Xunit;'. Already globally imported via csproj <Using> directive."
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 112,
+      "description": "3 individual SkillLevel_Level*Exists tests subsumed by comprehensive tests.",
+      "severity": "Low",
+      "status": "CONFIRMED",
+      "reason": "Lines 112-139 define SkillLevel_Level1Exists, SkillLevel_Level10Exists, SkillLevel_Level20Exists. These are fully covered by SkillLevel_HasAllLevelsFrom1To20 (line 98) and SkillLevel_AllLevelsHaveSequentialValues (line 142)."
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+      "line": 264,
+      "description": "3 display name tests subsumed by GetDisplayName_Progression_IsMonotonic.",
+      "severity": "Low",
+      "status": "FALSE_POSITIVE",
+      "reason": "The report says line 264 has 3 subsumed tests. Looking at the actual code: GetDisplayName_LowerLevels_SuggestWeakness (line 265) and GetDisplayName_UpperLevels_SuggestExcellence (line 277) are already separately reported as findings #15 and #16 with their own analysis. GetDisplayName_MidpointLevel_ReturnsMediacore (line 289) checks Level10='mediocre' which IS already covered by the progression test at line 227. However, this finding largely duplicates findings #15 and #16 which already handle these tests. Marking as false positive since these are already tracked separately."
+    },
+    {
+      "agent": "20_OVER_ENGINEERING",
+      "file": "Hattrick.Core/Models/SkillLevel.cs",
+      "line": 1,
+      "description": "Enum with 20 members named Level1-Level20 where an int with range validation would be simpler.",
+      "severity": "Low",
+      "status": "FALSE_POSITIVE",
+      "reason": "PHASE_1_PLAN.md explicitly specifies SkillLevel as an enum. The finding itself acknowledges 'may be mandated by the implementation plan'. The plan mandates this design, so it is not over-engineering -- it follows project requirements."
+    }
+  ]
+}

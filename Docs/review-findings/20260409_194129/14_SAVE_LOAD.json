@@ -1,0 +1,50 @@
+[
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "Hattrick.Core/Repositories/IPlayerRepository.cs",
+    "line": 8,
+    "description": "IPlayerRepository has no GetAll(), ClearAsync(), or LoadAsync() methods. When save/load is wired up, the repository needs: (1) GetAll() to extract all players for serialization, (2) ClearAsync() to wipe state before loading, and (3) LoadAsync() to bulk-insert players and restore state including any internal counters. Without these, the save system cannot persist or restore player data.",
+    "severity": "High",
+    "suggestedFix": "Add methods to IPlayerRepository: IReadOnlyList<Player> GetAll(); Task ClearAsync(); Task LoadAsync(IEnumerable<Player> players); and implement them in PlayerRepository. Since this project uses Guids (not sequential int IDs), _nextId restoration is not needed, but ClearAsync and bulk load are still required."
+  },
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 39,
+    "description": "Player.Skills is Dictionary<SkillType, double> with enum keys. System.Text.Json (used by SaveGameService) cannot round-trip Dictionary<TEnum, TValue> by default in .NET 8+. The JsonStringEnumConverter handles enum values but not enum dictionary keys. Serialization will throw or produce unusable JSON keys like '0', '1' etc. depending on .NET version, and deserialization back to SkillType keys may fail or lose data.",
+    "severity": "Critical",
+    "suggestedFix": "Either: (1) Add a custom JsonConverter for Dictionary<SkillType, double>, (2) use a DTO that maps Skills to a simpler structure (e.g., Dictionary<string, double> or individual properties), or (3) verify with a round-trip test that System.Text.Json correctly handles enum-keyed dictionaries with JsonStringEnumConverter in the project's .NET version. At minimum, add a save/load round-trip integration test for a Player with populated Skills."
+  },
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 13,
+    "description": "Player.Id defaults to Guid.NewGuid() on construction. When deserializing from JSON, System.Text.Json will construct a new Player (calling the default constructor which generates a new Guid), then set properties from JSON. If the Id property is present in the JSON this works correctly. However, if the DTO pattern is used later or if serialization settings skip default values, the auto-generated Id could mask a missing/null Id in the save file, silently assigning a new Id instead of failing.",
+    "severity": "Low",
+    "suggestedFix": "Consider adding a round-trip save/load test that verifies Player.Id survives serialization and deserialization. When DTOs are introduced, ensure the mapper explicitly copies Id and does not rely on the default Guid.NewGuid()."
+  },
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "Hattrick.Core/Services/SaveGameService.cs",
+    "line": 20,
+    "description": "SaveGameService uses DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull. While Player properties are mostly non-nullable value types, if any property is ever changed to nullable (e.g., nullable TeamId, nullable BestPosition), null values will be silently omitted from the JSON output. On load, these will revert to their default values instead of null, causing data loss.",
+    "severity": "Medium",
+    "suggestedFix": "Consider using JsonIgnoreCondition.Never for save game data to ensure all properties are always written, or document this behavior prominently so future developers know to account for it when adding nullable properties to models."
+  },
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 1,
+    "description": "No PlayerDto class exists yet. The Player model is currently serialized directly. When the DTO layer is introduced (per the project's architecture: 'Models/Dtos/[Model]Dto.cs'), every Player property must be replicated in the DTO and mapped in both directions via SaveGameMapper. With 24 properties on Player, this is a high-risk area for missing a property and losing data on save/load. This is noted as a future risk for when DTOs are implemented.",
+    "severity": "Low",
+    "suggestedFix": "When implementing the DTO layer, create PlayerDto with all 24 properties. Write a unit test that uses reflection to verify every public property on Player has a corresponding property on PlayerDto, to catch any future property additions that are missed in the DTO."
+  },
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 99,
+    "description": "Player.Wage is decimal type. System.Text.Json serializes decimal as a JSON number but may lose precision for edge-case values during round-tripping (e.g., very large or very precise decimals). Additionally, if JSON is ever edited manually or consumed by JavaScript-based tools, floating-point precision differences could corrupt wage data.",
+    "severity": "Low",
+    "suggestedFix": "Add a round-trip test specifically for Player.Wage with precise decimal values (e.g., 12500.50m, 999999.99m) to confirm no precision loss through JSON serialization. Consider a custom converter that serializes decimal as a string in save files if precision issues arise."
+  }
+]

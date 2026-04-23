@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 8,
+    "description": "Test SUT is typed as the concrete class `TeamRepository` rather than the interface `ITeamRepository`. This couples the tests to the implementation and does not verify the interface contract. All repository tests should program against the interface so that switching implementations doesn't require rewriting tests.",
+    "severity": "Medium",
+    "suggestedFix": "Change the field declaration to `private readonly ITeamRepository _sut = new TeamRepository();` so the tests exercise the interface contract rather than the concrete type directly."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\ServiceCollectionExtensions.cs",
+    "line": 21,
+    "description": "ISaveGameService and ISaveSlotService are registered as Singleton. According to the documented DI lifetime rules (Repositories: Singleton, Services: Scoped, Config: Singleton), stateful or request-scoped services should use AddScoped. Even in MAUI, if these services hold mutable state or acquire resources per operation, Singleton lifetime can cause hard-to-diagnose issues. At minimum, the decision should be documented in a comment.",
+    "severity": "Low",
+    "suggestedFix": "If these services are truly stateless (and ISaveGameService appears to be), document with a comment explaining why Singleton is chosen over Scoped. If they carry per-session state, change to AddScoped. Example: `// Singleton: stateless file I/O service; no per-request state` above each registration."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Services\\SaveSlotService.cs",
+    "line": 17,
+    "description": "SaveSlotService constructor uses an optional parameter `string? customSaveDir = null` for its save directory. While this enables test injection, optional constructor parameters are a DI anti-pattern: the DI container will silently pass the default (null) and there is no way to register a different directory via normal DI configuration. This makes it impossible to configure the save directory via DI options or environment-specific config without subclassing or overriding.",
+    "severity": "Low",
+    "suggestedFix": "Introduce a dedicated options/config class (e.g., `SaveSlotOptions` with a `SaveDirectory` property) and inject it via the DI container: `services.AddSingleton(new SaveSlotOptions { SaveDirectory = ... })`. The constructor then takes `SaveSlotOptions options` instead of a nullable string. For tests, construct `SaveSlotOptions` with a temp path directly."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\DependencyInjectionTests.cs",
+    "line": 29,
+    "description": "DI_ContainerRegistersServicesAsSingletons only asserts singleton lifetime for IGameStateService, IPlayerRepository, and ITeamRepository — leaving IRandomProvider, IDateTimeProvider, ISaveGameService, and ISaveSlotService unverified. If any of these were accidentally registered with the wrong lifetime in future, no test would catch it.",
+    "severity": "Low",
+    "suggestedFix": "Add singleton lifetime assertions for all 7 registered services: resolve each interface twice and assert `Should().BeSameAs()` for IRandomProvider, IDateTimeProvider, ISaveGameService, and ISaveSlotService as well."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 44,
+    "description": "TeamSpirit and Confidence are documented as 0.0–10.0 and CoachLevel as 1–8, but all properties are plain auto-properties with no range enforcement. Any caller can silently set `CoachLevel = 0` or `TeamSpirit = 99.9` and the model will accept it without complaint. Since game logic depends on these ranges (match formulas, etc.), invalid values will silently corrupt results.",
+    "severity": "Low",
+    "suggestedFix": "Add guard clauses in property setters or a `Validate()` method that throws `ArgumentOutOfRangeException` for out-of-range values. Alternatively, document clearly in code comments that validation is the responsibility of the service layer, and add service-layer guards. The current approach leaves validation entirely implicit."
+  }
+]

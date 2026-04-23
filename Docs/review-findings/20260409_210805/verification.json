@@ -1,0 +1,282 @@
+[
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 118,
+    "description": "Test name 'Id_CanBeSetToSpecificGuid' has only two segments (Property_ExpectedResult). Missing the Scenario segment. Required format: MethodName_Scenario_ExpectedResult.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Id_WhenSetViaObjectInitializer_RetainsSpecificGuid'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 127,
+    "description": "Test name 'Id_TwoNewTeams_HaveDifferentIds' - acceptable three-segment name, no issue.",
+    "severity": "Info",
+    "suggestedFix": "No change needed."
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 141,
+    "description": "Test name 'Name_CanBeSetAndRetrieved' has only two segments. Missing the Scenario segment. Required format: MethodName_Scenario_ExpectedResult.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Name_WhenSetViaObjectInitializer_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 149,
+    "description": "Test name 'Name_CanBeUpdatedAfterConstruction' has only two segments (Property_ExpectedResult). Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Name_WhenMutatedPostConstruction_ReflectsNewValue'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 162,
+    "description": "Test name 'IsHumanControlled_CanBeSetToTrue' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'IsHumanControlled_WhenSetToTrue_IsTrue'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 170,
+    "description": "Test name 'IsHumanControlled_CanBeSetToFalse' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'IsHumanControlled_WhenSetToFalse_IsFalse'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 182,
+    "description": "Test name 'Budget_CanBeSetAndRetrieved' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Budget_WhenSetViaObjectInitializer_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 190,
+    "description": "Test name 'Budget_SupportsDecimalPrecision' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Budget_WhenSetWithFractionalValue_RetainsPrecision'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 199,
+    "description": "Test name 'Budget_CanBeSetToLargeValue' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Budget_WhenSetToLargeValue_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 208,
+    "description": "Test name 'Budget_CanBeSetToZero' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Budget_WhenSetToZero_IsZero'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 220,
+    "description": "Test name 'Fans_CanBeSetAndRetrieved' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Fans_WhenSetViaObjectInitializer_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 228,
+    "description": "Test name 'Fans_CanBeSetToLargeValue' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Fans_WhenSetToLargeValue_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 237,
+    "description": "Test name 'FanClubSize_CanBeSetAndRetrieved' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'FanClubSize_WhenSetViaObjectInitializer_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 245,
+    "description": "Test name 'FanClubSize_CanBeSetToLargeValue' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'FanClubSize_WhenSetToLargeValue_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 253,
+    "description": "Test name 'Fans_CanBeSetToZero' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Fans_WhenResetToZero_IsZero'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 262,
+    "description": "Test name 'FanClubSize_CanBeSetToZero' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'FanClubSize_WhenResetToZero_IsZero'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 278,
+    "description": "Test name 'TeamSpirit_AcceptsValidValues' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'TeamSpirit_WhenSetToValidValue_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 302,
+    "description": "Test name 'TeamSpirit_SupportsFractionalValues' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'TeamSpirit_WhenSetToFractionalValue_RetainsPrecision'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 318,
+    "description": "Test name 'Confidence_AcceptsValidValues' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Confidence_WhenSetToValidValue_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 342,
+    "description": "Test name 'Confidence_SupportsFractionalValues' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Confidence_WhenSetToFractionalValue_RetainsPrecision'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 358,
+    "description": "Test name 'CoachType_AcceptsAllValidValues' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'CoachType_WhenSetToValidValue_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 373,
+    "description": "Test name 'CoachLevel_AcceptsValidValues' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'CoachLevel_WhenSetToValidValue_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 371,
+    "description": "Magic number: InlineData(4) is a bare literal mid-range value for CoachLevel (1-8 range). It is not self-documenting.",
+    "severity": "Low",
+    "suggestedFix": "Add 'public const int MidRangeCoachLevel = 4;' to Team class and use Team.MidRangeCoachLevel, OR add an inline comment: [InlineData(4 /* midpoint of 1..8 range */)]"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 402,
+    "description": "Magic number: InlineData(5) is a bare literal mid-range value for AssistantCoachLevel (0-10 range). It is not self-documenting.",
+    "severity": "Low",
+    "suggestedFix": "Add 'public const int MidRangeAssistantCoachLevel = 5;' to Team class and use Team.MidRangeAssistantCoachLevel, OR add an inline comment."
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 404,
+    "description": "Test name 'AssistantCoachLevel_AcceptsValidValues' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'AssistantCoachLevel_WhenSetToValidValue_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 435,
+    "description": "Test name 'DoctorLevel_AcceptsValidValues' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'DoctorLevel_WhenSetToValidValue_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 466,
+    "description": "Test name 'SpokespersonLevel_AcceptsValidValues' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'SpokespersonLevel_WhenSetToValidValue_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 497,
+    "description": "Test name 'FinancialDirectorLevel_AcceptsValidValues' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'FinancialDirectorLevel_WhenSetToValidValue_IsRetained'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 108,
+    "description": "Test name 'GetById_ReturnsTeamWhenExists' has only two segments. Missing the Scenario segment. Required format: MethodName_Scenario_ExpectedResult.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'GetById_WhenTeamExists_ReturnsTeam'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 125,
+    "description": "Test name 'GetById_ReturnsNullWhenNotFound' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'GetById_WhenTeamNotFound_ReturnsNull'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 148,
+    "description": "Test name 'GetById_DoesNotReturnTeamWithDifferentId' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'GetById_WhenIdDoesNotMatch_ReturnsNull'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 177,
+    "description": "Test name 'GetAll_ReturnsAllAddedTeams' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'GetAll_WhenTeamsAdded_ReturnsAllOfThem'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 197,
+    "description": "Test name 'GetAll_ReturnsIReadOnlyList' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'GetAll_WhenCalled_ReturnsIReadOnlyList'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 230,
+    "description": "Test name 'GetAll_ReturnsTeamsWithCorrectFieldValues' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'GetAll_WhenTeamAdded_ReturnsCorrectFieldValues'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 272,
+    "description": "Test name 'Update_ReplacesTeamData' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Update_WhenTeamExists_ReplacesAllData'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 312,
+    "description": "Test name 'Update_PreservesTeamId' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Update_WhenTeamExists_PreservesTeamId'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 359,
+    "description": "Test name 'Update_DoesNotAffectOtherTeams' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Update_WhenOneTeamUpdated_DoesNotAffectOtherTeams'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 462,
+    "description": "Test name 'ConcurrentAdds_DoNotCorruptState' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Add_WhenCalledConcurrently_DoesNotCorruptState'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 481,
+    "description": "Test name 'ConcurrentReadsAndWrites_DoNotThrow' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Repository_WhenReadAndWrittenConcurrently_DoesNotThrow'"
+  },
+  {
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 523,
+    "description": "Test name 'ConcurrentUpdates_DoNotCorruptState' has only two segments. Missing the Scenario segment.",
+    "severity": "Low",
+    "suggestedFix": "Rename to 'Update_WhenCalledConcurrently_DoesNotCorruptState'"
+  }
+]

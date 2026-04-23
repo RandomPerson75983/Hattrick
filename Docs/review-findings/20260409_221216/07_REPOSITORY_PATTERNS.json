@@ -1,0 +1,26 @@
+[
+  {
+    "agent": "07_REPOSITORY_PATTERNS",
+    "file": "Hattrick/Components/Pages/Players.razor",
+    "line": 6,
+    "description": "Blazor component directly injects IPlayerRepository and calls it in OnInitialized. Architecture rules require components to call services only; repositories should be accessed exclusively by services.",
+    "severity": "High",
+    "suggestedFix": "Remove @inject IPlayerRepository PlayerRepository from Players.razor. Create or extend IPlayerService/IPlayerDisplayService with a method like GetTeamPlayers(Guid teamId) that internally calls the repository. The component should only inject service interfaces."
+  },
+  {
+    "agent": "07_REPOSITORY_PATTERNS",
+    "file": "Hattrick/Components/Pages/Players.razor",
+    "line": 105,
+    "description": "Guid.Empty is hardcoded as the teamId argument in GetByTeamId(Guid.Empty). This couples the view to a magic sentinel value and bypasses any team-context resolution that should live in a service.",
+    "severity": "Medium",
+    "suggestedFix": "Move the team ID resolution into a service method. The service should be responsible for knowing which team is active (e.g., via IGameStateService or similar), not the Blazor component."
+  },
+  {
+    "agent": "07_REPOSITORY_PATTERNS",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 15,
+    "description": "GetByTeamId filters players by TeamId inside the repository (.Where(p => p.TeamId == teamId)). The repository guide classifies filtering/domain logic as business logic that should live in a service, not in a repository method.",
+    "severity": "Low",
+    "suggestedFix": "Expose a simple GetAll() method that returns all players as IReadOnlyList<Player>, then let a service layer perform the TeamId filter. Alternatively, keep GetByTeamId but document the design decision if team-scoped access is deemed a data-access concern rather than business logic."
+  }
+]

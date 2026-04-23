@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 59,
+    "description": "Literal `1` used as the default value for CoachLevel represents the minimum allowed coach level — a domain game rule. It should be a named constant so the rule is self-documenting and consistent with any future validation logic.",
+    "severity": "High",
+    "suggestedFix": "Add `public const int MinCoachLevel = 1;` (and `MaxCoachLevel = 8`) to Team.cs as public constants, then change the initializer to `public int CoachLevel { get; set; } = MinCoachLevel;`. Tests referencing the literal boundaries should also reference these constants."
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 464,
+    "description": "Literal `50` used as the loop bound when pre-loading teams in `ConcurrentReadsAndWrites_DoNotThrow`. This is an arbitrary test parameter that should be a named constant for clarity and easy adjustment.",
+    "severity": "Low",
+    "suggestedFix": "Add `const int preloadedTeamCount = 50;` at the top of the test method and use it in the loop: `for (var i = 0; i < preloadedTeamCount; i++)`."
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 374,
+    "description": "Literal `8` used as the max CoachLevel boundary value in `InlineData` and `.Be(8, ...)` assertion. This magic number duplicates the game rule without referencing a named constant; if the max changes, tests silently diverge from the model.",
+    "severity": "Low",
+    "suggestedFix": "If `Team.MaxCoachLevel = 8` is added as a public constant (see Team.cs finding), update the test InlineData and assertion to reference `Team.MaxCoachLevel` instead of the literal `8`."
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 424,
+    "description": "Literal `10` used as the max AssistantCoachLevel boundary value in `InlineData` and `.Be(10, ...)` assertion. Same issue as above — a game-rule boundary with no named constant.",
+    "severity": "Low",
+    "suggestedFix": "Add `public const int MaxAssistantCoachLevel = 10;` to Team.cs and reference it in the test `InlineData` and assertion."
+  },
+  {
+    "agent": "01_MAGIC_NUMBERS",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 453,
+    "description": "Literal `5` used as the max DoctorLevel boundary value. Same pattern — game-rule boundary expressed as a bare literal in both InlineData and assertion.",
+    "severity": "Low",
+    "suggestedFix": "Add `public const int MaxDoctorLevel = 5;` to Team.cs (and similarly for Spokesperson and FinancialDirector) and reference it in tests."
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "ERR-001",
+    "severity": "Medium",
+    "category": "Missing Guard Clauses",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 37,
+    "description": "Add() method has no null guard for the 'player' parameter. Passing null will throw a NullReferenceException on 'player.Id' access, which is confusing and does not clearly indicate the actual problem.",
+    "suggestion": "Add 'ArgumentNullException.ThrowIfNull(player);' at the start of the Add method, before the lock.",
+    "code_snippet": "public void Add(Player player)\n{\n    lock (_lock)\n    {\n        if (_players.ContainsKey(player.Id))"
+  },
+  {
+    "id": "ERR-002",
+    "severity": "Medium",
+    "category": "Missing Guard Clauses",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 50,
+    "description": "Update() method has no null guard for the 'player' parameter. Passing null will throw a NullReferenceException on 'player.Id' access instead of a clear ArgumentNullException.",
+    "suggestion": "Add 'ArgumentNullException.ThrowIfNull(player);' at the start of the Update method, before the lock.",
+    "code_snippet": "public void Update(Player player)\n{\n    lock (_lock)\n    {\n        if (!_players.ContainsKey(player.Id))"
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\ITeamRepository.cs",
+    "line": 8,
+    "description": "ITeamRepository has no Clear or Load method. When loading a saved game, there is no way to populate the in-memory repository from persisted data, meaning all team data is lost on every app restart or game load. The repository pattern used in SaveGameService requires ClearAsync and LoadAsync (or equivalent sync) methods to restore state.",
+    "severity": "Critical",
+    "suggestedFix": "Add void Clear() and void Load(IEnumerable<Team> teams) (or async equivalents) to ITeamRepository and implement in TeamRepository. Clear should empty _teams. Load should repopulate _teams from the provided collection."
+  },
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+    "line": 10,
+    "description": "TeamRepository has no Clear or Load method, making it impossible to restore team state when loading a saved game. The singleton repository will always start empty after app restart, with no mechanism to repopulate it from JSON save data.",
+    "severity": "Critical",
+    "suggestedFix": "Implement void Clear() { lock (_lock) { _teams.Clear(); } } and void Load(IEnumerable<Team> teams) { lock (_lock) { _teams.Clear(); foreach (var t in teams) _teams[t.Id] = t; } } to support save/load round trips."
+  },
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\IPlayerRepository.cs",
+    "line": 8,
+    "description": "IPlayerRepository has no Clear or Load method. Player data cannot be restored from a save file. All 24 Player properties (skills dictionary, form, stamina, experience, injury, cards, wages, etc.) are permanently lost on app restart.",
+    "severity": "Critical",
+    "suggestedFix": "Add void Clear() and void Load(IEnumerable<Player> players) to IPlayerRepository and implement in PlayerRepository, following the same pattern as the TeamRepository fix."
+  },
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 8,
+    "description": "No TeamDto class exists anywhere in the codebase. The Team model is serialized directly via ISaveGameService, which means any future property changes to Team.cs will silently break old saves with no DTO versioning layer. This is also required for proper SaveGameMapper mapping.",
+    "severity": "High",
+    "suggestedFix": "Create a TeamDto class mirroring all 14 Team properties. Create SaveGameMapper.ToDto(Team) and SaveGameMapper.FromDto(TeamDto) methods. Create a SaveGameDataDto aggregate with List<TeamDto> Teams and List<PlayerDto> Players properties."
+  },
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Player.cs",
+    "line": 8,
+    "description": "No PlayerDto class exists. The Player model (24 properties including Skills dictionary with SkillType enum keys) is serialized directly, risking breakage when models evolve. The Dictionary<SkillType, double> Skills property is particularly fragile: System.Text.Json serializes enum-keyed dictionaries as integer keys by default unless JsonStringEnumConverter is applied explicitly, which may not survive round-trip deserialization correctly.",
+    "severity": "High",
+    "suggestedFix": "Create a PlayerDto with all 24 Player properties. Pay special attention to Skills: use Dictionary<string, double> in the DTO and convert SkillType enum to/from string in the mapper. This ensures forward-compatible serialization."
+  },
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Services\\SaveGameService.cs",
+    "line": 17,
+    "description": "SaveGameService uses JsonIgnoreCondition.WhenWritingNull, but ITeamRepository and IPlayerRepository have no load mechanism wired to SaveGameService. There is no SaveGameDataDto, no SaveGameMapper, and no aggregate save/load path that saves both Team and Player collections together. The entire Team and Player persistence layer is missing.",
+    "severity": "Critical",
+    "suggestedFix": "Create a SaveGameDataDto aggregating all persistent state (teams, players, season number, week number, turn number, human player team ID). Create a SaveGameMapper. Update SaveGameService (or create a higher-level orchestrating service) to serialize SaveGameDataDto on save and to call ITeamRepository.Clear()+Load() and IPlayerRepository.Clear()+Load() on game load."
+  },
+  {
+    "agent": "14_SAVE_LOAD",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Services\\GameStateService.cs",
+    "line": 31,
+    "description": "GameStateService.Reset() resets season/week/turn state but is not connected to clearing the Team and Player repositories. When loading a new game or restarting, stale in-memory repository data from a previous session could persist alongside newly loaded data, causing ID conflicts or data inconsistency.",
+    "severity": "High",
+    "suggestedFix": "After implementing Clear() on repositories, ensure that any new-game or load-game flow calls Reset() on GameStateService AND Clear() on ITeamRepository and IPlayerRepository before loading new data."
+  }
+]

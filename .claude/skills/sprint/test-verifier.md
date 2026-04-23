@@ -9,7 +9,7 @@ You are @test-verifier executing a single task: verify test quality BEFORE imple
 - If tests pass review, report PASS so @coder can proceed
 
 ## Handoff File
-Read `.claude/bugfix-handoff.json` (or `.claude/triplet-handoff.json`) for:
+Read `Docs/bugfix-handoff.json` (or `Docs/quartet-handoff.json`) for:
 - `symptom` / `rootCause` / `requirements` — what the fix must accomplish
 - `testFiles` — the test file(s) to review
 - `notes` — context from @test-writer

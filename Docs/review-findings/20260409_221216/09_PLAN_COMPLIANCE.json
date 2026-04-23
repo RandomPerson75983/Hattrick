@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "09_PLAN_COMPLIANCE",
+    "file": "Hattrick/Components/Pages/Players.razor",
+    "line": 105,
+    "description": "Players page loads players via `PlayerRepository.GetByTeamId(Guid.Empty)` instead of using `IGameStateService.HumanPlayerTeamId`. The plan specifies API-first: every service method takes a `teamId` so the system works for any team (human or AI). Using a hardcoded `Guid.Empty` means the page will always show an empty squad unless player data was seeded with that exact ID, and it bypasses the game state entirely.",
+    "severity": "High",
+    "suggestedFix": "Inject `IGameStateService` and use `PlayerRepository.GetByTeamId(GameState.HumanPlayerTeamId ?? Guid.Empty)` — or gate the load on `GameState.IsGameLoaded`."
+  },
+  {
+    "agent": "09_PLAN_COMPLIANCE",
+    "file": "Hattrick/Components/Pages/Players.razor",
+    "line": 35,
+    "description": "Plan Quartet 1 requires each player row to show a 'Player avatar/portrait' and a 'Nationality flag'. Neither element is present in the rendered markup — there is no image, icon, or placeholder for either. The plan explicitly lists these as required row columns.",
+    "severity": "Medium",
+    "suggestedFix": "Add avatar/portrait placeholder (img or icon element) and nationality flag element (e.g. a flag icon or country code span) to each player row, matching the Hattrick Players Page screenshot reference."
+  },
+  {
+    "agent": "09_PLAN_COMPLIANCE",
+    "file": "Hattrick/Components/Pages/Players.razor",
+    "line": 54,
+    "description": "Plan Quartet 1 requires showing 'Last rating date' per player row. This column is completely absent from both the header and player row markup — there is no `last-rating` cell or any date display.",
+    "severity": "Medium",
+    "suggestedFix": "Add a 'Last rated' column to the skill table header and a corresponding cell in each player row, displaying the date the player was last rated."
+  },
+  {
+    "agent": "09_PLAN_COMPLIANCE",
+    "file": "Hattrick/Components/Pages/Players.razor",
+    "line": 103,
+    "description": "The `OnInitialized` lifecycle method is synchronous. Repository reads are currently synchronous, but CLAUDE.md states 'Never .Result or .Wait() on async methods. Always await.' If/when the repository is made async (e.g., for save/load), this synchronous pattern will break. Best practice is `OnInitializedAsync` returning a Task.",
+    "severity": "Low",
+    "suggestedFix": "Change `protected override void OnInitialized()` to `protected override async Task OnInitializedAsync()` and await any future async calls."
+  },
+  {
+    "agent": "09_PLAN_COMPLIANCE",
+    "file": "Hattrick.Tests/Components/PlayersPageTests.cs",
+    "line": 1,
+    "description": "The Players page tests (`PlayersPageTests` and `PlayersSidebarTests`) do not use bUnit to render the actual Blazor component. They construct expected HTML strings manually and assert against that static markup, meaning the tests never exercise the real `Players.razor` component, its DI wiring, or its data-loading logic. A bug in the component (wrong CSS class, missing field, broken data binding) would not be caught. The plan requires bUnit tests for new pages.",
+    "severity": "High",
+    "suggestedFix": "Replace or supplement the string-construction tests with proper bUnit v2 tests: use `BunitContext`, register required services (`IPlayerRepository`, `IPlayerDisplayService`, `IPlayerStatsService`), call `ctx.Render<Players>()`, and assert against the rendered DOM using `FindAll`, `Find`, and text-content assertions."
+  }
+]

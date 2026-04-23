@@ -1,0 +1,106 @@
+[
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 37,
+    "description": "Add() does not guard against a null player argument. Passing null will throw a NullReferenceException on `player.Id` instead of a clear ArgumentNullException. The same applies to Update().",
+    "severity": "High",
+    "suggestedFix": "Add `ArgumentNullException.ThrowIfNull(player);` as the first line in both Add() and Update() methods."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 28,
+    "description": "GetById() returns a direct mutable reference to the stored Player object. Callers can mutate repository state without going through Update(), bypassing any future validation or thread-safety guarantees. The same issue exists in GetByTeamId() which returns references to the same mutable objects.",
+    "severity": "Medium",
+    "suggestedFix": "Consider returning cloned/copied Player objects from GetById() and GetByTeamId() so the caller cannot silently corrupt internal repository state. Alternatively, document this as intentional (live reference pattern) and ensure all consumers go through Update()."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 29,
+    "description": "No validation on Age property. The comment says minimum is 17, but nothing prevents setting Age to 0, -1, or any negative value. Default is 0, which is already outside the documented valid range.",
+    "severity": "Medium",
+    "suggestedFix": "Either add a property setter guard that clamps or throws on invalid ages, or add validation at the service layer and document that the model is intentionally a plain data container. Consider making default Age = 17."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 33,
+    "description": "No validation on AgeDays property. Comment says 0-111, but nothing prevents values like -1 or 999. No guard against out-of-range values.",
+    "severity": "Medium",
+    "suggestedFix": "Add validation (at model or service layer) to enforce 0 <= AgeDays <= 111."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 49,
+    "description": "Form property documented as 1-8 but defaults to 0 (outside valid range) and has no range validation. A newly constructed Player has Form=0, which is invalid per the documented rules.",
+    "severity": "Medium",
+    "suggestedFix": "Set default to 1 (or a reasonable starting value) and/or add validation to enforce 1 <= Form <= 8."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 54,
+    "description": "Stamina property documented as 1-9 but defaults to 0 (outside valid range). Same issue as Form - default is already invalid.",
+    "severity": "Medium",
+    "suggestedFix": "Set default to 1 and/or add validation to enforce 1 <= Stamina <= 9."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 59,
+    "description": "Experience property documented as 1-20 but defaults to 0 (outside valid range).",
+    "severity": "Medium",
+    "suggestedFix": "Set default to 1 and/or add validation to enforce 1 <= Experience <= 20."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 109,
+    "description": "Leadership property documented as 1-8 but defaults to 0 (outside valid range).",
+    "severity": "Medium",
+    "suggestedFix": "Set default to 1 and/or add validation to enforce 1 <= Leadership <= 8."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 89,
+    "description": "YellowCards property documented as 0-2 but nothing prevents values like 3 or -1. Similarly, InjuryWeeks has no guard against negative values.",
+    "severity": "Low",
+    "suggestedFix": "Add validation at the service layer or property setter to enforce 0 <= YellowCards <= 2 and InjuryWeeks >= 0."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 64,
+    "description": "Loyalty documented as 0.0-1.0 but no validation prevents values like -0.5 or 2.0 from being set.",
+    "severity": "Low",
+    "suggestedFix": "Add validation at the service layer to enforce 0.0 <= Loyalty <= 1.0."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Core/Models/Player.cs",
+    "line": 39,
+    "description": "Skills dictionary property has a public setter that allows replacement with null (e.g., `player.Skills = null`), which would cause NullReferenceException in any code that accesses skills without null-checking.",
+    "severity": "Medium",
+    "suggestedFix": "Make the Skills setter private or init-only, or add a null guard in the setter. Alternatively, use a backing field with a null-coalescing guard."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Tests/Models/PlayerModelTests.cs",
+    "line": 74,
+    "description": "Test Constructor_Default_NumericPropertiesAreZero asserts Form, Stamina, Experience, Leadership all default to 0, but the model documents these as having minimum values of 1. The test codifies an invalid default state without noting the inconsistency.",
+    "severity": "Low",
+    "suggestedFix": "Either update the model defaults to match documented minimums (Form=1, Stamina=1, etc.) and update these tests accordingly, or document that 0 means 'uninitialized' and is valid pre-assignment."
+  },
+  {
+    "agent": "11_EDGE_CASES",
+    "file": "Hattrick.Tests/Repositories/PlayerRepositoryTests.cs",
+    "line": 460,
+    "description": "Test Remove_FromOneTeam_DoesNotAffectOtherTeam uses .First() on the result of GetByTeamId() without guarding against an empty collection. If the test setup fails to add the player, this will throw InvalidOperationException instead of a clear assertion failure.",
+    "severity": "Low",
+    "suggestedFix": "Use .Should().ContainSingle().Which.Name.Should().Be(\"Team B Player\") instead of .First().Name to get a clear assertion failure message."
+  }
+]

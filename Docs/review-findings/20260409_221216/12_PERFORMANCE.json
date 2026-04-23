@@ -1,0 +1,26 @@
+[
+  {
+    "agent": "12_PERFORMANCE",
+    "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+    "line": 16,
+    "description": "GetTeamTotals iterates the player list 7 separate times (Sum x3, Select+Distinct+Count, Count x2, Sum) instead of a single pass. At scale (e.g. 40 players per team, called frequently), each LINQ operator materialises a full enumeration independently.",
+    "severity": "Medium",
+    "suggestedFix": "Collapse the 7 LINQ passes into a single foreach loop that accumulates TotalTSI, TotalWage, TotalEstimatedValue, nationality set, InjuredCount, RedCardCount, and YellowCardCount in one pass. Similarly collapse GetTeamAverages into one pass."
+  },
+  {
+    "agent": "12_PERFORMANCE",
+    "file": "Hattrick.Core/Services/PlayerStatsService.cs",
+    "line": 31,
+    "description": "GetTeamAverages iterates the player list 7 separate times (seven individual .Average() calls). Combined with GetTeamTotals, the Players page triggers 14 full enumerations of the roster on every load.",
+    "severity": "Medium",
+    "suggestedFix": "Accumulate all running sums (TSI, wage, estimatedValue, age, form, stamina, experience) in a single foreach loop, then divide by players.Count at the end. This reduces 7 passes to 1."
+  },
+  {
+    "agent": "12_PERFORMANCE",
+    "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+    "line": 28,
+    "description": "GetSkillColorClass calls GetSkillFloor(skill) internally, and GetSkillBarPercent also independently computes (skill % 1). In the Players razor both methods are called per skill cell (7 skills x N players), so Math.Floor is evaluated twice per cell. Minor but avoidable.",
+    "severity": "Low",
+    "suggestedFix": "Expose a combined method (or a SkillDisplay value object) that computes floor and percent in one call, or accept the precomputed floor as a parameter to GetSkillColorClass to avoid the double Math.Floor."
+  }
+]

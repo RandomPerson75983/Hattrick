@@ -1,0 +1,26 @@
+[
+  {
+    "agent": "27_API_SURFACE",
+    "file": "Hattrick/Components/Pages/Players.razor",
+    "line": 105,
+    "description": "Players.razor calls PlayerRepository.GetByTeamId(Guid.Empty) with a hardcoded empty GUID instead of using IGameStateService.HumanPlayerTeamId. IGameStateService is registered in DI and exposes the human player's actual team ID. This means the page will always load zero players once a real game is running, since no team will have Guid.Empty as its ID.",
+    "severity": "High",
+    "suggestedFix": "Inject IGameStateService into the component and replace Guid.Empty with _gameStateService.HumanPlayerTeamId ?? Guid.Empty, or assert that a game is loaded and use the non-null value."
+  },
+  {
+    "agent": "27_API_SURFACE",
+    "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+    "line": 29,
+    "description": "GetSkillBarPercent uses Math.Round((skill % 1) * 100) but the IPlayerDisplayService XML contract explicitly states 'Truncates; does not round'. For a skill of e.g. 7.735, Math.Round gives 74 while (int)((skill % 1) * 100) gives 73. The implementation violates its own documented contract, which also governs CSS bar widths displayed to the user.",
+    "severity": "Medium",
+    "suggestedFix": "Replace Math.Round with a cast: (int)((skill % 1) * SkillBarPercentMultiplier) to match the documented truncation behaviour, or update the interface XML doc to say 'Rounds' if rounding is intentional."
+  },
+  {
+    "agent": "27_API_SURFACE",
+    "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+    "line": 14,
+    "description": "The constant SkillGoodFloor = 7 is defined but never referenced in GetSkillColorClass. The switch arm '<= SkillGoodCeiling' (8) silently covers both 7 and 8 without using SkillGoodFloor. The unused constant is misleading — a future maintainer may assume it is enforced somewhere when it is not.",
+    "severity": "Low",
+    "suggestedFix": "Either remove SkillGoodFloor, or restructure the switch arm to explicitly reference it: use a guard like 'when floor >= SkillGoodFloor && floor <= SkillGoodCeiling' or a two-value pattern to make the range explicit."
+  }
+]

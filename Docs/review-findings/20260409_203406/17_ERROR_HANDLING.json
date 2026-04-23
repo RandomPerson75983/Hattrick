@@ -1,0 +1,18 @@
+[
+  {
+    "agent": "17_ERROR_HANDLING",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+    "line": 42,
+    "description": "Add() throws ArgumentException for a duplicate ID, but InvalidOperationException is more semantically correct for a 'duplicate already exists' condition. ArgumentException signals that the argument value itself is inherently invalid, whereas a duplicate-key collision is an invalid operation against the repository's current state. The BCL Dictionary.Add does throw ArgumentException for duplicates, but repository-layer code should use the more expressive type.",
+    "severity": "Low",
+    "suggestedFix": "Replace `throw new ArgumentException(...)` with `throw new InvalidOperationException($\"A team with ID '{team.Id}' already exists in the repository.\");` and update the corresponding test assertion from `act.Should().Throw<ArgumentException>()` to `act.Should().Throw<InvalidOperationException>()`."
+  },
+  {
+    "agent": "17_ERROR_HANDLING",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+    "line": 16,
+    "description": "Inconsistent error propagation: GetById() returns null when a team is not found, while Update() throws KeyNotFoundException for the same condition. Callers must handle two different 'not found' contracts from the same repository. The project convention (per the guide) should be uniform — either all not-found cases return null or all throw. Because Update() already throws, GetById() should also throw (with an overload or separate method), or the inconsistency should be documented in the interface.",
+    "severity": "Low",
+    "suggestedFix": "Decide on a single convention. If returning null for GetById is intentional (nullable return type signals optional lookup), document it clearly on the interface and ensure callers null-check before use. If the convention is throw-on-not-found, change GetById to throw KeyNotFoundException and update its return type to non-nullable Team."
+  }
+]

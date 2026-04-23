@@ -1,0 +1,34 @@
+[
+  {
+    "agent": "19_DEAD_CODE",
+    "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+    "line": 1,
+    "description": "Redundant 'using FluentAssertions;' -- already globally imported via global usings in Hattrick.Tests.csproj",
+    "severity": "Medium",
+    "suggestedFix": "Remove line 1"
+  },
+  {
+    "agent": "19_DEAD_CODE",
+    "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+    "line": 3,
+    "description": "Redundant 'using Xunit;' -- already globally imported via global usings in Hattrick.Tests.csproj",
+    "severity": "Medium",
+    "suggestedFix": "Remove line 3"
+  },
+  {
+    "agent": "19_DEAD_CODE",
+    "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+    "line": 1,
+    "description": "Redundant 'using FluentAssertions;' -- already globally imported via global usings in Hattrick.Tests.csproj",
+    "severity": "Medium",
+    "suggestedFix": "Remove line 1"
+  },
+  {
+    "agent": "19_DEAD_CODE",
+    "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+    "line": 3,
+    "description": "Redundant 'using Xunit;' -- already globally imported via global usings in Hattrick.Tests.csproj",
+    "severity": "Medium",
+    "suggestedFix": "Remove line 3"
+  }
+]

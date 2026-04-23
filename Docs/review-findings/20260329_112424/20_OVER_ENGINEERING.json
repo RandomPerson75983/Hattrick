@@ -1,0 +1,130 @@
+[
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+    "line": 16,
+    "description": "Redundant individual-member existence tests. 6+5 individual Has*Member tests for Position and IndividualOrder are fully subsumed by AllMembersAreExpected tests.",
+    "severity": "Medium",
+    "suggestedFix": "Remove individual Has*Member tests; keep AllMembersAreExpected."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+    "line": 26,
+    "description": "Redundant individual-member tests. 10 Formation + 7 Tactic + 3 TeamAttitude individual Has*Member tests subsumed by AllMembersAreExpected.",
+    "severity": "Medium",
+    "suggestedFix": "Remove individual Has*Member tests; keep AllMembersAreExpected."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 278,
+    "description": "19 individual numeric value tests (one per enum member) should be 3 comprehensive tests matching the pattern used in other test files.",
+    "severity": "Medium",
+    "suggestedFix": "Consolidate into 3 comprehensive value tests."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 14,
+    "description": "8+6+3 individual Has*Member tests subsumed by MembersHaveCorrectNames tests.",
+    "severity": "Medium",
+    "suggestedFix": "Remove individual Has*Member tests."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 428,
+    "description": "Specialty_And_PlayerPersonality_CanBeUsedTogether and All_Enums_Can_Be_Converted_To_String_And_Back test CLR behavior, not application logic.",
+    "severity": "Medium",
+    "suggestedFix": "Remove tests that only verify CLR guarantees."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+    "line": 512,
+    "description": "Formation_And_Tactic_AndTeamAttitude_CanCoexist assigns enums and asserts identity -- impossible to fail.",
+    "severity": "Medium",
+    "suggestedFix": "Remove this trivial test."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 305,
+    "description": "AllSkillTypesAndAllSkillLevels_CanBeCreated iterates 160 combinations but SkillType dimension is irrelevant. SkillTypeAndLevel_CanBeUsedTogether tests nothing meaningful.",
+    "severity": "Medium",
+    "suggestedFix": "Remove or simplify these tests."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 14,
+    "description": "8 individual SkillType_Has*Member tests subsumed by SkillType_MembersHaveCorrectNames.",
+    "severity": "Medium",
+    "suggestedFix": "Remove individual Has*Member tests."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 94,
+    "description": "3 AllMembers_CanBeEnumerated tests duplicate MembersHaveCorrectNames.",
+    "severity": "Low",
+    "suggestedFix": "Remove redundant enumeration tests."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+    "line": 228,
+    "description": "4 tests for CLR enum ToString/cast behavior.",
+    "severity": "Low",
+    "suggestedFix": "Remove tests that only verify CLR guarantees."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+    "line": 176,
+    "description": "6 tests for CLR enum ToString/cast behavior.",
+    "severity": "Low",
+    "suggestedFix": "Remove tests that only verify CLR guarantees."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 401,
+    "description": "3 tests for Enum.Parse throwing on invalid input (CLR guarantee).",
+    "severity": "Low",
+    "suggestedFix": "Remove tests for CLR behavior."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 487,
+    "description": "3 distinctness tests using HashSet that cannot catch the actual concern (duplicate int values).",
+    "severity": "Low",
+    "suggestedFix": "Replace with int-value uniqueness assertions if needed."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 112,
+    "description": "3 individual SkillLevel_Level*Exists tests subsumed by comprehensive tests.",
+    "severity": "Low",
+    "suggestedFix": "Remove redundant individual tests."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 264,
+    "description": "3 display name tests subsumed by GetDisplayName_Progression_IsMonotonic.",
+    "severity": "Low",
+    "suggestedFix": "Remove redundant display name tests."
+  },
+  {
+    "agent": "20_OVER_ENGINEERING",
+    "file": "Hattrick.Core/Models/SkillLevel.cs",
+    "line": 1,
+    "description": "Enum with 20 members named Level1-Level20 where an int with range validation would be simpler, but may be mandated by the implementation plan.",
+    "severity": "Low",
+    "suggestedFix": "Consider if plan mandates enum; if not, a range-validated int may be simpler."
+  }
+]

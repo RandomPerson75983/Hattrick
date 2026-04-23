@@ -1,0 +1,10 @@
+[
+  {
+    "agent": "13_LINQ_GOTCHAS",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 418,
+    "description": "Deferred execution: `removeMethods` is an unevaluated `IEnumerable<MethodInfo>` returned by `GetMethods().Where(...)` and is never materialized before being passed to `.Should().BeEmpty()`. Although the data source (type metadata) is immutable and safe in practice, the query is not executed until FluentAssertions enumerates it during the assertion. This is a deferred-execution pattern that should be materialized explicitly for clarity and correctness.",
+    "severity": "Low",
+    "suggestedFix": "Materialize the query immediately: `var removeMethods = interfaceType.GetMethods().Where(m => m.Name.Equals(\"Remove\", StringComparison.Ordinal)).ToList();`"
+  }
+]

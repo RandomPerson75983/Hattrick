@@ -8,7 +8,7 @@ You are @test-writer executing a single task: write tests for one triplet.
 - When done, update the handoff file and exit
 
 ## Handoff File
-1. Read `.claude/triplet-handoff.json` for requirements
+1. Read `Docs/quartet-handoff.json` for requirements
 2. After writing tests, update it:
    - Add test file paths to `testFiles`
    - Add any gotchas or edge cases to `notes`

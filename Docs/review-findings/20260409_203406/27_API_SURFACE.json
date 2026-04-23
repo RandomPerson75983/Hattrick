@@ -1,0 +1,18 @@
+[
+  {
+    "agent": "27_API_SURFACE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Models\\Team.cs",
+    "line": 13,
+    "description": "Team.Id has a public setter (`public Guid Id { get; set; }`), making the entity's identity mutable after construction. The TeamRepository keys its internal dictionary on `team.Id` at the time of `Add`; if a caller mutates `team.Id` afterward, the stored key and the object's own Id diverge, making `GetById(team.Id)` return null for the modified team. A repository contract that depends on stable identity requires the Id to be init-only or read-only.",
+    "severity": "High",
+    "suggestedFix": "Change the property to `public Guid Id { get; init; } = Guid.NewGuid();` so the Id can only be set at object-initializer time and is immutable thereafter."
+  },
+  {
+    "agent": "27_API_SURFACE",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Core\\Repositories\\TeamRepository.cs",
+    "line": 57,
+    "description": "`Update` checks `_teams.ContainsKey(team.Id)` and then sets `_teams[team.Id] = team` as two separate dictionary operations within the same lock. This is safe under the lock, but using `_teams.ContainsKey` + assignment instead of a single `TryGetValue` or a pattern that makes the intent explicit is inconsistent with the `Add` method which correctly uses `TryAdd`. Minor consistency/clarity issue.",
+    "severity": "Low",
+    "suggestedFix": "Refactor to: `if (!_teams.ContainsKey(team.Id)) throw new KeyNotFoundException(...); _teams[team.Id] = team;` is fine as-is, but optionally use a guard-and-assign pattern matching the style of `Add` for consistency."
+  }
+]

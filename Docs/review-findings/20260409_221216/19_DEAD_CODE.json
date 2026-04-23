@@ -1,0 +1,18 @@
+[
+  {
+    "agent": "19_DEAD_CODE",
+    "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+    "line": 13,
+    "description": "Private constant `SkillGoodFloor = 7` is defined but never referenced anywhere in the file or codebase. The switch expression in `GetSkillColorClass` uses `<= SkillGoodCeiling` (line 41) to cover the good-skill range, making this constant dead code.",
+    "severity": "Medium",
+    "suggestedFix": "Remove the unused constant: `private const int SkillGoodFloor = 7;`"
+  },
+  {
+    "agent": "19_DEAD_CODE",
+    "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+    "line": 17,
+    "description": "Private constant `SkillOutstandingFloor = 11` is defined but never referenced anywhere in the file or codebase. The switch expression in `GetSkillColorClass` uses the `_` discard arm (line 43) to handle the outstanding-skill case, making this constant dead code.",
+    "severity": "Medium",
+    "suggestedFix": "Remove the unused constant: `private const int SkillOutstandingFloor = 11;`"
+  }
+]

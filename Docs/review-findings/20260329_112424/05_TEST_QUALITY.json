@@ -1,0 +1,98 @@
+[
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 38,
+    "description": "Missing test coverage for GetDisplayName with invalid SkillLevel values (e.g., (SkillLevel)0, (SkillLevel)99). The dictionary lookup will throw KeyNotFoundException for any value outside 1-20, but no test verifies this edge case behavior.",
+    "severity": "High",
+    "suggestedFix": "Add a test like GetDisplayName_InvalidSkillLevel_ThrowsKeyNotFoundException that verifies calling GetDisplayName with an out-of-range SkillLevel throws the expected exception. Alternatively, add a guard clause to GetDisplayName and test for it."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 289,
+    "description": "Test name has a typo: GetDisplayName_MidpointLevel_ReturnsMediacore should be GetDisplayName_MidpointLevel_ReturnsMediocre. 'Mediacore' is misspelled.",
+    "severity": "Medium",
+    "suggestedFix": "Rename the test method to fix the typo."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 228,
+    "description": "Test name GetDisplayName_Progression_IsMonotonic is misleading. The Hattrick skill scale is NOT monotonically increasing in perceived quality. The test actually verifies exact display name values, not monotonicity.",
+    "severity": "Medium",
+    "suggestedFix": "Rename to GetDisplayName_AllLevels_MatchExpectedProgression to accurately describe the assertion."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 265,
+    "description": "Test GetDisplayName_LowerLevels_SuggestWeakness uses vague assertions (checking that level 1 contains 'non' and level 3 does not contain 'excellent'). Duplicates coverage already provided by the full progression test at line 228.",
+    "severity": "Medium",
+    "suggestedFix": "Remove this test since the full progression test already verifies exact display names for all 20 levels."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 277,
+    "description": "Test GetDisplayName_UpperLevels_SuggestExcellence uses vague assertions. Duplicated by the full progression test at line 228.",
+    "severity": "Medium",
+    "suggestedFix": "Remove this test."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 447,
+    "description": "Test naming convention violation: All_Enums_Can_Be_Converted_To_String_And_Back uses underscores within word boundaries instead of PascalCase segments per MethodName_Scenario_ExpectedResult.",
+    "severity": "Medium",
+    "suggestedFix": "Rename to AllEnums_ConvertedToStringAndParsedBack_RoundTripSuccessfully."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 428,
+    "description": "Test naming convention violation: Specialty_And_PlayerPersonality_CanBeUsedTogether uses underscores within word boundaries.",
+    "severity": "Medium",
+    "suggestedFix": "Rename to SpecialtyAndPlayerPersonality_UsedTogether_BothRetainValues."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+    "line": 512,
+    "description": "Test naming convention violation: Formation_And_Tactic_AndTeamAttitude_CanCoexist has inconsistent underscore usage.",
+    "severity": "Medium",
+    "suggestedFix": "Rename to FormationTacticAndTeamAttitude_UsedTogether_AllRetainValues."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+    "line": 13,
+    "description": "Excessive test duplication: 12 individual HasXMember tests are entirely redundant with the AllMembersAreExpected tests which already verify member existence, names, and count.",
+    "severity": "Low",
+    "suggestedFix": "Remove individual HasXMember tests; keep AllMembersAreExpected and value/integration tests."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+    "line": 27,
+    "description": "Excessive test duplication: 20 individual member existence tests are redundant with AllMembersAreExpected tests for Formation, Tactic, and TeamAttitude.",
+    "severity": "Low",
+    "suggestedFix": "Remove individual HasXMember tests."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 14,
+    "description": "Excessive test duplication: Individual HasXMember tests for SkillType and SkillLevel spot-checks are redundant with their comprehensive counterparts.",
+    "severity": "Low",
+    "suggestedFix": "Remove individual member tests."
+  },
+  {
+    "agent": "05_TEST_QUALITY",
+    "file": "Hattrick.Tests/Models/SpecialtyPersonalityEnumTests.cs",
+    "line": 14,
+    "description": "Excessive test duplication: Individual member existence tests and AllMembers_CanBeEnumerated tests for Specialty, PlayerPersonality, and CoachType duplicate coverage from MembersHaveCorrectNames.",
+    "severity": "Low",
+    "suggestedFix": "Remove individual HasXMember and CanBeEnumerated tests."
+  }
+]

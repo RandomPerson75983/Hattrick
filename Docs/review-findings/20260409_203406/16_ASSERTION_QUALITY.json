@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\DependencyInjectionTests.cs",
+    "line": 19,
+    "description": "DI_ContainerRegistersAllInfrastructureServices contains zero explicit FluentAssertions. It calls GetRequiredService for each service but relies entirely on exception-throwing as the implicit assertion mechanism. There is no .Should() call anywhere in the test body. Per assertion quality standards, every test should have at least one explicit assertion rather than relying on side-effect exceptions.",
+    "severity": "Medium",
+    "suggestedFix": "Add explicit assertions: e.g. `container.GetRequiredService<IRandomProvider>().Should().NotBeNull();` for each resolved service, or restructure as a Theory so each registration is individually verified with an explicit assertion."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\DependencyInjectionTests.cs",
+    "line": 59,
+    "description": "DI_InterfacesResolveToCorrectConcreteTypes uses .BeOfType<T>() as the sole assertion for each resolved service, with no verification of any property or state on the resolved object. The agent spec explicitly lists '.BeOfType<T>() without verifying property values' as a red flag. While the intent is purely type-checking, at minimum confirming the instance is not null before asserting type would improve robustness.",
+    "severity": "Low",
+    "suggestedFix": "Chain a follow-up assertion or use .BeAssignableTo<T>() followed by property verification. At minimum: `var provider = container.GetRequiredService<IRandomProvider>(); provider.Should().NotBeNull().And.BeOfType<RandomProvider>();`"
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 453,
+    "description": "ConcurrentAdds_DoNotCorruptState asserts only `.HaveCount(teamCount)` after 200 concurrent adds. Per the agent spec, `.HaveCount(x)` without `.Contain()` or `.BeEquivalentTo()` is a red flag — the assertion does not verify that all 200 distinct teams are present, only that the count is correct. A race-condition bug that duplicates some teams and loses others could still produce a count of 200 while corrupting identity.",
+    "severity": "Medium",
+    "suggestedFix": "Also assert that the returned teams have 200 distinct Ids: `_sut.GetAll().Select(t => t.Id).Distinct().Should().HaveCount(teamCount, \"all concurrent adds must produce unique, distinct teams\");`"
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Repositories\\TeamRepositoryTests.cs",
+    "line": 519,
+    "description": "ConcurrentUpdates_DoNotCorruptState verifies the surviving team name only with `.StartWith(\"Updated by thread \")`. This is a weak assertion — any partial write, corruption, or even the original name starting with that prefix would pass. The budget and fans fields updated by each thread are not verified at all after the concurrent run, missing a chance to confirm no partial/torn writes occurred.",
+    "severity": "Medium",
+    "suggestedFix": "After the concurrent updates complete, verify the full state of the retrieved team is internally consistent: check that Name, Budget, and Fans all correspond to the same thread's update (e.g., extract the thread index from Name and confirm Budget and Fans match). At minimum add: `result!.Budget.Should().BeGreaterThanOrEqualTo(100_000m, \"budget must reflect a complete update\");`"
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "C:\\Projects\\hattrick\\Hattrick.Tests\\Models\\TeamModelTests.cs",
+    "line": 287,
+    "description": "TeamSpirit boundary tests (TeamSpirit_BoundaryMinimum_IsZero, TeamSpirit_BoundaryMaximum_IsTen) and Confidence boundary tests only verify that valid boundary values round-trip correctly. They do not test that values outside the documented range (0.0-10.0) are rejected or clamped. The test names imply boundary enforcement testing but only confirm storage of valid values, giving false confidence that the boundary is enforced. The same applies to CoachLevel (1-8), AssistantCoachLevel (0-10), DoctorLevel (0-5), SpokespersonLevel (0-5), and FinancialDirectorLevel (0-5).",
+    "severity": "Medium",
+    "suggestedFix": "Either: (a) add tests for invalid values (e.g., TeamSpirit = -1.0, TeamSpirit = 11.0) that verify the model throws or clamps, OR (b) rename the boundary tests to `TeamSpirit_CanStoreMinimumValue` / `TeamSpirit_CanStoreMaximumValue` to accurately reflect that they only confirm storage, not enforcement — and add a note that enforcement is the responsibility of the service layer."
+  }
+]

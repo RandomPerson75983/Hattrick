@@ -1,0 +1,26 @@
+[
+  {
+    "agent": "12_PERFORMANCE",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 19,
+    "description": "GetByTeamId scans all players with .Where(p => p.TeamId == teamId) on every call. At scale (30 teams x 40 players = 1200 players), this is O(n) per call. If called in a loop for all teams (e.g., league processing, wage calculations), this becomes O(n*m). A secondary Dictionary<Guid, List<Player>> index keyed by TeamId would make lookups O(1).",
+    "severity": "Medium",
+    "suggestedFix": "Add a secondary index: private readonly Dictionary<Guid, List<Player>> _playersByTeam = new(); Maintain it in Add/Update/Remove. GetByTeamId then returns _playersByTeam.GetValueOrDefault(teamId, []).AsReadOnly() in O(1)."
+  },
+  {
+    "agent": "12_PERFORMANCE",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 40,
+    "description": "Add method does two dictionary operations: ContainsKey check followed by indexer set. Dictionary.TryAdd performs both in a single lookup.",
+    "severity": "Low",
+    "suggestedFix": "Replace the ContainsKey check + indexer set with: if (!_players.TryAdd(player.Id, player)) throw new ArgumentException(...);"
+  },
+  {
+    "agent": "12_PERFORMANCE",
+    "file": "Hattrick.Core/Repositories/PlayerRepository.cs",
+    "line": 55,
+    "description": "Update method does two dictionary operations: ContainsKey check followed by indexer set. This performs two hash lookups when one would suffice.",
+    "severity": "Low",
+    "suggestedFix": "Use _players.ContainsKey to check existence, then set. Alternatively, check with TryGetValue if the existing value is needed, otherwise the current pattern is acceptable for clarity at this scale."
+  }
+]

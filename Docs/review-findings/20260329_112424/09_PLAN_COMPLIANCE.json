@@ -1,0 +1,50 @@
+[
+  {
+    "agent": "09_PLAN_COMPLIANCE",
+    "file": "Hattrick.Core/Models/SkillLevelDisplayNames.cs",
+    "line": 9,
+    "description": "17 of 20 display names do not match plan's official Hattrick terminology. Uses generic English words instead of official names (e.g., 'very poor' instead of 'disastrous', 'mediocre' instead of 'formidable').",
+    "severity": "Critical",
+    "suggestedFix": "Replace all display names with official Hattrick terminology from PHASE_1_PLAN.md: non-existent, disastrous, wretched, poor, weak, inadequate, passable, solid, excellent, formidable, outstanding, brilliant, magnificent, world class, supernatural, titanic, extra-terrestrial, mythical, magical, utopian (divine)."
+  },
+  {
+    "agent": "09_PLAN_COMPLIANCE",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 229,
+    "description": "GetDisplayName_Progression_IsMonotonic test encodes wrong display names that match the buggy implementation rather than the plan.",
+    "severity": "Critical",
+    "suggestedFix": "Update expectedProgression array to use official Hattrick terminology."
+  },
+  {
+    "agent": "09_PLAN_COMPLIANCE",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 170,
+    "description": "Test asserts Level 2 = 'very poor' but plan says 'disastrous'.",
+    "severity": "Critical",
+    "suggestedFix": "Change expected value to 'disastrous'."
+  },
+  {
+    "agent": "09_PLAN_COMPLIANCE",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 179,
+    "description": "Test asserts Level 10 = 'mediocre' but plan says 'formidable'.",
+    "severity": "Critical",
+    "suggestedFix": "Change expected value to 'formidable'."
+  },
+  {
+    "agent": "09_PLAN_COMPLIANCE",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 289,
+    "description": "Test name has typo ('Mediacore') and asserts wrong Level 10 name.",
+    "severity": "High",
+    "suggestedFix": "Fix typo and update expected value to 'formidable'."
+  },
+  {
+    "agent": "09_PLAN_COMPLIANCE",
+    "file": "Hattrick.Core/Models/SkillLevel.cs",
+    "line": 5,
+    "description": "Comment incorrectly calls Level 10 'mediocre' and 'pivot/midpoint of the scale'.",
+    "severity": "Medium",
+    "suggestedFix": "Update comment to reflect official terminology."
+  }
+]

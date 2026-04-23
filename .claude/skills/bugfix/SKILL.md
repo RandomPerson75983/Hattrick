@@ -4,7 +4,7 @@ Diagnose bugs properly, then fix using sequential TDD agents with handoff file.
 
 ## State Files
 
-- `.claude/bugfix-handoff.json` — Context passed between agents (deleted after fix)
+- `Docs/bugfix-handoff.json` — Context passed between agents (deleted after fix)
 
 ---
 
@@ -30,7 +30,7 @@ Diagnose bugs properly, then fix using sequential TDD agents with handoff file.
 
 5. **Create handoff file**
    ```json
-   // .claude/bugfix-handoff.json
+   // Docs/bugfix-handoff.json
    {
      "symptom": "Brief description of what user sees",
      "rootCause": "File:line and reason",
@@ -49,7 +49,7 @@ Diagnose bugs properly, then fix using sequential TDD agents with handoff file.
 ```
 Spawn agent (subagent_type: "general-purpose", name: "test-writer")
 Prompt: Read .claude/skills/sprint/test-writer.md
-        Read .claude/bugfix-handoff.json for bug details
+        Read Docs/bugfix-handoff.json for bug details
         Write a reproduction test that FAILS before the fix
         Update handoff.testFiles with path
         Update handoff.notes with any discoveries
@@ -59,7 +59,7 @@ Prompt: Read .claude/skills/sprint/test-writer.md
 ```
 Spawn agent (subagent_type: "general-purpose", name: "test-verifier")
 Prompt: Read .claude/skills/sprint/test-verifier.md
-        Read .claude/bugfix-handoff.json for bug context
+        Read Docs/bugfix-handoff.json for bug context
         Review the tests written by @test-writer for quality and coverage
         Report PASS or FAIL with specific issues
 ```
@@ -74,7 +74,7 @@ Prompt: Read .claude/skills/sprint/test-verifier.md
 ```
 Spawn agent (subagent_type: "general-purpose", name: "coder")
 Prompt: Read .claude/skills/sprint/coder.md
-        Read .claude/bugfix-handoff.json for context
+        Read Docs/bugfix-handoff.json for context
         Fix the root cause to make the test pass
         Update handoff.implFiles with modified files
         Update handoff.notes with fix details
@@ -96,7 +96,7 @@ changedFiles = handoff.testFiles + handoff.implFiles
 Generate a timestamp directory for findings:
 ```
 timestamp=$(date +%Y%m%d_%H%M%S)
-mkdir -p .claude/review-findings/$timestamp
+mkdir -p Docs/review-findings/$timestamp
 ```
 
 Spawn 21 review agents in batches (7-7-7). Each reviews ONLY the changed files.
@@ -112,9 +112,9 @@ Spawn 21 review agents in batches (7-7-7). Each reviews ONLY the changed files.
 Spawn agent (subagent_type: "general-purpose", name: "reviewer-XX")
 Prompt: Read C:\Projects\Hattrick\Docs\CODE_REVIEW_AGENTS\{XX_NAME}.md
         Review ONLY these files for issues in your specialty: [changedFiles]
-        Also read .claude/bugfix-handoff.json for context on what was fixed
+        Also read Docs/bugfix-handoff.json for context on what was fixed
         Report: File, line, description, severity (Critical/High/Medium/Low), suggested fix
-        Write findings to .claude/review-findings/{timestamp}/{XX_NAME}.json
+        Write findings to Docs/review-findings/{timestamp}/{XX_NAME}.json
         Write an empty array [] if no issues found.
 ```
 
@@ -122,7 +122,7 @@ Prompt: Read C:\Projects\Hattrick\Docs\CODE_REVIEW_AGENTS\{XX_NAME}.md
 
 After all 21 review agents complete, run post-review agents **sequentially**:
 
-1. **@deduplicator** — Read `Docs/CODE_REVIEW_AGENTS/22_DEDUPLICATION.md`, process `.claude/review-findings/{timestamp}/`, write `dedup-report.json`
+1. **@deduplicator** — Read `Docs/CODE_REVIEW_AGENTS/22_DEDUPLICATION.md`, process `Docs/review-findings/{timestamp}/`, write `dedup-report.json`
 2. **@validator** — Read `Docs/CODE_REVIEW_AGENTS/23_VALIDATION.md`, read `Docs/CLAUDE.md` for conventions, verify findings against source code, write `validation-report.json`
 
 ### Step 6: Handle validated results

@@ -1,0 +1,42 @@
+[
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "hattrick/Components/Pages/Players.razor",
+    "line": 6,
+    "description": "Blazor component directly injects IPlayerRepository. Architecture rules require components to call services, and services to call repositories. The component should inject a player service (or use an existing one) that internally uses the repository.",
+    "severity": "High",
+    "suggestedFix": "Create an IPlayerService (or extend IPlayerStatsService) that encapsulates the repository call. Inject IPlayerService in Players.razor instead of IPlayerRepository directly."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "hattrick/Components/Pages/Players.razor",
+    "line": 105,
+    "description": "Component hardcodes Guid.Empty as the team ID when calling PlayerRepository.GetByTeamId(Guid.Empty). The correct current team ID should be obtained from IGameStateService.HumanPlayerTeamId, which already exists and holds this value. This is business logic (deciding which team to load) inside a Blazor component.",
+    "severity": "High",
+    "suggestedFix": "Inject IGameStateService and use its HumanPlayerTeamId property: _players = PlayerRepository.GetByTeamId(_gameState.HumanPlayerTeamId ?? Guid.Empty). Better still, move this call into a service method that handles the team resolution."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "hattrick/Components/Pages/Players.razor",
+    "line": 88,
+    "description": "DisplayedSkills is a static array of domain-relevant SkillType values defined inside the Blazor component. This is domain/configuration knowledge that belongs in a service or constants class, not in a UI component.",
+    "severity": "Medium",
+    "suggestedFix": "Move the DisplayedSkills array to IPlayerDisplayService or a PlayerDisplayConstants class, and expose it via a method or property on the service so the component only consumes it."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "Hattrick.Core/ServiceCollectionExtensions.cs",
+    "line": 22,
+    "description": "ISaveGameService, ISaveSlotService, and IGameStateService are registered as Singleton, but the architecture rules state services should be Scoped (per-request). Stateful services like these that hold game session data are particularly risky as Singletons in a Blazor context where multiple render cycles exist.",
+    "severity": "Medium",
+    "suggestedFix": "Register stateful services (IGameStateService, ISaveGameService, ISaveSlotService) as AddScoped. Only stateless, pure services (IPlayerDisplayService, IPlayerStatsService) and repositories (IPlayerRepository, ITeamRepository) should remain as Singleton."
+  },
+  {
+    "agent": "08_ARCHITECTURE",
+    "file": "hattrick/Components/Pages/Players.razor",
+    "line": 103,
+    "description": "OnInitialized() is used instead of OnInitializedAsync(). While current services are synchronous, Blazor components should use the async lifecycle method to remain compatible with future async service implementations (e.g., if player data ever needs to be loaded from a save file on init).",
+    "severity": "Low",
+    "suggestedFix": "Change to: protected override async Task OnInitializedAsync() { ... await Task.CompletedTask; } or simply use the async variant without the workaround once async service methods are added."
+  }
+]

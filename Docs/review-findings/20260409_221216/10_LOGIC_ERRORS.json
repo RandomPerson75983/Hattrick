@@ -1,0 +1,26 @@
+[
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick/Components/Pages/Players.razor",
+    "line": 105,
+    "description": "Hardcoded Guid.Empty passed to GetByTeamId() instead of the human player's actual team ID from IGameStateService.HumanPlayerTeamId. This means the players list will always query for players belonging to no team (empty GUID), which will always return an empty list (or wrong players) once a real game is loaded.",
+    "severity": "Critical",
+    "suggestedFix": "Inject IGameStateService and use the human player's team ID: `_players = PlayerRepository.GetByTeamId(_gameState.HumanPlayerTeamId ?? Guid.Empty);`"
+  },
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+    "line": 28,
+    "description": "GetSkillBarPercent uses Math.Round but the interface contract (IPlayerDisplayService line 27) explicitly documents 'Truncates; does not round'. For values like skill=7.995, Math.Round returns 100 (clamping to full-bar width) even though the player has not reached the next skill level. This makes the skill bar appear 100% full incorrectly.",
+    "severity": "Medium",
+    "suggestedFix": "Replace Math.Round with a cast truncation to match the documented contract: `(int)((skill % 1) * SkillBarPercentMultiplier)` — this truncates toward zero as documented."
+  },
+  {
+    "agent": "10_LOGIC_ERRORS",
+    "file": "Hattrick.Core/Services/PlayerDisplayService.cs",
+    "line": 12,
+    "description": "Constants SkillGoodFloor (= 7) and SkillExcellentFloor (= 9) are declared but never used in GetSkillColorClass. The switch uses <= SkillGoodCeiling and <= SkillExcellentCeiling instead. The unused constants create misleading names that suggest a lower-bound check is performed, when it is not. If a future maintainer adds a case using SkillGoodFloor incorrectly, a gap or overlap in the colour ranges could result.",
+    "severity": "Low",
+    "suggestedFix": "Remove SkillGoodFloor and SkillExcellentFloor constants, or use them explicitly in the switch: `>= SkillGoodFloor and <= SkillGoodCeiling => \"skill-good\"` to make the intent unambiguous."
+  }
+]

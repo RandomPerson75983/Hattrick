@@ -1,0 +1,24 @@
+[
+  {
+    "id": "DUP-001",
+    "severity": "Medium",
+    "title": "DI registration duplicated between MauiProgram.cs and DependencyInjectionTests.cs",
+    "description": "The RegisterServices() helper in DependencyInjectionTests.cs (lines 79-87) is a copy-paste of the service registrations in MauiProgram.cs (lines 22-29). Both register the same 6 singletons: IRandomProvider, IDateTimeProvider, ISaveGameService, ISaveSlotService, IGameStateService, IPlayerRepository. If a new service is added to production, the test won't detect its absence unless manually updated in both places. Consider extracting a shared IServiceCollection.AddHattrickCoreServices() extension method that both MauiProgram and tests can call.",
+    "files": [
+      "Hattrick\\MauiProgram.cs:22-29",
+      "Hattrick.Tests\\DependencyInjectionTests.cs:79-87"
+    ],
+    "suggestion": "Create an extension method like IServiceCollection.AddHattrickCoreServices() in Hattrick.Core or Hattrick project, then call it from both MauiProgram.CreateMauiApp() and the test RegisterServices() helper. This ensures the test always validates the real production registrations."
+  },
+  {
+    "id": "DUP-002",
+    "severity": "Medium",
+    "title": "Service resolution code duplicated across DI test methods",
+    "description": "DI_ContainerRegistersAllInfrastructureServices (lines 19-26) and DI_InterfacesAreProperlyImplemented (lines 63-68) resolve the exact same 6 services using GetRequiredService<T>() with the same variable names. Furthermore, DI_InterfacesAreProperlyImplemented asserts .Should().BeAssignableTo<IFoo>() on the result of GetRequiredService<IFoo>(), which is redundant -- the generic type constraint already guarantees this at compile time. The third test adds no value beyond the first.",
+    "files": [
+      "Hattrick.Tests\\DependencyInjectionTests.cs:19-26",
+      "Hattrick.Tests\\DependencyInjectionTests.cs:63-68"
+    ],
+    "suggestion": "Remove DI_InterfacesAreProperlyImplemented entirely -- it is a duplicate of DI_ContainerRegistersAllInfrastructureServices with weaker assertions. GetRequiredService<IFoo>() already proves the resolved object implements IFoo; checking BeAssignableTo again adds no coverage."
+  }
+]

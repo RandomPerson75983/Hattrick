@@ -1,0 +1,66 @@
+[
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 318,
+    "description": "SkillTypeAndLevel_CanBeUsedTogether -- displayName.Should().NotBeNullOrEmpty() is the only assertion on the display name value. Should verify exact expected value.",
+    "severity": "Medium",
+    "suggestedFix": "Assert .Be() with the expected display name instead of .NotBeNullOrEmpty()."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 338,
+    "description": "AllSkillTypesAndAllSkillLevels_CanBeCreated -- loops over 160 combinations but only asserts .NotBeNullOrEmpty(). Would pass even if all entries mapped to the same wrong string.",
+    "severity": "Medium",
+    "suggestedFix": "Assert specific expected values or at minimum assert uniqueness across levels."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 86,
+    "description": "SkillType_MembersHaveCorrectNames -- uses .Contain() (subset check) instead of .BeEquivalentTo(). Would pass if extra unexpected members were added.",
+    "severity": "Medium",
+    "suggestedFix": "Use .HaveCount().And.BeEquivalentTo() pattern like other test files."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 199,
+    "description": "Missing boundary test -- No test for GetDisplayName with an invalid SkillLevel (e.g., (SkillLevel)0 or (SkillLevel)21).",
+    "severity": "Medium",
+    "suggestedFix": "Add test for invalid SkillLevel input to document expected exception behavior."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 271,
+    "description": "GetDisplayName_LowerLevels_SuggestWeakness -- uses .Contain('non') and .NotContain('excellent') which are vague substring assertions.",
+    "severity": "Low",
+    "suggestedFix": "Assert exact expected display name with .Be()."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Models/SkillEnumTests.cs",
+    "line": 283,
+    "description": "GetDisplayName_UpperLevels_SuggestExcellence -- asserts .NotContain('poor') which passes for any non-'poor' string.",
+    "severity": "Low",
+    "suggestedFix": "Assert exact expected display name with .Be()."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Models/PositionOrderEnumTests.cs",
+    "line": 29,
+    "description": "Individual Has*Member tests use .BeTrue() on a boolean, losing failure context. All redundant with AllMembersAreExpected which uses .BeEquivalentTo().",
+    "severity": "Low",
+    "suggestedFix": "Remove redundant individual member tests."
+  },
+  {
+    "agent": "16_ASSERTION_QUALITY",
+    "file": "Hattrick.Tests/Models/TacticsFormationEnumTests.cs",
+    "line": 29,
+    "description": "Same redundant .BeTrue() pattern on individual Has*Member tests for Formation, Tactic, and TeamAttitude. Each group already has an AllMembersAreExpected test.",
+    "severity": "Low",
+    "suggestedFix": "Remove redundant individual member tests."
+  }
+]

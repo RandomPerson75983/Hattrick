@@ -6,4 +6,7 @@ namespace Hattrick.Core.Services;
 /// </summary>
 /// <param name="IsValid">True if the lineup passes all validation rules.</param>
 /// <param name="Errors">List of validation error messages. Empty if valid.</param>
-public record LineupValidationResult(bool IsValid, IReadOnlyList<string> Errors);
+public record LineupValidationResult(bool IsValid, IReadOnlyList<string> Errors)
+{
+    public IReadOnlyList<string> Errors { get; } = Errors ?? Array.Empty<string>();
+}

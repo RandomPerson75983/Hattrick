@@ -87,10 +87,11 @@ public class LineupService : ILineupService
         }
 
         // Rules 8 & 9: Check injury and red card status for players in lineup
+        // Create dictionary lookup for O(1) player access instead of O(n*m) LINQ queries
+        var playerLookup = squad.ToDictionary(p => p.Id);
         foreach (var slot in lineup.Slots)
         {
-            var player = squad.FirstOrDefault(p => p.Id == slot.PlayerId);
-            if (player == null)
+            if (!playerLookup.TryGetValue(slot.PlayerId, out var player))
             {
                 continue; // Already handled in Rule 5
             }

@@ -28,6 +28,7 @@ public static class ServiceCollectionExtensions
 
         // Domain services
         services.AddSingleton<IPlayerService, PlayerService>();
+        services.AddSingleton<ILineupService, LineupService>();
 
         // Display services
         services.AddSingleton<IPlayerDisplayService, PlayerDisplayService>();

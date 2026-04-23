@@ -153,10 +153,10 @@ public class ServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void AddHattrickCoreServices_Registers14Services()
+    public void AddHattrickCoreServices_Registers15Services()
     {
         var services = new ServiceCollection();
         services.AddHattrickCoreServices();
-        services.Should().HaveCount(14);
+        services.Should().HaveCount(15);
     }
 }

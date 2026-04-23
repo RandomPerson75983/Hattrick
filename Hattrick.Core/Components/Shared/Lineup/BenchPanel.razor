@@ -1,0 +1,37 @@
+@namespace Hattrick.Components.Shared.Lineup
+@using Hattrick.Core.Models
+
+<div class="bench-panel">
+    @foreach (var slot in BenchPlayers)
+    {
+        <div class="bench-player" @key="slot.PlayerId" @onclick="() => HandlePlayerClick(slot)">
+            <PlayerAvatar PlayerId="@slot.PlayerId" Position="@slot.Position" Size="PlayerAvatarSize.Small" />
+        </div>
+    }
+</div>
+
+@code {
+    private IReadOnlyList<MatchLineupSlot> _previousBenchPlayers = Array.Empty<MatchLineupSlot>();
+
+    [Parameter]
+    public IReadOnlyList<MatchLineupSlot> BenchPlayers { get; set; } = Array.Empty<MatchLineupSlot>();
+
+    [Parameter]
+    public EventCallback<MatchLineupSlot> OnPlayerClick { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _previousBenchPlayers = BenchPlayers;
+    }
+
+    protected override bool ShouldRender()
+    {
+        // Only re-render when parameters actually change, not on event callback invocations
+        return !ReferenceEquals(BenchPlayers, _previousBenchPlayers);
+    }
+
+    private async Task HandlePlayerClick(MatchLineupSlot slot)
+    {
+        await OnPlayerClick.InvokeAsync(slot);
+    }
+}

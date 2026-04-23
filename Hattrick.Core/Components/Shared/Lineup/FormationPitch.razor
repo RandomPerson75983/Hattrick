@@ -33,8 +33,10 @@
 </svg>
 
 @code {
-    private Formation _previousFormation;
-    private IReadOnlyList<MatchLineupSlot> _previousSlots = Array.Empty<MatchLineupSlot>();
+    private Formation? _renderedFormation;
+    private IReadOnlyList<MatchLineupSlot>? _renderedSlots;
+    private List<MatchLineupSlot> _cachedStarters = new();
+    private Dictionary<Position, List<MatchLineupSlot>> _startersByPosition = new();
 
     [Parameter]
     public Formation Formation { get; set; }
@@ -45,18 +47,33 @@
     [Parameter]
     public EventCallback<MatchLineupSlot> OnSlotClick { get; set; }
 
-    private IEnumerable<MatchLineupSlot> Starters => Slots.Where(s => s.IsStarter);
+    private IReadOnlyList<MatchLineupSlot> Starters => _cachedStarters;
 
     protected override void OnParametersSet()
     {
-        _previousFormation = Formation;
-        _previousSlots = Slots;
+        // Materialize starters once per parameter change for O(1) access
+        _cachedStarters = Slots.Where(s => s.IsStarter).ToList();
+
+        // Build position lookup dictionary for O(1) lookup in GetPositionCoordinates
+        _startersByPosition = _cachedStarters
+            .GroupBy(s => s.Position)
+            .ToDictionary(g => g.Key, g => g.ToList());
     }
 
     protected override bool ShouldRender()
     {
-        // Only re-render when parameters actually change, not on event callback invocations
-        return Formation != _previousFormation || !ReferenceEquals(Slots, _previousSlots);
+        // First render: _renderedFormation is null, so we must render
+        // Subsequent renders: compare current params against what we last rendered
+        return _renderedFormation is null ||
+               Formation != _renderedFormation ||
+               !ReferenceEquals(Slots, _renderedSlots);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        // Track what we just rendered so ShouldRender can compare against it
+        _renderedFormation = Formation;
+        _renderedSlots = Slots;
     }
 
     private string FormationLabel => Formation switch
@@ -81,9 +98,18 @@
 
     private (int X, int Y) GetPositionCoordinates(MatchLineupSlot slot)
     {
-        // Get the index of this slot among starters of the same position type
-        var startersOfPosition = Starters.Where(s => s.Position == slot.Position).ToList();
+        // Get the starters of this position type from the cached dictionary (O(1) lookup)
+        if (!_startersByPosition.TryGetValue(slot.Position, out var startersOfPosition))
+        {
+            return (200, 300); // Default center position if not found
+        }
+
         var index = startersOfPosition.IndexOf(slot);
+        if (index < 0)
+        {
+            return (200, 300); // Default center position if slot not found in list
+        }
+
         var count = startersOfPosition.Count;
 
         return slot.Position switch
@@ -95,13 +121,13 @@
             Position.CentralDefender => GetHorizontalPosition(index, count, 480),
 
             // Wing Backs - wide positions at y=450
-            Position.WingBack => GetWingBackPosition(index, count),
+            Position.WingBack => GetWidePosition(index, count, 450),
 
             // Inner Midfielders - row at y=300
             Position.InnerMidfielder => GetHorizontalPosition(index, count, 300),
 
             // Wingers - wide positions at y=250
-            Position.Winger => GetWingerPosition(index, count),
+            Position.Winger => GetWidePosition(index, count, 250),
 
             // Forwards - row at y=100
             Position.Forward => GetHorizontalPosition(index, count, 100),
@@ -142,30 +168,19 @@
         return (40 + index * spacing, y);
     }
 
-    private static (int X, int Y) GetWingBackPosition(int index, int count)
+    /// <summary>
+    /// Gets the position for wide players (wingbacks, wingers) that are placed on the flanks.
+    /// Single player is centered; two players are placed at left/right; more are spaced evenly.
+    /// </summary>
+    private static (int X, int Y) GetWidePosition(int index, int count, int y)
     {
-        const int y = 450;
         if (count == 0) return (200, y);
-        if (count == 1) return index == 0 ? (60, y) : (340, y);
+        if (count == 1) return (200, y); // Single player centered, not at left side
         if (count == 2)
         {
             return index == 0 ? (60, y) : (340, y);
         }
-        // More than 2 wingbacks (rare formations)
-        var spacing = 280 / (count - 1);
-        return (60 + index * spacing, y);
-    }
-
-    private static (int X, int Y) GetWingerPosition(int index, int count)
-    {
-        const int y = 250;
-        if (count == 0) return (200, y);
-        if (count == 1) return index == 0 ? (60, y) : (340, y);
-        if (count == 2)
-        {
-            return index == 0 ? (60, y) : (340, y);
-        }
-        // More than 2 wingers
+        // More than 2 wide players (rare formations)
         var spacing = 280 / (count - 1);
         return (60 + index * spacing, y);
     }

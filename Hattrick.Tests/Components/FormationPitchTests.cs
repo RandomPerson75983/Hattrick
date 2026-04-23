@@ -2,6 +2,7 @@ using Bunit;
 using FluentAssertions;
 using Hattrick.Core.Models;
 using Hattrick.Components.Shared.Lineup;
+using Microsoft.AspNetCore.Components;
 
 namespace Hattrick.Tests.Components;
 
@@ -657,5 +658,206 @@ public class FormationPitchTests : BunitContext
         // Assert - Should show only 5 players
         var playerSlots = cut.FindAll(".player-slot");
         playerSlots.Should().HaveCount(5);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // BUG: ShouldRender broken - component shows stale data after parameter changes
+    // Issue: OnParametersSet updates _previous* BEFORE ShouldRender compares them
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task FormationPitch_FormationChanges_ReRendersWithNewFormation()
+    {
+        // Arrange - Initial render with 4-4-2
+        var cut = Render<FormationPitch>(parameters => parameters
+            .Add(p => p.Formation, Formation.Formation442)
+            .Add(p => p.Slots, Create442Lineup()));
+
+        // Verify initial state
+        cut.Find(".formation-label").TextContent.Should().Contain("4-4-2");
+
+        // Act - Change formation to 4-3-3 by setting parameters on the component instance
+        await cut.InvokeAsync(() => cut.Instance.SetParametersAsync(
+            ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                { nameof(FormationPitch.Formation), Formation.Formation433 },
+                { nameof(FormationPitch.Slots), Create442Lineup() }
+            })));
+
+        // Assert - Label should now show 4-3-3, not stale 4-4-2
+        cut.Find(".formation-label").TextContent.Should().Contain("4-3-3",
+            because: "changing Formation parameter should trigger re-render with new value");
+    }
+
+    [Fact]
+    public async Task FormationPitch_SlotsChange_ReRendersWithNewSlots()
+    {
+        // Arrange - Initial render with full lineup
+        var initialLineup = Create442Lineup();
+        var cut = Render<FormationPitch>(parameters => parameters
+            .Add(p => p.Formation, Formation.Formation442)
+            .Add(p => p.Slots, initialLineup));
+
+        // Verify initial state
+        cut.FindAll(".player-slot").Should().HaveCount(11);
+
+        // Act - Change to minimal lineup with different slots list
+        var newLineup = new List<MatchLineupSlot>
+        {
+            new(PlayerId1, Position.Keeper, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId2, Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId3, Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+        };
+
+        await cut.InvokeAsync(() => cut.Instance.SetParametersAsync(
+            ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                { nameof(FormationPitch.Formation), Formation.Formation442 },
+                { nameof(FormationPitch.Slots), newLineup }
+            })));
+
+        // Assert - Should show only 3 players now, not stale 11
+        cut.FindAll(".player-slot").Should().HaveCount(3,
+            because: "changing Slots parameter should trigger re-render with new slot count");
+    }
+
+    [Fact]
+    public async Task FormationPitch_MultipleParameterChanges_AlwaysReflectsLatestValues()
+    {
+        // Arrange
+        var cut = Render<FormationPitch>(parameters => parameters
+            .Add(p => p.Formation, Formation.Formation442)
+            .Add(p => p.Slots, Create442Lineup()));
+
+        // First change
+        await cut.InvokeAsync(() => cut.Instance.SetParametersAsync(
+            ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                { nameof(FormationPitch.Formation), Formation.Formation433 },
+                { nameof(FormationPitch.Slots), Create442Lineup() }
+            })));
+
+        cut.Find(".formation-label").TextContent.Should().Contain("4-3-3");
+
+        // Second change
+        await cut.InvokeAsync(() => cut.Instance.SetParametersAsync(
+            ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                { nameof(FormationPitch.Formation), Formation.Formation352 },
+                { nameof(FormationPitch.Slots), Create442Lineup() }
+            })));
+
+        cut.Find(".formation-label").TextContent.Should().Contain("3-5-2");
+
+        // Third change
+        await cut.InvokeAsync(() => cut.Instance.SetParametersAsync(
+            ParameterView.FromDictionary(new Dictionary<string, object?>
+            {
+                { nameof(FormationPitch.Formation), Formation.Formation541 },
+                { nameof(FormationPitch.Slots), Create442Lineup() }
+            })));
+
+        // Assert - Should reflect the latest formation, not any stale value
+        cut.Find(".formation-label").TextContent.Should().Contain("5-4-1",
+            because: "component should always reflect latest parameter values after any number of changes");
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // BUG: Single wingback/winger placed at X=60 instead of centered at X=200
+    // Issue: GetWingBackPosition and GetWingerPosition return (60, y) for count==1
+    // ─────────────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void FormationPitch_SingleWingBack_IsCenteredHorizontally()
+    {
+        // Arrange - Lineup with exactly 1 wingback
+        var lineup = new List<MatchLineupSlot>
+        {
+            new(PlayerId1, Position.Keeper, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId2, Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId3, Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId4, Position.WingBack, IndividualOrder.Normal, isStarter: true), // Single wingback
+            new(PlayerId5, Position.InnerMidfielder, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId6, Position.InnerMidfielder, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId7, Position.InnerMidfielder, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId8, Position.Winger, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId9, Position.Winger, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId10, Position.Forward, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId11, Position.Forward, IndividualOrder.Normal, isStarter: true),
+        };
+
+        // Act
+        var cut = Render<FormationPitch>(parameters => parameters
+            .Add(p => p.Formation, Formation.Formation442)
+            .Add(p => p.Slots, lineup));
+
+        // Assert - Find the wingback slot and check its x position
+        // SVG foreignObject x attribute should be around 175 (200 - 25 offset for centering)
+        // The bug places it at x=35 (60 - 25)
+        var playerSlots = cut.FindAll("foreignObject.player-slot");
+
+        // Find the wingback slot by checking which slot has the wingback player
+        // The wingback (PlayerId4) should be centered, not at the left side
+        // With correct centering: x = 200 - 25 = 175
+        // With bug: x = 60 - 25 = 35
+        var wingbackSlot = playerSlots.FirstOrDefault(slot =>
+        {
+            var xAttr = slot.GetAttribute("x");
+            // The wingback is at y=450, so foreignObject y = 450 - 30 = 420
+            var yAttr = slot.GetAttribute("y");
+            return yAttr == "420";
+        });
+
+        wingbackSlot.Should().NotBeNull("there should be a wingback slot at y=420");
+        var xValue = int.Parse(wingbackSlot!.GetAttribute("x")!, System.Globalization.CultureInfo.InvariantCulture);
+
+        // Centered x should be around 175 (200 - 25), not 35 (60 - 25)
+        xValue.Should().BeInRange(170, 180,
+            because: "a single wingback should be centered (X around 200), not placed at left side (X=60)");
+    }
+
+    [Fact]
+    public void FormationPitch_SingleWinger_IsCenteredHorizontally()
+    {
+        // Arrange - Lineup with exactly 1 winger
+        var lineup = new List<MatchLineupSlot>
+        {
+            new(PlayerId1, Position.Keeper, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId2, Position.WingBack, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId3, Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId4, Position.CentralDefender, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId5, Position.WingBack, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId6, Position.Winger, IndividualOrder.Normal, isStarter: true), // Single winger
+            new(PlayerId7, Position.InnerMidfielder, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId8, Position.InnerMidfielder, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId9, Position.InnerMidfielder, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId10, Position.Forward, IndividualOrder.Normal, isStarter: true),
+            new(PlayerId11, Position.Forward, IndividualOrder.Normal, isStarter: true),
+        };
+
+        // Act
+        var cut = Render<FormationPitch>(parameters => parameters
+            .Add(p => p.Formation, Formation.Formation442)
+            .Add(p => p.Slots, lineup));
+
+        // Assert - Find the winger slot and check its x position
+        // SVG foreignObject x attribute should be around 175 (200 - 25 offset for centering)
+        // The bug places it at x=35 (60 - 25)
+        var playerSlots = cut.FindAll("foreignObject.player-slot");
+
+        // Find the winger slot by checking y position
+        // The winger is at y=250, so foreignObject y = 250 - 30 = 220
+        var wingerSlot = playerSlots.FirstOrDefault(slot =>
+        {
+            var yAttr = slot.GetAttribute("y");
+            return yAttr == "220";
+        });
+
+        wingerSlot.Should().NotBeNull("there should be a winger slot at y=220");
+        var xValue = int.Parse(wingerSlot!.GetAttribute("x")!, System.Globalization.CultureInfo.InvariantCulture);
+
+        // Centered x should be around 175 (200 - 25), not 35 (60 - 25)
+        xValue.Should().BeInRange(170, 180,
+            because: "a single winger should be centered (X around 200), not placed at left side (X=60)");
     }
 }

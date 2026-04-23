@@ -13,6 +13,14 @@ public class LineupService : ILineupService
     private const int RequiredKeeperCount = 1;
     private const int YellowCardSuspensionThreshold = 3;
 
+    // 4-4-2 Formation position counts
+    private const int Formation442KeeperCount = 1;
+    private const int Formation442CentralDefenderCount = 2;
+    private const int Formation442WingBackCount = 2;
+    private const int Formation442InnerMidfielderCount = 2;
+    private const int Formation442WingerCount = 2;
+    private const int Formation442ForwardCount = 2;
+
     /// <inheritdoc />
     public LineupValidationResult ValidateLineup(TeamLineup lineup, IReadOnlyList<Player> squad)
     {
@@ -135,7 +143,7 @@ public class LineupService : ILineupService
             selectedPlayers,
             Position.Keeper,
             SkillType.Keeper,
-            count: 1);
+            count: Formation442KeeperCount);
         slots.AddRange(keeper);
 
         // Step 4: Pick defenders for 4-4-2
@@ -145,7 +153,7 @@ public class LineupService : ILineupService
             selectedPlayers,
             Position.CentralDefender,
             SkillType.Defending,
-            count: 2);
+            count: Formation442CentralDefenderCount);
         slots.AddRange(centralDefenders);
 
         // 2 Wing Backs by Defending skill
@@ -154,7 +162,7 @@ public class LineupService : ILineupService
             selectedPlayers,
             Position.WingBack,
             SkillType.Defending,
-            count: 2);
+            count: Formation442WingBackCount);
         slots.AddRange(wingBacks);
 
         // Step 5: Pick midfielders for 4-4-2
@@ -164,7 +172,7 @@ public class LineupService : ILineupService
             selectedPlayers,
             Position.InnerMidfielder,
             SkillType.Playmaking,
-            count: 2);
+            count: Formation442InnerMidfielderCount);
         slots.AddRange(innerMids);
 
         // 2 Wingers by Winger skill
@@ -173,7 +181,7 @@ public class LineupService : ILineupService
             selectedPlayers,
             Position.Winger,
             SkillType.Winger,
-            count: 2);
+            count: Formation442WingerCount);
         slots.AddRange(wingers);
 
         // Step 6: Pick 2 Forwards by Scoring skill
@@ -182,7 +190,7 @@ public class LineupService : ILineupService
             selectedPlayers,
             Position.Forward,
             SkillType.Scoring,
-            count: 2);
+            count: Formation442ForwardCount);
         slots.AddRange(forwards);
 
         // Step 7: Add up to 3 substitutes from remaining players

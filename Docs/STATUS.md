@@ -1,13 +1,13 @@
 # Hattrick Clone - Project Status
 
-**Date:** April 22, 2026
-**Current Phase:** 2 (Team Creation & Lineup Management) — SPRINT 1 COMPLETE ✅
-**Overall Progress:** 30% (Phase 2 Sprint 1 done)
+**Date:** April 23, 2026
+**Current Phase:** 2 (Team Creation & Lineup Management) — SPRINT 2 COMPLETE ✅
+**Overall Progress:** 35% (Phase 2 Sprint 2 done)
 
 ## Project Stats
 
 - **Solution:** Hattrick.slnx with 3 projects
-- **Tests:** 736 passing (Phase 0-1 + Phase 2 Sprint 1 team/player generation)
+- **Tests:** 940 passing (Phase 0-1 + Phase 2 Sprint 1-2)
 - **Compilation:** OK
 - **App Runs:** Yes (Players page shows generated team with 25 players)
 
@@ -148,11 +148,39 @@ All foundation infrastructure complete:
 **Phase 2 Sprint 1 Summary:** 4 quartets, 166 new tests, 736 total passing
 **Gameplay:** App now displays real player data on Players page
 
+## Phase 2 - Sprint 2 COMPLETE ✅
+
+### Lineup Models & ILineupService (4 Quartets)
+
+**Quartet 1: MatchLineupSlot Model** ✅
+- Immutable record: PlayerId, Position, IndividualOrder (default Normal), IsStarter
+- Supports `with` expression and value equality
+- Tests: 35 passing
+
+**Quartet 2: TeamLineup Model** ✅
+- Mutable class: TeamId, Formation, Tactic, Attitude, Slots list, SetPiecesTakerId, CaptainId
+- Constants: StarterCount=11, MaxSubstituteCount=3, MaxTotalSlots=14
+- Tests: 64 passing
+
+**Quartet 3: LineupService - Validation** ✅
+- ILineupService + LineupService with ValidateLineup method
+- 9 validation rules: 11 starters, 1 keeper, max 3 subs, no duplicates, player existence, captain/set pieces in lineup, no injured/red-carded
+- LineupValidationResult record with IsValid and Errors
+- Registered as Singleton in DI
+- Tests: 55 passing
+
+**Quartet 4: LineupService - AutoSuggest** ✅
+- SuggestLineup method: picks best 11 for 4-4-2 by position/skill
+- Excludes injured/red-carded, adds up to 3 subs, sets captain by Leadership
+- Tests: 32 passing (87 total LineupService tests)
+
+**Phase 2 Sprint 2 Summary:** 4 quartets, 204 new tests, 940 total passing
+
 ## Upcoming Work
 
-### Phase 2 Sprint 2 (Next)
-- Lineup Models (MatchLineupSlot, TeamLineup)
-- ILineupService (validation, auto-suggest)
+### Phase 2 Sprint 3 (Next)
+- Lineup Manager UI components
+- FormationPitch, TabNavigation, PlayerAvatar components
 
 ### Phase 3 (Pending)
 - Match Engine
